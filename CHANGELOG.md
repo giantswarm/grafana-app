@@ -7,4 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Added:
+
+- initial import of upstream repo
+- disabled AppArmor in PSP
+- added test run with `kube-app-testing`
+- images retagged for Giant Swarm registries
+
 [Unreleased]: https://github.com/giantswarm/REPOSITORY_NAME/tree/master
