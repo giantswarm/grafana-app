@@ -5,11 +5,21 @@ orbs:
 workflows:
   package-and-push-chart-on-tag:
     jobs:
+      - architect/run-kat-tests:
+          name: "test the chart with kat"
+          chart: "grafana-app"
+          kind-version: "0.9.0"
+          filters:
+            tags:
+              only: /^v.*/
+
       - architect/push-to-app-catalog:
           context: "architect"
+          requires:
+            - run-kat-tests
           name: "package and push grafana-app chart"
-          app_catalog: "giantswarm-playground-catalog"
-          app_catalog_test: "giantswarm-playground-test-catalog"
+          app_catalog: "giantswarm-catalog"
+          app_catalog_test: "giantswarm-test-catalog"
           chart: "grafana-app"
           # Trigger job on git tag.
           filters:
