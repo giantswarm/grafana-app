@@ -8,6 +8,7 @@ workflows:
       - architect/run-kat-tests:
           name: "test the chart with kat"
           chart: "grafana-app"
+          kube-app-testing-version: "use-gsctl"
           kind-version: "0.7.0"
           filters:
             tags:
