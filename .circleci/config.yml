@@ -8,7 +8,7 @@ workflows:
       - architect/run-kat-tests:
           name: "test the chart with kat"
           chart: "grafana-app"
-          kind-version: "0.9.0"
+          kind-version: "0.7.0"
           filters:
             tags:
               only: /^v.*/
