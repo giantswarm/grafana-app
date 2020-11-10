@@ -1,10 +1,20 @@
-[![CircleCI](https://circleci.com/gh/giantswarm/{APP-NAME}-app.svg?style=shield)](https://circleci.com/gh/giantswarm/{APP-NAME}-app)
+[![CircleCI](https://circleci.com/gh/giantswarm/grafana-app.svg?style=shield)](https://circleci.com/gh/giantswarm/grafana-app)
 
-# {APP-NAME}-app chart
+# grafana-app chart
 
-Giant Swarm offers a {APP-NAME} Managed App which can be installed in tenant clusters.
-Here we define the {APP-NAME} chart with its templates and default configuration.
+Giant Swarm offers a Grafana Managed App which can be installed in tenant clusters.
+This chart is almost an exact copy of the upstream [Grafana Chart](https://github.com/grafana/helm-charts).
+
+Changes compared to upstream:
+
+- images URLs are set to use Giant Swarm's HA registries
+- AppArmor for PSPs is disabled
+- requests/limits are enabled
+
+## Configuration
+
+Please refer [this file](helm/grafana-app/Chart.yaml) for available config options.
 
 ## Credit
 
-* {APP HELM REPOSITORY}
+- <https://github.com/grafana/helm-charts>

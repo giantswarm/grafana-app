@@ -1,12 +1,13 @@
 apiVersion: v1
 name: grafana-app
-version: 0.0.0-94a9803231f83493f5fcfdb15bdcda2c66cae87d
+version: [[ .Version ]]
 appVersion: 7.3.1
 kubeVersion: "^1.8.0-0"
 description: The leading tool for querying and visualizing time series and metrics.
-home: https://grafana.net
+home: https://github.com/giantswarm/grafana-app
 icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
 sources:
+  - https://github.com/giantswarm/grafana-app
   - https://github.com/grafana/grafana
 maintainers:
   - name: zanhsieh
@@ -17,5 +18,10 @@ maintainers:
     email: maor.friedman@redhat.com
   - name: Xtigyro
     email: miroslav.hadzhiev@gmail.com
+  - name: Giant Swarm applications team
+    url: https://github.com/giantswarm/loki-stack-app
 engine: gotpl
 type: application
+annotations:
+#  application.giantswarm.io/values-schema: https://raw.githubusercontent.com/giantswarm/hello-world-app/v0.0.1/helm/hello-world-app/values.schema.json
+  application.giantswarm.io/readme: https://github.com/giantswarm/grafana-app/raw/master/README.md
