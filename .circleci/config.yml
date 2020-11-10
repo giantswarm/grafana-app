@@ -10,6 +10,7 @@ workflows:
           chart: "grafana-app"
           kube-app-testing-version: "use-gsctl"
           kind-version: "0.7.0"
+          additional_kube-app-testing_flags: "--python-container-tag 3.7-slim""
           filters:
             tags:
               only: /^v.*/
