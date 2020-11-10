@@ -1,9 +1,12 @@
 from typing import cast
 
 import pykube
+import pytest
 from pytest_helm_charts.clusters import Cluster
 
 
+# when grafana pod is up, it might be still starting and returning 503
+@pytest.mark.flaky(reruns=10, reruns_delay=10)
 def test_grafana_login_page_available(kube_cluster: Cluster) -> None:
     srv = cast(pykube.Service, pykube.Service.objects(kube_cluster.kube_client).get_or_none(name="grafana-app"))
     if srv is None:
