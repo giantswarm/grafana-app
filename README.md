@@ -13,7 +13,7 @@ Changes compared to upstream:
 
 ## Configuration
 
-Please refer [this file](helm/grafana-app/Chart.yaml) for available config options.
+Please refer [this file](helm/grafana-app/Chart.yaml) for available config options and more info.
 
 ## Credit
 
