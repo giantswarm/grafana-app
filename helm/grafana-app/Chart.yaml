@@ -23,6 +23,5 @@ maintainers:
 engine: gotpl
 type: application
 annotations:
-#  application.giantswarm.io/values-schema: https://raw.githubusercontent.com/giantswarm/hello-world-app/v0.0.1/helm/hello-world-app/values.schema.json
+  application.giantswarm.io/values-schema: https://github.com/giantswarm/grafana-app/raw/master/helm/grafana-app/values.schema.json
   application.giantswarm.io/readme: https://github.com/giantswarm/grafana-app/raw/master/README.md
-
