@@ -16,7 +16,7 @@ workflows:
       - architect/push-to-app-catalog:
           context: "architect"
           requires:
-            - run-kat-tests
+            - "test the chart with kat"
           name: "package and push grafana-app chart"
           app_catalog: "giantswarm-catalog"
           app_catalog_test: "giantswarm-test-catalog"
