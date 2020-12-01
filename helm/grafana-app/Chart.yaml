@@ -23,4 +23,4 @@ maintainers:
 engine: gotpl
 annotations:
   application.giantswarm.io/values-schema: https://github.com/giantswarm/grafana-app/raw/master/helm/grafana-app/values.schema.json
-  application.giantswarm.io/readme: https://github.com/giantswarm/grafana-app/raw/master/README.md
+  application.giantswarm.io/readme: https://raw.githubusercontent.com/giantswarm/grafana-app/v[[ .Version ]]/README.md
