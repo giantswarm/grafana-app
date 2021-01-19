@@ -1,0 +1,13 @@
+ingress:
+  enabled: true
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-giantswarm
+  hosts:
+    - host: grafana.m2h60.k8s.gauss.eu-west-1.aws.gigantic.io
+      paths:
+        - /
+  tls:
+    - hosts:
+        - grafana.m2h60.k8s.gauss.eu-west-1.aws.gigantic.io
+      secretName: grafana-ingress-cert
+
