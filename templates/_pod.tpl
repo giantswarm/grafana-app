@@ -84,6 +84,10 @@ initContainers:
         value: LIST
       - name: LABEL
         value: "{{ .Values.sidecar.datasources.label }}"
+      {{- if .Values.sidecar.datasources.labelValue }}
+      - name: LABEL_VALUE
+        value: {{ quote .Values.sidecar.datasources.labelValue }}
+      {{- end }}
       - name: FOLDER
         value: "/etc/grafana/provisioning/datasources"
       - name: RESOURCE
@@ -164,6 +168,10 @@ containers:
         value: {{ .Values.sidecar.dashboards.watchMethod }}
       - name: LABEL
         value: "{{ .Values.sidecar.dashboards.label }}"
+      {{- if .Values.sidecar.dashboards.labelValue }}
+      - name: LABEL_VALUE
+        value: {{ quote .Values.sidecar.dashboards.labelValue }}
+      {{- end }}
       - name: FOLDER
         value: "{{ .Values.sidecar.dashboards.folder }}{{- with .Values.sidecar.dashboards.defaultFolderName }}/{{ . }}{{- end }}"
       - name: RESOURCE
@@ -203,6 +211,10 @@ containers:
       - {{ . }}
     {{- end }}
   {{- end}}
+{{- if .Values.containerSecurityContext }}
+    securityContext:
+{{- toYaml .Values.containerSecurityContext | nindent 6 }}
+{{- end }}
     volumeMounts:
       - name: config
         mountPath: "/etc/grafana/grafana.ini"
