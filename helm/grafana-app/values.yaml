@@ -179,13 +179,13 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-resources:
-  limits:
-    cpu: 2
-    memory: 2Gi
-  requests:
-    cpu: 500m
-    memory: 512Mi
+resources: {}
+#  limits:
+#    cpu: 100m
+#    memory: 128Mi
+#  requests:
+#    cpu: 100m
+#    memory: 128Mi
 
 ## Node labels for pod assignment
 ## ref: https://kubernetes.io/docs/user-guide/node-selection/
@@ -528,6 +528,14 @@ ldap:
   # config: |-
   #   verbose_logging = true
 
+  #   [[servers]]
+  #   host = "my-ldap-server"
+  #   port = 636
+  #   use_ssl = true
+  #   start_tls = false
+  #   ssl_skip_verify = false
+  #   bind_dn = "uid=%s,ou=users,dc=myorg,dc=com"
+
 ## Grafana's SMTP configuration
 ## NOTE: To enable, grafana.ini must be configured with smtp.enabled
 ## ref: http://docs.grafana.org/installation/configuration/#smtp
@@ -636,6 +644,8 @@ imageRenderer:
     HTTP_HOST: "0.0.0.0"
     # RENDERING_ARGS: --disable-gpu,--window-size=1280x758
     # RENDERING_MODE: clustered
+  # image-renderer deployment serviceAccount
+  serviceAccountName: ""
   # image-renderer deployment securityContext
   securityContext: {}
   # image-renderer deployment Host Aliases
