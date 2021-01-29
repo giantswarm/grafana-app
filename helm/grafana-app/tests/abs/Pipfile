@@ -4,11 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pytest-helm-charts = ">=0.2.1"
+pytest-helm-charts = ">=0.3.1"
 pytest = ">=6.1.2"
 pytest-rerunfailures = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.7"
+python_version = "3.8"
