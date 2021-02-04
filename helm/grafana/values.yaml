@@ -66,9 +66,8 @@ image:
 
 testFramework:
   enabled: true
-  # FIXME https://quay.io/repository/giantswarm/bats?tab=tags
-  image: "bats/bats"
-  tag: v1.1.0
+  image: quay.io/giantswarm/bats
+  tag: v1.2.1
   imagePullPolicy: IfNotPresent
   securityContext: {}
 
