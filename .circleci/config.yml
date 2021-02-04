@@ -21,8 +21,6 @@ workflows:
           # resource_class: 2xlarge
           name: execute chart tests
           chart_dir: "./helm/grafana"
-          #app-build-suite_version: "v0.1.6"
-          #app-build-suite_container_tag: "0.1.6-5452b34f4eb103272df72a624e60fcb75b948d25"
           filters:
             tags:
               only: /^v.*/
