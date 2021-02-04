@@ -52,9 +52,9 @@ livenessProbe:
 # schedulerName: "default-scheduler"
 
 image:
-  repository: grafana/grafana
-  tag: 7.3.5
-  sha: ""
+  repository: quay.io/giantswarm/grafana
+  tag: 7.3.7
+  sha: f140fde5ba622745926b1e390b6ff335c1a0b7a1126cd4211600534f922ef4c0
   pullPolicy: IfNotPresent
 
   ## Optionally specify an array of imagePullSecrets.
@@ -66,8 +66,9 @@ image:
 
 testFramework:
   enabled: true
+  # FIXME https://quay.io/repository/giantswarm/bats?tab=tags
   image: "bats/bats"
-  tag: "v1.1.0"
+  tag: v1.1.0
   imagePullPolicy: IfNotPresent
   securityContext: {}
 
@@ -96,9 +97,9 @@ extraEmptyDirMounts: []
 # priorityClassName:
 
 downloadDashboardsImage:
-  repository: curlimages/curl
-  tag: 7.73.0
-  sha: ""
+  repository: quay.io/giantswarm/curl
+  tag: 7.75.0
+  sha: 420f8d57851bfc4cec0dd018ebff01f7fbcc7db5c627f976ca9c87eac6722a94
   pullPolicy: IfNotPresent
 
 downloadDashboards:
@@ -255,9 +256,9 @@ initChownData:
   ## initChownData container image
   ##
   image:
-    repository: busybox
-    tag: "1.31.1"
-    sha: ""
+    repository: quay.io/giantswarm/busybox
+    tag: 1.32.1
+    sha: 0415f56ccc05526f2af5a7ae8654baec97d4a614f24736e8eef41a4591f08019
     pullPolicy: IfNotPresent
 
   ## initChownData resource requests and limits
@@ -550,9 +551,9 @@ smtp:
 ## Requires at least Grafana 5 to work and can't be used together with parameters dashboardProviders, datasources and dashboards
 sidecar:
   image:
-    repository: kiwigrid/k8s-sidecar
-    tag: 1.1.0
-    sha: ""
+    repository: quay.io/giantswarm/k8s-sidecar
+    tag: 1.3.0
+    sha: 2b05ee3161e8cabe4abaa63058c504e55a7cf7a2e086fda33dffaf7ae363aa63
   imagePullPolicy: IfNotPresent
   resources: {}
 #   limits:
@@ -631,14 +632,10 @@ imageRenderer:
   enabled: false
   replicas: 1
   image:
-    # image-renderer Image repository
-    repository: grafana/grafana-image-renderer
-    # image-renderer Image tag
-    tag: latest
-    # image-renderer Image sha (optional)
-    sha: ""
-    # image-renderer ImagePullPolicy
-    pullPolicy: Always
+    repository: quay.io/giantswarm/grafana-image-renderer
+    tag: 2.0.1
+    sha: d0c6271cb7f4f7588e1cfda31756e31bd39d5e5bd0e0c7453716e97f16af3126
+    pullPolicy: IfNotPresent
   # extra environment variables
   env:
     HTTP_HOST: "0.0.0.0"
