@@ -1,29 +1,26 @@
 version: 2.1
 orbs:
-  architect: giantswarm/architect@0.16.0
+  architect: giantswarm/architect@1.1.2
 
 workflows:
   package-and-push-chart-on-tag:
     jobs:
-      - architect/run-kat-tests:
-          name: "test the chart with kat"
-          chart: "grafana-app"
-          kube-app-testing-version: "use-gsctl"
-          kind-version: "0.7.0"
-          additional_kube-app-testing_flags: "--python-container-tag 3.7-slim"
+      - architect/push-to-app-catalog:
+          context: "architect"
+          executor: "app-build-suite"
+          name: "package and push grafana chart"
+          app_catalog: "giantswarm-catalog"
+          app_catalog_test: "giantswarm-test-catalog"
+          chart: "grafana"
+          # Trigger job on git tag.
           filters:
             tags:
               only: /^v.*/
 
-      - architect/push-to-app-catalog:
-          context: "architect"
-          requires:
-            - "test the chart with kat"
-          name: "package and push grafana-app chart"
-          app_catalog: "giantswarm-catalog"
-          app_catalog_test: "giantswarm-test-catalog"
-          chart: "grafana-app"
-          # Trigger job on git tag.
+      - architect/run-tests-with-abs:
+          # resource_class: 2xlarge
+          name: execute chart tests
+          chart_dir: "./helm/grafana"
           filters:
             tags:
               only: /^v.*/
