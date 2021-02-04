@@ -1,3 +1,6 @@
 grafana-app-*.tgz
 test-results/
-test/kat/.idea/
+**/.idea/
+**/__pycache__
+**/test_results**.xml
+build/

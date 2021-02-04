@@ -3,7 +3,7 @@ rbac:
   ## Use an existing ClusterRole/Role (depending on rbac.namespaced false/true)
   # useExistingRole: name-of-some-(cluster)role
   pspEnabled: true
-  pspUseAppArmor: false
+  pspUseAppArmor: true
   namespaced: false
   extraRoleRules: []
   # - apiGroups: []
@@ -24,8 +24,8 @@ replicas: 1
 
 ## See `kubectl explain poddisruptionbudget.spec` for more
 ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
-podDisruptionBudget:
-  minAvailable: 1
+podDisruptionBudget: {}
+#  minAvailable: 1
 #  maxUnavailable: 1
 
 ## See `kubectl explain deployment.spec.strategy` for more
@@ -52,10 +52,9 @@ livenessProbe:
 # schedulerName: "default-scheduler"
 
 image:
-  registry: quay.io
-  repository: giantswarm/grafana
-  tag: 7.3.1
-  sha: ""
+  repository: quay.io/giantswarm/grafana
+  tag: 7.3.7
+  sha: f140fde5ba622745926b1e390b6ff335c1a0b7a1126cd4211600534f922ef4c0
   pullPolicy: IfNotPresent
 
   ## Optionally specify an array of imagePullSecrets.
@@ -67,8 +66,8 @@ image:
 
 testFramework:
   enabled: true
-  image: "bats/bats"
-  tag: "v1.1.0"
+  image: quay.io/giantswarm/bats
+  tag: v1.2.1
   imagePullPolicy: IfNotPresent
   securityContext: {}
 
@@ -77,6 +76,8 @@ securityContext:
   runAsGroup: 472
   fsGroup: 472
 
+containerSecurityContext:
+  {}
 
 extraConfigmapMounts: []
   # - name: certs-configmap
@@ -95,10 +96,9 @@ extraEmptyDirMounts: []
 # priorityClassName:
 
 downloadDashboardsImage:
-  registry: quay.io
-  repository: giantswarm/curl
-  tag: 7.73.0
-  sha: ""
+  repository: quay.io/giantswarm/curl
+  tag: 7.75.0
+  sha: 420f8d57851bfc4cec0dd018ebff01f7fbcc7db5c627f976ca9c87eac6722a94
   pullPolicy: IfNotPresent
 
 downloadDashboards:
@@ -242,6 +242,7 @@ persistence:
   # annotations: {}
   finalizers:
     - kubernetes.io/pvc-protection
+  # selectorLabels: {}
   # subPath: ""
   # existingClaim:
 
@@ -254,10 +255,9 @@ initChownData:
   ## initChownData container image
   ##
   image:
-    registry: quay.io
-    repository: giantswarm/busybox
-    tag: "1.31.1"
-    sha: ""
+    repository: quay.io/giantswarm/busybox
+    tag: 1.32.1
+    sha: 0415f56ccc05526f2af5a7ae8654baec97d4a614f24736e8eef41a4591f08019
     pullPolicy: IfNotPresent
 
   ## initChownData resource requests and limits
@@ -528,6 +528,14 @@ ldap:
   # config: |-
   #   verbose_logging = true
 
+  #   [[servers]]
+  #   host = "my-ldap-server"
+  #   port = 636
+  #   use_ssl = true
+  #   start_tls = false
+  #   ssl_skip_verify = false
+  #   bind_dn = "uid=%s,ou=users,dc=myorg,dc=com"
+
 ## Grafana's SMTP configuration
 ## NOTE: To enable, grafana.ini must be configured with smtp.enabled
 ## ref: http://docs.grafana.org/installation/configuration/#smtp
@@ -542,10 +550,9 @@ smtp:
 ## Requires at least Grafana 5 to work and can't be used together with parameters dashboardProviders, datasources and dashboards
 sidecar:
   image:
-    registry: quay.io
-    repository: giantswarm/k8s-sidecar
-    tag: 1.1.0
-    sha: ""
+    repository: quay.io/giantswarm/k8s-sidecar
+    tag: 1.3.0
+    sha: 2b05ee3161e8cabe4abaa63058c504e55a7cf7a2e086fda33dffaf7ae363aa63
   imagePullPolicy: IfNotPresent
   resources: {}
 #   limits:
@@ -562,6 +569,8 @@ sidecar:
     SCProvider: true
     # label that the configmaps with dashboards are marked with
     label: grafana_dashboard
+    # value of label that the configmaps with dashboards are set to
+    labelValue: null
     # folder in the pod that should hold the collected dashboards (unless `defaultFolderName` is set)
     folder: /tmp/dashboards
     # The default folder name, it will create a subfolder under the `folder` and put dashboards in there instead
@@ -593,6 +602,8 @@ sidecar:
     enabled: false
     # label that the configmaps with datasources are marked with
     label: grafana_datasource
+    # value of label that the configmaps with datasources are set to
+    labelValue: null
     # If specified, the sidecar will search for datasource config-maps inside this namespace.
     # Otherwise the namespace in which the sidecar is running will be used.
     # It's also possible to specify ALL to search in all namespaces
@@ -620,19 +631,17 @@ imageRenderer:
   enabled: false
   replicas: 1
   image:
-    registry: quay.io
-    # image-renderer Image repository
-    repository: giantswarm/grafana-image-renderer
-    # image-renderer Image tag
-    tag: 2.0.0
-    # image-renderer Image sha (optional)
-    sha: ""
-    # image-renderer ImagePullPolicy
-    pullPolicy: Always
+    repository: quay.io/giantswarm/grafana-image-renderer
+    tag: 2.0.1
+    sha: d0c6271cb7f4f7588e1cfda31756e31bd39d5e5bd0e0c7453716e97f16af3126
+    pullPolicy: IfNotPresent
   # extra environment variables
-  env: {}
+  env:
+    HTTP_HOST: "0.0.0.0"
     # RENDERING_ARGS: --disable-gpu,--window-size=1280x758
     # RENDERING_MODE: clustered
+  # image-renderer deployment serviceAccount
+  serviceAccountName: ""
   # image-renderer deployment securityContext
   securityContext: {}
   # image-renderer deployment Host Aliases
@@ -644,6 +653,7 @@ imageRenderer:
     portName: 'http'
     # image-renderer service port used by both service and deployment
     port: 8081
+    targetPort: 8081
   # name of the image-renderer port on the pod
   podPortName: http
   # number of image-renderer replica sets to keep

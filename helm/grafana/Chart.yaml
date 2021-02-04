@@ -1,0 +1,25 @@
+apiVersion: v2
+appVersion: 7.3.5
+description: The leading tool for querying and visualizing time series and metrics.
+engine: gotpl
+home: https://github.com/giantswarm/grafana-app
+icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/grafana_icon.svg
+kubeVersion: ^1.8.0-0
+maintainers:
+- email: zanhsieh@gmail.com
+  name: zanhsieh
+- email: rluckie@cisco.com
+  name: rtluckie
+- email: maor.friedman@redhat.com
+  name: maorfr
+- email: miroslav.hadzhiev@gmail.com
+  name: Xtigyro
+- email: mail@torstenwalter.de
+  name: torstenwalter
+- name: Giant Swarm applications team
+  url: https://github.com/giantswarm/grafana-app
+name: grafana
+sources:
+- https://github.com/giantswarm/grafana-app
+- https://github.com/grafana/grafana
+version: 0.2.0

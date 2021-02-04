@@ -21,9 +21,9 @@ initContainers:
 {{- if ( and .Values.persistence.enabled .Values.initChownData.enabled ) }}
   - name: init-chown-data
     {{- if .Values.initChownData.image.sha }}
-    image: "{{ .Values.initChownData.image.registry }}/{{ .Values.initChownData.image.repository }}:{{ .Values.initChownData.image.tag }}@sha256:{{ .Values.initChownData.image.sha }}"
+    image: "{{ .Values.initChownData.image.repository }}:{{ .Values.initChownData.image.tag }}@sha256:{{ .Values.initChownData.image.sha }}"
     {{- else }}
-    image: "{{ .Values.initChownData.image.registry }}/{{ .Values.initChownData.image.repository }}:{{ .Values.initChownData.image.tag }}"
+    image: "{{ .Values.initChownData.image.repository }}:{{ .Values.initChownData.image.tag }}"
     {{- end }}
     imagePullPolicy: {{ .Values.initChownData.image.pullPolicy }}
     securityContext:
@@ -42,9 +42,9 @@ initContainers:
 {{- if .Values.dashboards }}
   - name: download-dashboards
     {{- if .Values.downloadDashboardsImage.sha }}
-    image: "{{ .Values.downloadDashboardsImage.registry }}/{{ .Values.downloadDashboardsImage.repository }}:{{ .Values.downloadDashboardsImage.tag }}@sha256:{{ .Values.downloadDashboardsImage.sha }}"
+    image: "{{ .Values.downloadDashboardsImage.repository }}:{{ .Values.downloadDashboardsImage.tag }}@sha256:{{ .Values.downloadDashboardsImage.sha }}"
     {{- else }}
-    image: "{{ .Values.downloadDashboardsImage.registry }}/{{ .Values.downloadDashboardsImage.repository }}:{{ .Values.downloadDashboardsImage.tag }}"
+    image: "{{ .Values.downloadDashboardsImage.repository }}:{{ .Values.downloadDashboardsImage.tag }}"
     {{- end }}
     imagePullPolicy: {{ .Values.downloadDashboardsImage.pullPolicy }}
     command: ["/bin/sh"]
@@ -74,9 +74,9 @@ initContainers:
 {{- if .Values.sidecar.datasources.enabled }}
   - name: {{ template "grafana.name" . }}-sc-datasources
     {{- if .Values.sidecar.image.sha }}
-    image: "{{ .Values.sidecar.image.registry }}/{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}@sha256:{{ .Values.sidecar.image.sha }}"
+    image: "{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}@sha256:{{ .Values.sidecar.image.sha }}"
     {{- else }}
-    image: "{{ .Values.sidecar.image.registry }}/{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}"
+    image: "{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}"
     {{- end }}
     imagePullPolicy: {{ .Values.sidecar.imagePullPolicy }}
     env:
@@ -84,6 +84,10 @@ initContainers:
         value: LIST
       - name: LABEL
         value: "{{ .Values.sidecar.datasources.label }}"
+      {{- if .Values.sidecar.datasources.labelValue }}
+      - name: LABEL_VALUE
+        value: {{ quote .Values.sidecar.datasources.labelValue }}
+      {{- end }}
       - name: FOLDER
         value: "/etc/grafana/provisioning/datasources"
       - name: RESOURCE
@@ -109,9 +113,9 @@ initContainers:
 {{- if .Values.sidecar.notifiers.enabled }}
   - name: {{ template "grafana.name" . }}-sc-notifiers
     {{- if .Values.sidecar.image.sha }}
-    image: "{{ .Values.sidecar.image.registry }}/{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}@sha256:{{ .Values.sidecar.image.sha }}"
+    image: "{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}@sha256:{{ .Values.sidecar.image.sha }}"
     {{- else }}
-    image: "{{ .Values.sidecar.image.registry }}/{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}"
+    image: "{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}"
     {{- end }}
     imagePullPolicy: {{ .Values.sidecar.imagePullPolicy }}
     env:
@@ -154,9 +158,9 @@ containers:
 {{- if .Values.sidecar.dashboards.enabled }}
   - name: {{ template "grafana.name" . }}-sc-dashboard
     {{- if .Values.sidecar.image.sha }}
-    image: "{{ .Values.sidecar.image.registry }}/{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}@sha256:{{ .Values.sidecar.image.sha }}"
+    image: "{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}@sha256:{{ .Values.sidecar.image.sha }}"
     {{- else }}
-    image: "{{ .Values.sidecar.image.registry }}/{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}"
+    image: "{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}"
     {{- end }}
     imagePullPolicy: {{ .Values.sidecar.imagePullPolicy }}
     env:
@@ -164,6 +168,10 @@ containers:
         value: {{ .Values.sidecar.dashboards.watchMethod }}
       - name: LABEL
         value: "{{ .Values.sidecar.dashboards.label }}"
+      {{- if .Values.sidecar.dashboards.labelValue }}
+      - name: LABEL_VALUE
+        value: {{ quote .Values.sidecar.dashboards.labelValue }}
+      {{- end }}
       - name: FOLDER
         value: "{{ .Values.sidecar.dashboards.folder }}{{- with .Values.sidecar.dashboards.defaultFolderName }}/{{ . }}{{- end }}"
       - name: RESOURCE
@@ -192,9 +200,9 @@ containers:
 {{- end}}
   - name: {{ .Chart.Name }}
     {{- if .Values.image.sha }}
-    image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}@sha256:{{ .Values.image.sha }}"
+    image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}@sha256:{{ .Values.image.sha }}"
     {{- else }}
-    image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+    image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
     {{- end }}
     imagePullPolicy: {{ .Values.image.pullPolicy }}
   {{- if .Values.command }}
@@ -203,6 +211,10 @@ containers:
       - {{ . }}
     {{- end }}
   {{- end}}
+{{- if .Values.containerSecurityContext }}
+    securityContext:
+{{- toYaml .Values.containerSecurityContext | nindent 6 }}
+{{- end }}
     volumeMounts:
       - name: config
         mountPath: "/etc/grafana/grafana.ini"
