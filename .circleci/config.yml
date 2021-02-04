@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  architect: giantswarm/architect@dev:bump-app-build-suite-version
+  architect: giantswarm/architect@1.1.2
 
 workflows:
   package-and-push-chart-on-tag:
@@ -26,4 +26,3 @@ workflows:
           filters:
             tags:
               only: /^v.*/
-
