@@ -1,23 +1,25 @@
 apiVersion: v2
-name: grafana
-version: 6.5.0
-appVersion: 7.4.2
-kubeVersion: '^1.8.0-0'
+appVersion: 7.3.5
 description: The leading tool for querying and visualizing time series and metrics.
-home: https://grafana.net
-icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
-sources:
-  - https://github.com/grafana/grafana
-maintainers:
-  - name: zanhsieh
-    email: zanhsieh@gmail.com
-  - name: rtluckie
-    email: rluckie@cisco.com
-  - name: maorfr
-    email: maor.friedman@redhat.com
-  - name: Xtigyro
-    email: miroslav.hadzhiev@gmail.com
-  - name: torstenwalter
-    email: mail@torstenwalter.de
 engine: gotpl
-type: application
+home: https://github.com/giantswarm/grafana-app
+icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/grafana_icon.svg
+kubeVersion: ^1.8.0-0
+maintainers:
+- email: zanhsieh@gmail.com
+  name: zanhsieh
+- email: rluckie@cisco.com
+  name: rtluckie
+- email: maor.friedman@redhat.com
+  name: maorfr
+- email: miroslav.hadzhiev@gmail.com
+  name: Xtigyro
+- email: mail@torstenwalter.de
+  name: torstenwalter
+- name: Giant Swarm applications team
+  url: https://github.com/giantswarm/grafana-app
+name: grafana
+sources:
+- https://github.com/giantswarm/grafana-app
+- https://github.com/grafana/grafana
+version: 0.2.0

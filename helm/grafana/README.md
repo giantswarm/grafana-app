@@ -59,7 +59,7 @@ This version requires Helm >= 3.1.0.
 | `securityContext`                         | Deployment securityContext                    | `{"runAsUser": 472, "runAsGroup": 472, "fsGroup": 472}`  |
 | `priorityClassName`                       | Name of Priority Class to assign pods         | `nil`                                                   |
 | `image.repository`                        | Image repository                              | `grafana/grafana`                                       |
-| `image.tag`                               | Image tag (`Must be >= 5.0.0`)                | `7.4.2`                                                 |
+| `image.tag`                               | Image tag (`Must be >= 5.0.0`)                | `7.0.3`                                                 |
 | `image.sha`                               | Image sha (optional)                          | `17cbd08b9515fda889ca959e9d72ee6f3327c8f1844a3336dfd952134f38e2fe` |
 | `image.pullPolicy`                        | Image pull policy                             | `IfNotPresent`                                          |
 | `image.pullSecrets`                       | Image pull secrets                            | `{}`                                                    |
@@ -80,7 +80,6 @@ This version requires Helm >= 3.1.0.
 | `ingress.annotations`                     | Ingress annotations (values are templated)    | `{}`                                                    |
 | `ingress.labels`                          | Custom labels                                 | `{}`                                                    |
 | `ingress.path`                            | Ingress accepted path                         | `/`                                                     |
-| `ingress.pathType`                        | Ingress type of path                          | `Prefix`                                                |
 | `ingress.hosts`                           | Ingress accepted hostnames                    | `["chart-example.local"]`                                                    |
 | `ingress.extraPaths`                      | Ingress extra paths to prepend to every host configuration. Useful when configuring [custom actions with AWS ALB Ingress Controller](https://kubernetes-sigs.github.io/aws-alb-ingress-controller/guide/ingress/annotation/#actions). | `[]`                                                    |
 | `ingress.tls`                             | Ingress TLS configuration                     | `[]`                                                    |
@@ -91,7 +90,6 @@ This version requires Helm >= 3.1.0.
 | `extraInitContainers`                     | Init containers to add to the grafana pod     | `{}`                                                    |
 | `extraContainers`                         | Sidecar containers to add to the grafana pod  | `{}`                                                    |
 | `extraContainerVolumes`                   | Volumes that can be mounted in sidecar containers | `[]`                                                |
-| `extraLabels`                             | Custom labels for all manifests               | `{}`                                                    |
 | `schedulerName`                           | Name of the k8s scheduler (other than default) | `nil`                                                  |
 | `persistence.enabled`                     | Use persistent volume to store data           | `false`                                                 |
 | `persistence.type`                        | Type of persistence (`pvc` or `statefulset`)  | `pvc`                                                   |
@@ -102,8 +100,6 @@ This version requires Helm >= 3.1.0.
 | `persistence.annotations`                 | PersistentVolumeClaim annotations             | `{}`                                                    |
 | `persistence.finalizers`                  | PersistentVolumeClaim finalizers              | `[ "kubernetes.io/pvc-protection" ]`                    |
 | `persistence.subPath`                     | Mount a sub dir of the persistent volume      | `nil`                                                   |
-| `persistence.inMemory.enabled`            | If persistence is not enabled, whether to mount the local storage in-memory to improve performance | `false`                                                   |
-| `persistence.inMemory.sizeLimit`          | SizeLimit for the in-memory local storage     | `nil`                                                   |
 | `initChownData.enabled`                   | If false, don't reset data ownership at startup | true                                                  |
 | `initChownData.image.repository`          | init-chown-data container image repository    | `busybox`                                               |
 | `initChownData.image.tag`                 | init-chown-data container image tag           | `1.31.1`                                                |
@@ -134,8 +130,8 @@ This version requires Helm >= 3.1.0.
 | `podAnnotations`                          | Pod annotations                               | `{}`                                                    |
 | `podLabels`                               | Pod labels                                    | `{}`                                                    |
 | `podPortName`                             | Name of the grafana port on the pod           | `grafana`                                               |
-| `sidecar.image.repository`                | Sidecar image repository                      | `quay.io/kiwigrid/k8s-sidecar`                          |
-| `sidecar.image.tag`                       | Sidecar image tag                             | `1.10.6`                                                |
+| `sidecar.image.repository`                | Sidecar image repository                      | `kiwigrid/k8s-sidecar`                                  |
+| `sidecar.image.tag`                       | Sidecar image tag                             | `1.1.0`                                                 |
 | `sidecar.image.sha`                       | Sidecar image sha (optional)                  | `""`                                                    |
 | `sidecar.imagePullPolicy`                 | Sidecar image pull policy                     | `IfNotPresent`                                          |
 | `sidecar.resources`                       | Sidecar resources                             | `{}`                                                    |
@@ -188,7 +184,6 @@ This version requires Helm >= 3.1.0.
 | `testFramework.imagePullPolicy`           | `test-framework` image pull policy.           | `IfNotPresent`                                          |
 | `testFramework.securityContext`           | `test-framework` securityContext              | `{}`                                                    |
 | `downloadDashboards.env`                  | Environment variables to be passed to the `download-dashboards` container | `{}`                        |
-| `downloadDashboards.envFromSecret`        | Name of a Kubernetes secret (must be manually created in the same namespace) containing values to be added to the environment. Can be templated | `""` |
 | `downloadDashboards.resources`            | Resources of `download-dashboards` container  | `{}`                                                    |
 | `downloadDashboardsImage.repository`      | Curl docker image repo                        | `curlimages/curl`                                       |
 | `downloadDashboardsImage.tag`             | Curl docker image tag                         | `7.73.0`                                                |
@@ -325,18 +320,35 @@ If the parameter `sidecar.datasources.enabled` is set, an init container is depl
 pod. This container lists all secrets (or configmaps, though not recommended) in the cluster and
 filters out the ones with a label as defined in `sidecar.datasources.label`. The files defined in
 those secrets are written to a folder and accessed by grafana on startup. Using these yaml files,
-the data sources in grafana can be imported.
+the data sources in grafana can be imported. The secrets must be created before `helm install` so
+that the datasources init container can list the secrets.
 
 Secrets are recommended over configmaps for this usecase because datasources usually contain private
 data like usernames and passwords. Secrets are the more appropriate cluster resource to manage those.
 
-Example values to add a datasource adapted from [Grafana](http://docs.grafana.org/administration/provisioning/#example-datasource-config-file):
+Example datasource config adapted from [Grafana](http://docs.grafana.org/administration/provisioning/#example-datasource-config-file):
 
 ```yaml
-datasources:
- datasources.yaml:
-   apiVersion: 1
-   datasources:
+apiVersion: v1
+kind: Secret
+metadata:
+  name: sample-grafana-datasource
+  labels:
+     grafana_datasource: "1"
+type: Opaque
+stringData:
+  datasource.yaml: |-
+    # config file version
+    apiVersion: 1
+
+    # list of datasources that should be deleted from the database
+    deleteDatasources:
+      - name: Graphite
+        orgId: 1
+
+    # list of datasources to insert/update depending
+    # whats available in the database
+    datasources:
       # <string, required> name of the datasource. Required
     - name: Graphite
       # <string, required> datasource type. Required
@@ -376,6 +388,7 @@ datasources:
       version: 1
       # <bool> allow users to edit datasources from the UI.
       editable: false
+
 ```
 
 ## Sidecar for notifiers

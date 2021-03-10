@@ -71,9 +71,6 @@ helm.sh/chart: {{ include "grafana.chart" . }}
 app.kubernetes.io/version: {{ .Values.image.tag | default .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- if .Values.extraLabels }}
-{{ toYaml .Values.extraLabels }}
-{{- end }}
 {{- end -}}
 
 {{/*
