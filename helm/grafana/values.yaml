@@ -53,8 +53,8 @@ livenessProbe:
 
 image:
   repository: quay.io/giantswarm/grafana
-  tag: 7.3.7
-  sha: f140fde5ba622745926b1e390b6ff335c1a0b7a1126cd4211600534f922ef4c0
+  tag: 7.4.3
+  sha: 848c405bb116d5cb1f9de98ebb6f02aec4fbaa8e624ef3fa8824d28a55c09183
   pullPolicy: IfNotPresent
 
   ## Optionally specify an array of imagePullSecrets.
@@ -68,6 +68,7 @@ testFramework:
   enabled: true
   image: quay.io/giantswarm/bats
   tag: v1.2.1
+  sha: 2defd45426be3b5bc7415455ca529c910dab7473717eeece9c3cc26efa5ca037
   imagePullPolicy: IfNotPresent
   securityContext: {}
 
