@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Changed:
 
-- Upgraded charts from [upststream](https://github.com/grafana/helm-charts/tree/main/charts/grafana)
+- Upgraded charts from [upstream](https://github.com/grafana/helm-charts/tree/main/charts/grafana)
 - Upgraded Grafana image version to `7.4.3`
 
 ## [0.1.0-alpha1] - 2020-11-10
