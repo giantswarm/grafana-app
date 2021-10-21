@@ -3,7 +3,7 @@ appVersion: 7.3.5
 description: The leading tool for querying and visualizing time series and metrics.
 engine: gotpl
 home: https://github.com/giantswarm/grafana-app
-icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/grafana_icon.svg
+icon: https://s.giantswarm.io/app-icons/grafana/1/light.svg
 kubeVersion: ^1.8.0-0
 maintainers:
 - email: zanhsieh@gmail.com
