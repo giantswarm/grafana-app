@@ -24,4 +24,4 @@ sources:
 - https://github.com/grafana/grafana
 version: 0.2.0
 annotations:
-  applications.giantswarm.io/team: team-atlas
+  application.giantswarm.io/team: team-atlas
