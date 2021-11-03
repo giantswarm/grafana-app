@@ -1,6 +1,6 @@
 # DO NOT EDIT. Generated with:
 #
-#    devctl@4.3.0
+#    devctl@4.10.0
 #
 version: 2
 updates:
@@ -11,6 +11,14 @@ updates:
       time: "04:00"
     open-pull-requests-limit: 10
     reviewers:
-      - giantswarm/team-halo-engineers
+      - giantswarm/team-atlas
     ignore:
       - dependency-name: zricethezav/gitleaks-action
+  - package-ecosystem: pip
+    directory: "/"
+    schedule:
+      interval: weekly
+      time: "04:00"
+    open-pull-requests-limit: 10
+    reviewers:
+      - giantswarm/team-atlas

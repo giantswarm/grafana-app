@@ -1,0 +1,4 @@
+skip-steps: smoke
+
+functional-tests-cluster-type: kind
+
