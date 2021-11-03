@@ -12,15 +12,18 @@ workflows:
           app_catalog: "giantswarm-catalog"
           app_catalog_test: "giantswarm-test-catalog"
           chart: "grafana"
+          persist_chart_archive: true
           # Trigger job on git tag.
           filters:
             tags:
               only: /^v.*/
 
-      - architect/run-tests-with-abs:
-          # resource_class: 2xlarge
-          name: execute chart tests
-          chart_dir: "./helm/grafana"
-          filters:
-            tags:
-              only: /^v.*/
+      #- architect/run-tests-with-ats:
+      #    name: execute chart tests
+      #    filters:
+      #      # Do not trigger the job on merge to master.
+      #      branches:
+      #        ignore:
+      #          - master
+      #    requires:
+      #      - "package and push grafana chart"
