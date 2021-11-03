@@ -23,3 +23,5 @@ sources:
 - https://github.com/giantswarm/grafana-app
 - https://github.com/grafana/grafana
 version: 0.2.0
+annotations:
+  application.giantswarm.io/team: team-atlas
