@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2021-12-16
+
 ### Changed
 
 - Upgrade Grafana to 8.3.2 to fix some CVEs including CVE-2021-43813 and CVE-2021-43798
@@ -33,7 +35,8 @@ Added:
 - images retagged for Giant Swarm registries
 - simple functionality test to get login web page
 
-[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/giantswarm/grafana-app/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/giantswarm/grafana-app/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/giantswarm/grafana-app/compare/v0.1.0-alpha1...v0.2.0
 [0.1.0-alpha1]: https://github.com/giantswarm/grafana-app/releases/tag/v0.1.0-alpha1
