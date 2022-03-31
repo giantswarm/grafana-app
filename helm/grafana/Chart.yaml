@@ -25,3 +25,4 @@ sources:
 version: 0.3.0
 annotations:
   application.giantswarm.io/team: team-atlas
+  config.giantswarm.io/version: 1.x.x
