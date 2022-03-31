@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.3] - 2022-03-31
+
+### Fixed
+
+- Rename app to grafana instead of grafana-app
+
 ## [0.3.2] - 2022-03-31
 
 ### Fixed
@@ -47,7 +53,8 @@ Added:
 - images retagged for Giant Swarm registries
 - simple functionality test to get login web page
 
-[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v0.3.2...HEAD
+[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v0.3.3...HEAD
+[0.3.3]: https://github.com/giantswarm/grafana-app/compare/v0.3.2...v0.3.3
 [0.3.2]: https://github.com/giantswarm/grafana-app/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/giantswarm/grafana-app/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/giantswarm/grafana-app/compare/v0.2.1...v0.3.0
