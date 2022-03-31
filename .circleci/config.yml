@@ -8,13 +8,95 @@ workflows:
       - architect/push-to-app-catalog:
           context: "architect"
           executor: "app-build-suite"
-          name: "package and push grafana chart"
+          name: app-catalog
           app_catalog: "giantswarm-catalog"
           app_catalog_test: "giantswarm-test-catalog"
           chart: "grafana"
           persist_chart_archive: true
           # Trigger job on git tag.
           filters:
+            tags:
+              only: /^v.*/
+
+      - architect/push-to-app-catalog:
+          context: "architect"
+          executor: "app-build-suite"
+          name: control-plane-catalog
+          app_catalog: "control-plane-catalog"
+          app_catalog_test: "control-plane-test-catalog"
+          chart: "grafana"
+          # Trigger job on git tag.
+          filters:
+            tags:
+              only: /^v.*/
+
+      - architect/push-to-app-collection:
+          context: "architect"
+          name: aws-app-collection
+          app_name: "grafana"
+          app_namespace: "monitoring"
+          app_collection_repo: "aws-app-collection"
+          requires:
+            - control-plane-catalog
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
+
+      - architect/push-to-app-collection:
+          context: "architect"
+          name: azure-app-collection
+          app_name: "grafana"
+          app_namespace: "monitoring"
+          app_collection_repo: "azure-app-collection"
+          requires:
+            - control-plane-catalog
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
+
+      - architect/push-to-app-collection:
+          context: "architect"
+          name: kvm-app-collection
+          app_name: "grafana"
+          app_namespace: "monitoring"
+          app_collection_repo: "kvm-app-collection"
+          requires:
+            - control-plane-catalog
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
+
+      - architect/push-to-app-collection:
+          context: "architect"
+          name: vsphere-app-collection
+          app_name: "grafana"
+          app_namespace: "monitoring"
+          app_collection_repo: "vsphere-app-collection"
+          requires:
+            - control-plane-catalog
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
+
+      - architect/push-to-app-collection:
+          context: "architect"
+          name: openstack-app-collection
+          app_name: "grafana"
+          app_namespace: "monitoring"
+          app_collection_repo: "openstack-app-collection"
+          requires:
+            - control-plane-catalog
+          filters:
+            branches:
+              ignore: /.*/
             tags:
               only: /^v.*/
 
