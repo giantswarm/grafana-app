@@ -33,7 +33,7 @@ workflows:
       - architect/push-to-app-collection:
           context: "architect"
           name: aws-app-collection
-          app_name: "grafana"
+          app_name: "grafana-app"
           app_namespace: "monitoring"
           app_collection_repo: "aws-app-collection"
           requires:
@@ -47,7 +47,7 @@ workflows:
       - architect/push-to-app-collection:
           context: "architect"
           name: azure-app-collection
-          app_name: "grafana"
+          app_name: "grafana-app"
           app_namespace: "monitoring"
           app_collection_repo: "azure-app-collection"
           requires:
@@ -61,7 +61,7 @@ workflows:
       - architect/push-to-app-collection:
           context: "architect"
           name: kvm-app-collection
-          app_name: "grafana"
+          app_name: "grafana-app"
           app_namespace: "monitoring"
           app_collection_repo: "kvm-app-collection"
           requires:
@@ -75,7 +75,7 @@ workflows:
       - architect/push-to-app-collection:
           context: "architect"
           name: vsphere-app-collection
-          app_name: "grafana"
+          app_name: "grafana-app"
           app_namespace: "monitoring"
           app_collection_repo: "vsphere-app-collection"
           requires:
@@ -89,7 +89,7 @@ workflows:
       - architect/push-to-app-collection:
           context: "architect"
           name: openstack-app-collection
-          app_name: "grafana"
+          app_name: "grafana-app"
           app_namespace: "monitoring"
           app_collection_repo: "openstack-app-collection"
           requires:
