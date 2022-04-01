@@ -22,7 +22,7 @@ name: grafana
 sources:
 - https://github.com/giantswarm/grafana-app
 - https://github.com/grafana/grafana
-version: 0.3.0
+version: 0.3.5
 annotations:
   application.giantswarm.io/team: team-atlas
-  config.giantswarm.io/version: 1.x.x
+  config.giantswarm.io/version: configure-grafana-app
