@@ -1,12 +1,13 @@
 apiVersion: v2
 name: grafana
-version: 6.24.1
+version: 0.4.0
 appVersion: 8.4.2
 kubeVersion: "^1.8.0-0"
 description: The leading tool for querying and visualizing time series and metrics.
-home: https://grafana.net
-icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+home: https://github.com/giantswarm/grafana-app
+icon: https://s.giantswarm.io/app-icons/grafana/1/light.svg
 sources:
+  - https://github.com/giantswarm/grafana-app
   - https://github.com/grafana/grafana
 maintainers:
   - name: zanhsieh
@@ -21,3 +22,6 @@ maintainers:
     email: mail@torstenwalter.de
 engine: gotpl
 type: application
+annotations:
+  application.giantswarm.io/team: team-atlas
+  config.giantswarm.io/version: configure-grafana-app

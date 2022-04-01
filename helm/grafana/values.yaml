@@ -3,7 +3,7 @@ rbac:
   ## Use an existing ClusterRole/Role (depending on rbac.namespaced false/true)
   # useExistingRole: name-of-some-(cluster)role
   pspEnabled: true
-  pspUseAppArmor: true
+  pspUseAppArmor: false
   namespaced: false
   extraRoleRules: []
   # - apiGroups: []
@@ -72,7 +72,7 @@ livenessProbe:
 # schedulerName: "default-scheduler"
 
 image:
-  repository: grafana/grafana
+  repository: quay.io/giantswarm/grafana
   tag: 8.4.2
   sha: ""
   pullPolicy: IfNotPresent
@@ -86,7 +86,7 @@ image:
 
 testFramework:
   enabled: true
-  image: "bats/bats"
+  image: "quay.io/giantswarm/bats"
   tag: "v1.4.1"
   imagePullPolicy: IfNotPresent
   securityContext: {}
@@ -119,7 +119,7 @@ extraLabels: {}
 # priorityClassName:
 
 downloadDashboardsImage:
-  repository: curlimages/curl
+  repository: quay.io/giantswarm/curl
   tag: 7.73.0
   sha: ""
   pullPolicy: IfNotPresent
@@ -306,7 +306,7 @@ initChownData:
   ## initChownData container image
   ##
   image:
-    repository: busybox
+    repository: quay.io/giantswarm/busybox
     tag: "1.31.1"
     sha: ""
     pullPolicy: IfNotPresent
@@ -621,7 +621,7 @@ smtp:
 ## Requires at least Grafana 5 to work and can't be used together with parameters dashboardProviders, datasources and dashboards
 sidecar:
   image:
-    repository: quay.io/kiwigrid/k8s-sidecar
+    repository: quay.io/giantswarm/k8s-sidecar
     tag: 1.15.6
     sha: ""
   imagePullPolicy: IfNotPresent
@@ -754,7 +754,7 @@ imageRenderer:
   replicas: 1
   image:
     # image-renderer Image repository
-    repository: grafana/grafana-image-renderer
+    repository: quay.io/giantswarm/grafana-image-renderer
     # image-renderer Image tag
     tag: latest
     # image-renderer Image sha (optional)
