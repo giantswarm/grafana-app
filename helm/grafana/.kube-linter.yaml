@@ -1,8 +1,0 @@
-checks:
-  addAllBuiltIn: true
-  exclude:
-  - "no-read-only-root-fs"
-  - "privileged-ports"
-  - "required-annotation-email"
-  - "required-label-owner"
-
