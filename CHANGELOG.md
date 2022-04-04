@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Upgrade to version 6.24.1 of the upstream chart.
+
 ## [0.3.4] - 2022-03-31
 
 ### Fixed
