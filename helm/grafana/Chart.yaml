@@ -24,4 +24,4 @@ engine: gotpl
 type: application
 annotations:
   application.giantswarm.io/team: team-atlas
-  config.giantswarm.io/version: 1.x.x
+  config.giantswarm.io/version: enable-grafana-netpol
