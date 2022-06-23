@@ -74,6 +74,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- if .Values.extraLabels }}
 {{ toYaml .Values.extraLabels }}
 {{- end }}
+application.giantswarm.io/team: {{ index .Chart.Annotations "application.giantswarm.io/team" | quote }}
 {{- end -}}
 
 {{/*
@@ -138,6 +139,28 @@ Return the appropriate apiVersion for ingress.
     {{- print "networking.k8s.io/v1beta1" -}}
   {{- else -}}
     {{- print "extensions/v1beta1" -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*
+Return the appropriate apiVersion for podSecurityPolicy.
+*/}}
+{{- define "grafana.podSecurityPolicy.apiVersion" -}}
+  {{- if and (.Capabilities.APIVersions.Has "policy/v1") (semverCompare ">= 1.16-0" .Capabilities.KubeVersion.Version) -}}
+    {{- print "policy/v1beta1" -}}
+  {{- else -}}
+    {{- print "extensions/v1beta1" -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*
+Return the appropriate apiVersion for podDisruptionBudget.
+*/}}
+{{- define "grafana.podDisruptionBudget.apiVersion" -}}
+  {{- if and (.Capabilities.APIVersions.Has "policy/v1") (semverCompare ">= 1.21-0" .Capabilities.KubeVersion.Version) -}}
+    {{- print "policy/v1" -}}
+  {{- else -}}
+    {{- print "policy/v1beta1" -}}
   {{- end -}}
 {{- end -}}
 
