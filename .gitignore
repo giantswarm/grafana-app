@@ -1,6 +1,0 @@
-grafana-app-*.tgz
-test-results/
-**/.idea/
-**/__pycache__
-**/test_results**.xml
-build/
