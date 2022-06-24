@@ -9,7 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Upgrade to version 6.31.0 of the upstream chart with grafana 9.0.1.
+- Upgrade from version 6.24.1 to 6.31.0 of the upstream chart from grafana 8.4.2 to grafana 9.0.1. This release includes a small set of breaking changes that you can check [here](https://grafana.com/docs/grafana/latest/release-notes/release-notes-9-0-0/#breaking-changes).
+
+This release also allows some existing values to be templetized (tpl function) and adds a bit more configurability options (e.g. network policies)
 
 ## [0.4.0] - 2022-04-04
 
