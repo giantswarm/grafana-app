@@ -10,3 +10,4 @@ checks:
   - "run-as-non-root"
   - "unset-cpu-requirements"
   - "unset-memory-requirements"
+  - "no-extensions-v1beta"
