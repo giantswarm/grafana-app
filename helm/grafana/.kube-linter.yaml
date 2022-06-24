@@ -11,3 +11,7 @@ checks:
   - "unset-cpu-requirements"
   - "unset-memory-requirements"
   - "no-extensions-v1beta"
+  - "minimum-three-replicas"
+  - "non-isolated-pod"
+  - "read-secret-from-env-var"
+  - "use-namespace"
