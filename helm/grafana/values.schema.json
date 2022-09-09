@@ -22,6 +22,9 @@
         "affinity": {
             "type": "object"
         },
+        "alerting": {
+            "type": "object"
+        },
         "autoscaling": {
             "type": "object",
             "properties": {
@@ -32,6 +35,9 @@
         },
         "containerSecurityContext": {
             "type": "object"
+        },
+        "createConfigmap": {
+            "type": "boolean"
         },
         "dashboardProviders": {
             "type": "object"
@@ -181,6 +187,14 @@
                             "type": "string"
                         }
                     }
+                },
+                "server": {
+                    "type": "object",
+                    "properties": {
+                        "domain": {
+                            "type": "string"
+                        }
+                    }
                 }
             }
         },
@@ -285,6 +299,9 @@
                 "service": {
                     "type": "object",
                     "properties": {
+                        "appProtocol": {
+                            "type": "string"
+                        },
                         "enabled": {
                             "type": "boolean"
                         },
@@ -557,6 +574,9 @@
                 "annotations": {
                     "type": "object"
                 },
+                "appProtocol": {
+                    "type": "string"
+                },
                 "enabled": {
                     "type": "boolean"
                 },
@@ -638,6 +658,9 @@
                         "enabled": {
                             "type": "boolean"
                         },
+                        "env": {
+                            "type": "object"
+                        },
                         "extraMounts": {
                             "type": "array"
                         },
@@ -651,7 +674,7 @@
                             "type": "string"
                         },
                         "labelValue": {
-                            "type": ["string", "null"]
+                            "type": "string"
                         },
                         "provider": {
                             "type": "object",
@@ -709,7 +732,7 @@
                             "type": "string"
                         },
                         "labelValue": {
-                            "type": ["string", "null"]
+                            "type": "string"
                         },
                         "reloadURL": {
                             "type": "string"
@@ -754,6 +777,9 @@
                 "livenessProbe": {
                     "type": "object"
                 },
+                "logLevel": {
+                    "type": "string"
+                },
                 "notifiers": {
                     "type": "object",
                     "properties": {
@@ -787,7 +813,7 @@
                             "type": "string"
                         },
                         "labelValue": {
-                            "type": ["string", "null"]
+                            "type": "string"
                         },
                         "reloadURL": {
                             "type": "string"
@@ -855,6 +881,9 @@
             }
         },
         "tolerations": {
+            "type": "array"
+        },
+        "topologySpreadConstraints": {
             "type": "array"
         },
         "useStatefulSet": {
