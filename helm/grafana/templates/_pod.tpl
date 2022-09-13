@@ -190,6 +190,10 @@ containers:
     {{- end }}
     imagePullPolicy: {{ .Values.sidecar.imagePullPolicy }}
     env:
+      {{- range $key, $value := .Values.sidecar.dashboards.env }}
+      - name: "{{ $key }}"
+        value: "{{ $value }}"
+      {{- end }}
       - name: METHOD
         value: {{ .Values.sidecar.dashboards.watchMethod }}
       - name: LABEL
@@ -197,6 +201,10 @@ containers:
       {{- if .Values.sidecar.dashboards.labelValue }}
       - name: LABEL_VALUE
         value: {{ quote .Values.sidecar.dashboards.labelValue }}
+      {{- end }}
+      {{- if .Values.sidecar.logLevel }}
+      - name: LOG_LEVEL
+        value: {{ quote .Values.sidecar.logLevel }}
       {{- end }}
       - name: FOLDER
         value: "{{ .Values.sidecar.dashboards.folder }}{{- with .Values.sidecar.dashboards.defaultFolderName }}/{{ . }}{{- end }}"
@@ -462,6 +470,13 @@ containers:
         subPath: {{ . | quote }}
 {{- end }}
 {{- end }}
+{{- if .Values.alerting }}
+{{- range (keys .Values.alerting | sortAlpha) }}
+      - name: config
+        mountPath: "/etc/grafana/provisioning/alerting/{{ . }}"
+        subPath: {{ . | quote }}
+{{- end }}
+{{- end }}
 {{- if .Values.dashboardProviders }}
 {{- range (keys .Values.dashboardProviders | sortAlpha) }}
       - name: config
@@ -507,11 +522,8 @@ containers:
         mountPath: {{ .mountPath }}
     {{- end }}
     ports:
-      - name: {{ .Values.service.portName }}
-        containerPort: {{ .Values.service.port }}
-        protocol: TCP
       - name: {{ .Values.podPortName }}
-        containerPort: 3000
+        containerPort: {{ .Values.service.targetPort }}
         protocol: TCP
     env:
       {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
@@ -612,6 +624,10 @@ nodeSelector:
 affinity:
 {{ tpl (toYaml .) $root | indent 2 }}
 {{- end }}
+{{- with .Values.topologySpreadConstraints }}
+topologySpreadConstraints:
+{{ toYaml . | indent 2 }}
+{{- end }}
 {{- with .Values.tolerations }}
 tolerations:
 {{ toYaml . | indent 2 }}
@@ -625,6 +641,9 @@ volumes:
   - name: {{ tpl .name $root }}
     configMap:
       name: {{ tpl .configMap $root }}
+      {{- if .items }}
+      items: {{ toYaml .items | nindent 6 }}
+      {{- end }}
 {{- end }}
   {{- if .Values.dashboards }}
     {{- range (keys .Values.dashboards | sortAlpha) }}
@@ -718,6 +737,9 @@ volumes:
     secret:
       secretName: {{ .secretName }}
       defaultMode: {{ .defaultMode }}
+      {{- if .items }}
+      items: {{ toYaml .items | nindent 6 }}
+      {{- end }}
 {{- else if .projected }}
   - name: {{ .name }}
     projected: {{- toYaml .projected | nindent 6 }}
@@ -734,6 +756,10 @@ volumes:
     {{- else if .hostPath }}
     hostPath:
       path: {{ .hostPath }}
+    {{- else if .csi }}
+    csi:
+      data:
+        {{ toYaml .data | nindent 6 }}
     {{- else }}
     emptyDir: {}
     {{- end }}
@@ -743,6 +769,6 @@ volumes:
     emptyDir: {}
 {{- end -}}
 {{- if .Values.extraContainerVolumes }}
-{{ toYaml .Values.extraContainerVolumes | indent 2 }}
+{{ tpl (toYaml .Values.extraContainerVolumes) . | indent 2 }}
 {{- end }}
 {{- end }}
