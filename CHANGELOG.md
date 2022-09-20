@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Upgrade upstream chart from version 6.31.0 to 6.37.0, and grafana from 9.0.1. to 9.1.9. This release includes a small set of breaking changes that you can check [here](https://grafana.com/docs/grafana/latest/release-notes/release-notes-9-1-0/#breaking-changes).
+
 ## [1.0.3] - 2022-08-09
 
 ### Changed
