@@ -10,7 +10,7 @@ sources:
   - https://github.com/giantswarm/grafana-app
   - https://github.com/grafana/grafana
 upstreamChartURL: https://github.com/grafana/helm-charts
-upstreamChartVersion: 6.31.1
+upstreamChartVersion: 6.37.0
 maintainers:
   - name: zanhsieh
     email: zanhsieh@gmail.com
