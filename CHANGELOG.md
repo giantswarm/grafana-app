@@ -14,7 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Changed custom grafana helm chart to use chart dependency for upstream grafana chart. This will allow easier update of grafana version.
-- Custom changed written in _helpers.tpl.
+- Custom changes written in _helpers.tpl.
+- Added ct-config file in .circleci folder and updated the config one.
 
 ## [1.1.0] - 2022-09-22
 
