@@ -3,4 +3,6 @@ replace-chart-version-with-git: true
 generate-metadata: true
 destination: ./build
 catalog-base-url: https://giantswarm.github.io/giantswarm-catalog/
+# Need to skip the validate step from app-build-suite as in its current state it makes the circleci pipeline fail
+#TODO remove this "skip-steps" field as soon as app-build-suite is updated with new regex
 skip-steps: validate
