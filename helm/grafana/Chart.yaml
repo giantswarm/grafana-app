@@ -13,8 +13,8 @@ dependencies:
     version: 6.37.0
     repository: https://grafana.github.io/helm-charts
 maintainers:
-  - name: Giant Swarm applications team
-    url: https://github.com/giantswarm/grafana-app
+  - name: giantswarm/team-atlas
+    email: team-atlas@giantswarm.io
 engine: gotpl
 type: application
 annotations:
