@@ -7,8 +7,7 @@ workflows:
     jobs:
       - architect/push-to-app-catalog:
           context: "architect"
-          # app-build-suite breaks on "application.giantswarm.io/team" in _helpers test
-          #executor: "app-build-suite"
+          executor: "app-build-suite"
           name: app-catalog
           app_catalog: "giantswarm-catalog"
           app_catalog_test: "giantswarm-test-catalog"
@@ -22,8 +21,7 @@ workflows:
 
       - architect/push-to-app-catalog:
           context: "architect"
-          # app-build-suite breaks on "application.giantswarm.io/team" in _helpers test
-          #executor: "app-build-suite"
+          executor: "app-build-suite"
           name: control-plane-catalog
           app_catalog: "control-plane-catalog"
           app_catalog_test: "control-plane-test-catalog"
