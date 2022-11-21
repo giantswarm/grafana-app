@@ -4,3 +4,4 @@ test-results/
 **/__pycache__
 **/test_results**.xml
 build/
+helm/grafana/charts/*.tgz

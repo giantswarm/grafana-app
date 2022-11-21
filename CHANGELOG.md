@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Breaking change ⚠️
+
+- You have to update your values.yaml by moving the whole content under a `grafana:` section. See default `values.yaml` for reference.
+
 ## [1.1.0] - 2022-09-22
 
 - Upgrade upstream chart from version 6.31.0 to 6.37.0, and grafana from 9.0.1. to 9.1.9. This release includes a small set of breaking changes that you can check [here](https://grafana.com/docs/grafana/latest/release-notes/release-notes-9-1-0/#breaking-changes).

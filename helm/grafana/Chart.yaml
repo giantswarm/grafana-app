@@ -1,27 +1,20 @@
 apiVersion: v2
 name: grafana
-version: 1.1.0
+version: 2.0.0
 appVersion: 9.1.1
 kubeVersion: "^1.8.0-0"
 description: The leading tool for querying and visualizing time series and metrics.
 home: https://github.com/giantswarm/grafana-app
 icon: https://s.giantswarm.io/app-icons/grafana/1/light.svg
 sources:
-  - https://github.com/giantswarm/grafana-app
-  - https://github.com/grafana/grafana
-upstreamChartURL: https://github.com/grafana/helm-charts
-upstreamChartVersion: 6.37.0
+  - https://github.com/grafana/helm-charts/tree/main/charts/grafana
+dependencies:
+  - name: grafana
+    version: 6.37.0
+    repository: https://grafana.github.io/helm-charts
 maintainers:
-  - name: zanhsieh
-    email: zanhsieh@gmail.com
-  - name: rtluckie
-    email: rluckie@cisco.com
-  - name: maorfr
-    email: maor.friedman@redhat.com
-  - name: Xtigyro
-    email: miroslav.hadzhiev@gmail.com
-  - name: torstenwalter
-    email: mail@torstenwalter.de
+  - name: giantswarm/team-atlas
+    email: team-atlas@giantswarm.io
 engine: gotpl
 type: application
 annotations:
