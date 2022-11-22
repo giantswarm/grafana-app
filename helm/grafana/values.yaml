@@ -4,7 +4,7 @@ grafana:
     ## Use an existing ClusterRole/Role (depending on rbac.namespaced false/true)
     # useExistingRole: name-of-some-(cluster)role
     pspEnabled: true
-    pspUseAppArmor: true
+    pspUseAppArmor: false
     namespaced: false
     extraRoleRules: []
     # - apiGroups: []

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.2] - 2022-11-22
+
+- pspUseAppArmor disabled
+
 ## [2.0.1] - 2022-11-21
 
 - Push app to gcp-collection
@@ -101,7 +105,8 @@ Added:
 - images retagged for Giant Swarm registries
 - simple functionality test to get login web page
 
-[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.0.1...HEAD
+[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.0.2...HEAD
+[2.0.2]: https://github.com/giantswarm/grafana-app/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/giantswarm/grafana-app/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/giantswarm/grafana-app/compare/v1.1.0...v2.0.0
 [1.1.0]: https://github.com/giantswarm/grafana-app/compare/v1.0.3...v1.1.0
