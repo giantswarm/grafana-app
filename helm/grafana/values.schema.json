@@ -99,6 +99,9 @@
                 "enableServiceLinks": {
                     "type": "boolean"
                 },
+                "enabled": {
+                    "type": "boolean"
+                },
                 "env": {
                     "type": "object"
                 },

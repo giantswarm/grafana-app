@@ -12,6 +12,7 @@ dependencies:
   - name: grafana
     version: 6.44.7
     repository: https://grafana.github.io/helm-charts
+    condition: grafana.enabled
 maintainers:
   - name: giantswarm/team-atlas
     email: team-atlas@giantswarm.io
