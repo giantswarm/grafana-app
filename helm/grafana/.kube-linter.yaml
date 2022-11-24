@@ -15,3 +15,5 @@ checks:
   - "non-isolated-pod"
   - "read-secret-from-env-var"
   - "use-namespace"
+  - "dnsconfig-options"
+  - "no-node-affinity"
