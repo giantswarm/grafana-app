@@ -19,3 +19,4 @@ engine: gotpl
 type: application
 annotations:
   application.giantswarm.io/team: atlas
+  config.giantswarm.io/version: azure-grafana
