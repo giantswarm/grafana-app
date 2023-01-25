@@ -329,7 +329,7 @@ grafana:
     ##
     image:
       repository: docker.io/giantswarm/busybox
-      tag: "1.31.1"
+      tag: "1.36.0"
       sha: ""
       pullPolicy: IfNotPresent
 
