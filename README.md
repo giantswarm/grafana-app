@@ -13,7 +13,7 @@ Changes compared to upstream:
 
 ## Configuration
 
-Please refer [this file](helm/grafana-app/Chart.yaml) for available config options and more info.
+Please refer [this file](helm/grafana/Chart.yaml) for available config options and more info.
 Please note, that by default only the main grafana pod has requests and limits set for resources.
 
 ## Credit
