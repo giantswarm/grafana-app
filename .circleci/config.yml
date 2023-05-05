@@ -100,12 +100,12 @@ workflows:
               ignore: /.*/
             tags:
               only: /^v.*/
-#- architect/run-tests-with-ats:
-#    name: execute chart tests
-#    filters:
-#      # Do not trigger the job on merge to master.
-#      branches:
-#        ignore:
-#          - master
-#    requires:
-#      - "package and push grafana chart"
+#      - architect/run-tests-with-ats:
+#          name: execute chart tests
+#          filters:
+#            # Do not trigger the job on merge to master.
+#            branches:
+#              ignore:
+#                - master
+#          requires:
+#            - "package and push grafana chart"
