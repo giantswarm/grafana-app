@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- upgrade grafana chart: 6.55.1 => 6.56.1
+- upgrade grafana: 9.4.7 => 9.5.1
+
 ### Removed
 
 - Stop pushing to `openstack-app-collection`.
