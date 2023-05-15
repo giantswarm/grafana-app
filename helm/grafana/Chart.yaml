@@ -1,7 +1,7 @@
 apiVersion: v2
 name: grafana
 version: 2.4.0
-appVersion: 9.4.7
+appVersion: 9.5.2
 kubeVersion: "^1.8.0-0"
 description: The leading tool for querying and visualizing time series and metrics.
 home: https://github.com/giantswarm/grafana-app
@@ -10,7 +10,7 @@ sources:
   - https://github.com/grafana/helm-charts/tree/main/charts/grafana
 dependencies:
   - name: grafana
-    version: 6.56.1
+    version: 6.56.4
     repository: https://grafana.github.io/helm-charts
 maintainers:
   - name: giantswarm/team-atlas
