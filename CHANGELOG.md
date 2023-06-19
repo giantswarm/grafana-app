@@ -7,9 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
 - push grafana-app to cloud-director and vsphere collections.
+- upgrade grafana chart: 6.56.4 => 6.57.2
+- upgrade grafana: 9.5.2 => 9.5.3
 
 ## [2.4.1] - 2023-05-15
+
+### Changed
 
 - upgrade grafana chart: 6.56.1 => 6.56.4
 - upgrade grafana: 9.5.1 => 9.5.2
