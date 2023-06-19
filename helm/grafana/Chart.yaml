@@ -10,7 +10,7 @@ sources:
   - https://github.com/grafana/helm-charts/tree/main/charts/grafana
 dependencies:
   - name: grafana
-    version: 6.56.4
+    version: 6.57.2
     repository: https://grafana.github.io/helm-charts
 maintainers:
   - name: giantswarm/team-atlas
