@@ -129,7 +129,7 @@ grafana:
 
   downloadDashboardsImage:
     repository: "docker.io/giantswarm/curl"
-    tag: 8.1.2
+    tag: 8.2.1
     sha: ""
     pullPolicy: IfNotPresent
 
