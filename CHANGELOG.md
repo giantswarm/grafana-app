@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.5.0] - 2023-08-08
+
 ### Changed
 
 - push grafana-app to cloud-director and vsphere collections.
@@ -176,7 +178,8 @@ Added:
 - images retagged for Giant Swarm registries
 - simple functionality test to get login web page
 
-[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.4.1...HEAD
+[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.5.0...HEAD
+[2.5.0]: https://github.com/giantswarm/grafana-app/compare/v2.4.1...v2.5.0
 [2.4.1]: https://github.com/giantswarm/grafana-app/compare/v2.4.0...v2.4.1
 [2.4.0]: https://github.com/giantswarm/grafana-app/compare/v2.3.3...v2.4.0
 [2.3.3]: https://github.com/giantswarm/grafana-app/compare/v2.3.2...v2.3.3
