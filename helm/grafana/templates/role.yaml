@@ -10,9 +10,9 @@ metadata:
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
-{{- if or .Values.rbac.pspEnabled (and .Values.rbac.namespaced (or .Values.sidecar.dashboards.enabled (or .Values.sidecar.datasources.enabled (or .Values.sidecar.plugins.enabled .Values.rbac.extraRoleRules)))) }}
+{{- if or (and .Values.rbac.pspEnabled (not .Values.global.podSecurityStandards.enforced)) (and .Values.rbac.namespaced (or .Values.sidecar.dashboards.enabled (or .Values.sidecar.datasources.enabled (or .Values.sidecar.plugins.enabled .Values.rbac.extraRoleRules)))) }}
 rules:
-{{- if .Values.rbac.pspEnabled }}
+{{- if and .Values.rbac.pspEnabled (not .Values.global.podSecurityStandards.enforced)}}
 - apiGroups:      ['extensions']
   resources:      ['podsecuritypolicies']
   verbs:          ['use']

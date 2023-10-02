@@ -1,4 +1,4 @@
-{{- if .Values.rbac.pspEnabled }}
+{{- if and .Values.rbac.pspEnabled (not .Values.global.podSecurityStandards.enforced)}}
 apiVersion: {{ include "grafana.podSecurityPolicy.apiVersion" . }}
 kind: PodSecurityPolicy
 metadata:

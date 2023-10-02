@@ -138,6 +138,19 @@
         "extraVolumeMounts": {
             "type": "array"
         },
+        "global": {
+            "type": "object",
+            "properties": {
+                "podSecurityStandards": {
+                    "type": "object",
+                    "properties": {
+                        "enforced": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            }
+        },
         "grafana.ini": {
             "type": "object",
             "properties": {
