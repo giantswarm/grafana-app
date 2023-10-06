@@ -732,7 +732,7 @@ grafana:
   sidecar:
     image:
       repository: docker.io/giantswarm/k8s-sidecar
-      tag: 1.25.1
+      tag: 1.25.2
       sha: ""
     imagePullPolicy: IfNotPresent
     resources: {}
