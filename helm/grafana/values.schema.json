@@ -870,16 +870,24 @@
                             "type": "boolean"
                         },
                         "image": {
-                            "type": "string"
+                            "type": "object",
+                            "properties": {
+                                "registry": {
+                                    "type": "string"
+                                },
+                                "repository": {
+                                    "type": "string"
+                                },
+                                "tag": {
+                                    "type": "string"
+                                }
+                            }
                         },
                         "imagePullPolicy": {
                             "type": "string"
                         },
                         "securityContext": {
                             "type": "object"
-                        },
-                        "tag": {
-                            "type": "string"
                         }
                     }
                 },

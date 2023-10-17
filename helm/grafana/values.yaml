@@ -90,8 +90,10 @@ grafana:
 
   testFramework:
     enabled: true
-    image: "docker.io/giantswarm/bats"
-    tag: "v1.4.1"
+    image:
+      registry: docker.io
+      repository: giantswarm/bats
+      tag: "v1.4.1"
     imagePullPolicy: IfNotPresent
     securityContext: {}
 
