@@ -1,3 +1,7 @@
+global:
+  imageRegistry: null
+  imagePullSecrets: []
+
 grafana:
   rbac:
     create: true
