@@ -84,6 +84,7 @@ grafana:
     tag: ""
     sha: ""
     pullPolicy: IfNotPresent
+    pullSecrets: []
 
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.
@@ -94,7 +95,7 @@ grafana:
     #   - myRegistrKeySecretName
 
   testFramework:
-    enabled: true
+    enabled: false
     image: 
       registry: docker.io
       repository: giantswarm/bats"

@@ -2,6 +2,17 @@
     "$schema": "http://json-schema.org/schema#",
     "type": "object",
     "properties": {
+        "global": {
+            "type": "object",
+            "properties": {
+                "imagePullSecrets": {
+                    "type": "array"
+                },
+                "imageRegistry": {
+                    "type": ["string", "null"]
+                }
+            }
+        },
         "grafana": {
             "type": "object",
             "properties": {
@@ -215,6 +226,9 @@
                     "properties": {
                         "pullPolicy": {
                             "type": "string"
+                        },
+                        "pullSecrets": {
+                            "type": "array"
                         },
                         "registry": {
                             "type": "string"
@@ -622,10 +636,10 @@
                             "type": "boolean"
                         },
                         "name": {
-                            "type": "null"
+                            "type": ["string", "null"]
                         },
                         "nameTest": {
-                            "type": "null"
+                            "type": ["string", "null"]
                         }
                     }
                 },
@@ -668,7 +682,7 @@
                                     "type": "boolean"
                                 },
                                 "defaultFolderName": {
-                                    "type": "null"
+                                    "type": ["string", "null"]
                                 },
                                 "enabled": {
                                     "type": "boolean"
@@ -683,7 +697,7 @@
                                     "type": "string"
                                 },
                                 "folderAnnotation": {
-                                    "type": "null"
+                                    "type": ["string", "null"]
                                 },
                                 "label": {
                                     "type": "string"
@@ -721,10 +735,10 @@
                                     "type": "string"
                                 },
                                 "script": {
-                                    "type": "null"
+                                    "type": ["string", "null"]
                                 },
                                 "searchNamespace": {
-                                    "type": "null"
+                                    "type": ["string", "null"]
                                 },
                                 "sizeLimit": {
                                     "type": "object"
@@ -756,7 +770,7 @@
                                     "type": "string"
                                 },
                                 "searchNamespace": {
-                                    "type": "null"
+                                    "type": ["string", "null"]
                                 },
                                 "sizeLimit": {
                                     "type": "object"
@@ -811,7 +825,7 @@
                                     "type": "string"
                                 },
                                 "searchNamespace": {
-                                    "type": "null"
+                                    "type": ["string", "null"]
                                 },
                                 "sizeLimit": {
                                     "type": "object"
@@ -840,7 +854,7 @@
                                     "type": "string"
                                 },
                                 "searchNamespace": {
-                                    "type": "null"
+                                    "type": ["string", "null"]
                                 },
                                 "sizeLimit": {
                                     "type": "object"
