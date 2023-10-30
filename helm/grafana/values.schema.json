@@ -82,6 +82,9 @@
                         "pullPolicy": {
                             "type": "string"
                         },
+                        "registry": {
+                            "type": "string"
+                        },
                         "repository": {
                             "type": "string"
                         },
@@ -213,6 +216,9 @@
                         "pullPolicy": {
                             "type": "string"
                         },
+                        "registry": {
+                            "type": "string"
+                        },
                         "repository": {
                             "type": "string"
                         },
@@ -254,6 +260,9 @@
                             "type": "object",
                             "properties": {
                                 "pullPolicy": {
+                                    "type": "string"
+                                },
+                                "registry": {
                                     "type": "string"
                                 },
                                 "repository": {
@@ -369,6 +378,9 @@
                             "type": "object",
                             "properties": {
                                 "pullPolicy": {
+                                    "type": "string"
+                                },
+                                "registry": {
                                     "type": "string"
                                 },
                                 "repository": {
@@ -610,10 +622,10 @@
                             "type": "boolean"
                         },
                         "name": {
-                            "type": ["string", "null"]
+                            "type": "null"
                         },
                         "nameTest": {
-                            "type": ["string", "null"]
+                            "type": "null"
                         }
                     }
                 },
@@ -656,7 +668,7 @@
                                     "type": "boolean"
                                 },
                                 "defaultFolderName": {
-                                    "type": ["string", "null"]
+                                    "type": "null"
                                 },
                                 "enabled": {
                                     "type": "boolean"
@@ -671,7 +683,7 @@
                                     "type": "string"
                                 },
                                 "folderAnnotation": {
-                                    "type": ["string", "null"]
+                                    "type": "null"
                                 },
                                 "label": {
                                     "type": "string"
@@ -709,10 +721,10 @@
                                     "type": "string"
                                 },
                                 "script": {
-                                    "type": ["string", "null"]
+                                    "type": "null"
                                 },
                                 "searchNamespace": {
-                                    "type": ["string", "null"]
+                                    "type": "null"
                                 },
                                 "sizeLimit": {
                                     "type": "object"
@@ -744,7 +756,7 @@
                                     "type": "string"
                                 },
                                 "searchNamespace": {
-                                    "type": ["string", "null"]
+                                    "type": "null"
                                 },
                                 "sizeLimit": {
                                     "type": "object"
@@ -763,6 +775,9 @@
                         "image": {
                             "type": "object",
                             "properties": {
+                                "registry": {
+                                    "type": "string"
+                                },
                                 "repository": {
                                     "type": "string"
                                 },
@@ -796,7 +811,7 @@
                                     "type": "string"
                                 },
                                 "searchNamespace": {
-                                    "type": ["string", "null"]
+                                    "type": "null"
                                 },
                                 "sizeLimit": {
                                     "type": "object"
@@ -825,7 +840,7 @@
                                     "type": "string"
                                 },
                                 "searchNamespace": {
-                                    "type": ["string", "null"]
+                                    "type": "null"
                                 },
                                 "sizeLimit": {
                                     "type": "object"
@@ -870,16 +885,24 @@
                             "type": "boolean"
                         },
                         "image": {
-                            "type": "string"
+                            "type": "object",
+                            "properties": {
+                                "registry": {
+                                    "type": "string"
+                                },
+                                "repository": {
+                                    "type": "string"
+                                },
+                                "tag": {
+                                    "type": "string"
+                                }
+                            }
                         },
                         "imagePullPolicy": {
                             "type": "string"
                         },
                         "securityContext": {
                             "type": "object"
-                        },
-                        "tag": {
-                            "type": "string"
                         }
                     }
                 },

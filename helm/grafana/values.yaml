@@ -74,7 +74,8 @@ grafana:
   # schedulerName: "default-scheduler"
 
   image:
-    repository: docker.io/giantswarm/grafana
+    registry: docker.io 
+    repository: giantswarm/grafana
     # Overrides the Grafana image tag whose default is the chart appVersion
     tag: ""
     sha: ""
@@ -90,8 +91,10 @@ grafana:
 
   testFramework:
     enabled: true
-    image: "docker.io/giantswarm/bats"
-    tag: "v1.4.1"
+    image: 
+      registry: docker.io
+      repository: giantswarm/bats"
+      tag: "v1.4.1"
     imagePullPolicy: IfNotPresent
     securityContext: {}
 
@@ -128,7 +131,8 @@ grafana:
   # priorityClassName:
 
   downloadDashboardsImage:
-    repository: "docker.io/giantswarm/curl"
+    registry: docker.io
+    repository: giantswarm/curl
     tag: 8.4.0
     sha: ""
     pullPolicy: IfNotPresent
@@ -328,7 +332,8 @@ grafana:
     ## initChownData container image
     ##
     image:
-      repository: docker.io/giantswarm/busybox
+      registry: docker.io
+      repository: giantswarm/busybox
       tag: "1.36.1"
       sha: ""
       pullPolicy: IfNotPresent
@@ -731,7 +736,8 @@ grafana:
   ## Requires at least Grafana 5 to work and can't be used together with parameters dashboardProviders, datasources and dashboards
   sidecar:
     image:
-      repository: docker.io/giantswarm/k8s-sidecar
+      registry: docker.io
+      repository: giantswarm/k8s-sidecar
       tag: 1.25.2
       sha: ""
     imagePullPolicy: IfNotPresent
@@ -876,8 +882,9 @@ grafana:
     enabled: false
     replicas: 1
     image:
+      registry: docker.io
       # image-renderer Image repository
-      repository: docker.io/giantswarm/grafana-image-renderer
+      repository: giantswarm/grafana-image-renderer
       # image-renderer Image tag
       tag: latest
       # image-renderer Image sha (optional)
