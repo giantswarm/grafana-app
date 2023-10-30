@@ -98,7 +98,7 @@ grafana:
     enabled: false
     image: 
       registry: docker.io
-      repository: giantswarm/bats"
+      repository: giantswarm/bats
       tag: "v1.4.1"
     imagePullPolicy: IfNotPresent
     securityContext: {}
