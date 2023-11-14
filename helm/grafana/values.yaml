@@ -99,7 +99,7 @@ grafana:
     image: 
       registry: docker.io
       repository: giantswarm/bats
-      tag: "v1.4.1"
+      tag: "v1.10.0"
     imagePullPolicy: IfNotPresent
     securityContext: {}
 
