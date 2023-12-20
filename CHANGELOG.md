@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Configure `gsoci.azurecr.io` as the default container image registry.
+
 ## [2.7.0] - 2023-12-04
 
 ### Changed
@@ -52,7 +56,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - upgrade grafana chart: 6.53.0 => 6.55.1
-
 
 ## [2.3.2] - 2023-04-17
 

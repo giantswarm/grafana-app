@@ -78,7 +78,7 @@ grafana:
   # schedulerName: "default-scheduler"
 
   image:
-    registry: docker.io 
+    registry: gsoci.azurecr.io
     repository: giantswarm/grafana
     # Overrides the Grafana image tag whose default is the chart appVersion
     tag: ""
@@ -96,8 +96,8 @@ grafana:
 
   testFramework:
     enabled: false
-    image: 
-      registry: docker.io
+    image:
+      registry: gsoci.azurecr.io
       repository: giantswarm/bats
       tag: "v1.10.0"
     imagePullPolicy: IfNotPresent
@@ -108,8 +108,7 @@ grafana:
     runAsGroup: 472
     fsGroup: 472
 
-  containerSecurityContext:
-    {}
+  containerSecurityContext: {}
 
   # Enable creating the grafana configmap
   createConfigmap: true
@@ -136,7 +135,7 @@ grafana:
   # priorityClassName:
 
   downloadDashboardsImage:
-    registry: docker.io
+    registry: gsoci.azurecr.io
     repository: giantswarm/curl
     tag: 8.4.0
     sha: ""
@@ -337,7 +336,7 @@ grafana:
     ## initChownData container image
     ##
     image:
-      registry: docker.io
+      registry: gsoci.azurecr.io
       repository: giantswarm/busybox
       tag: "1.36.1"
       sha: ""
@@ -741,7 +740,7 @@ grafana:
   ## Requires at least Grafana 5 to work and can't be used together with parameters dashboardProviders, datasources and dashboards
   sidecar:
     image:
-      registry: docker.io
+      registry: gsoci.azurecr.io
       repository: giantswarm/k8s-sidecar
       tag: 1.25.3
       sha: ""
@@ -887,7 +886,7 @@ grafana:
     enabled: false
     replicas: 1
     image:
-      registry: docker.io
+      registry: gsoci.azurecr.io
       # image-renderer Image repository
       repository: giantswarm/grafana-image-renderer
       # image-renderer Image tag
