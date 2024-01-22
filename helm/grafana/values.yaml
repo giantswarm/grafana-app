@@ -2,6 +2,9 @@ global:
   imageRegistry: null
   imagePullSecrets: []
 
+ciliumNetworkPolicy:
+  enabled: true
+
 grafana:
   rbac:
     create: true

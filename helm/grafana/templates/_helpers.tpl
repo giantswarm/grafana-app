@@ -15,6 +15,14 @@ application.giantswarm.io/team: {{ index .Chart.Annotations "application.giantsw
 {{- end -}}
 
 {{/*
+Selector labels
+*/}}
+{{- define "labels.selector" -}}
+app.kubernetes.io/name: {{ .Chart.Name | quote }}
+app.kubernetes.io/instance: {{ .Chart.Name | quote }}
+{{- end -}}
+
+{{/*
 Return the appropriate apiVersion for podSecurityPolicy.
 */}}
 {{- define "grafana.podSecurityPolicy.apiVersion" -}}
