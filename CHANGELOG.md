@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add `CiliumNetworkPolicy`.
+
 ### Changed
 
 - upgrade grafana chart: 7.0.11 => 7.0.19
