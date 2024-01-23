@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.8.1] - 2024-01-23
 
+### Fixed
+
+- Fix `CiliumNetworkPolicy` to allow access to the internet (required to download plugins).
+
 ## [2.8.0] - 2024-01-23
 
 ### Added
