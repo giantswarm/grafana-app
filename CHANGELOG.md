@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.8.1] - 2024-01-23
+
 ### Fixed
 
 - Fix `CiliumNetworkPolicy` to allow access to the internet (required to download plugins).
@@ -211,7 +213,8 @@ Added:
 - images retagged for Giant Swarm registries
 - simple functionality test to get login web page
 
-[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.8.0...HEAD
+[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.8.1...HEAD
+[2.8.1]: https://github.com/giantswarm/grafana-app/compare/v2.8.0...v2.8.1
 [2.8.0]: https://github.com/giantswarm/grafana-app/compare/v2.7.1...v2.8.0
 [2.7.1]: https://github.com/giantswarm/grafana-app/compare/v2.7.0...v2.7.1
 [2.7.0]: https://github.com/giantswarm/grafana-app/compare/v2.6.0...v2.7.0
