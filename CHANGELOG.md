@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- upgrade grafana chart: 7.3.0 => 7.3.5
+- upgrade grafana : 10.3.1 => 10.3.3
+
 ## [2.10.1] - 2024-02-19
 
 ### Fixed
