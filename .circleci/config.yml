@@ -1,6 +1,14 @@
 version: 2.1
 orbs:
   architect: giantswarm/architect@5.3.1
+jobs:
+  template-chart:
+    docker:
+      - image: giantswarm/helm-chart-testing:v3.11.0
+    steps:
+      - checkout
+      - run: cd helm/grafana && helm dep up
+      - run: helm template helm/grafana
 
 workflows:
   package-and-push-chart-on-tag:
@@ -31,6 +39,15 @@ workflows:
           filters:
             tags:
               only: /^v.*/
+
+      - template-chart:
+          name: "template-chart"
+          filters:
+            branches:
+              ignore:
+                - master
+          requires:
+            - "app-catalog"
       
       - architect/run-tests-with-ats:
           name: run-chart-tests-with-ats
