@@ -1,10 +1,5 @@
 import logging
-import requests
-import time
-from contextlib import contextmanager
-from functools import partial
-from pathlib import Path
-from typing import Dict, List, Optional
+from typing import List
 
 import pykube
 import pytest
@@ -33,7 +28,7 @@ def test_api_working(kube_cluster: Cluster) -> None:
 # scope "module" means this is run only once, for the first test case requesting! It might be tricky
 # if you want to assert this multiple times
 @pytest.fixture(scope="module")
-def ic_deployment(request, kube_cluster: Cluster) -> List[pykube.Deployment]:
+def ic_deployment(kube_cluster: Cluster) -> List[pykube.Deployment]:
     logger.info("Waiting for grafana deployment..")
 
     deployment_ready = wait_for_ic_deployment(kube_cluster)
@@ -68,7 +63,7 @@ def pods(kube_cluster: Cluster) -> List[pykube.Pod]:
 @pytest.mark.smoke
 @pytest.mark.upgrade
 @pytest.mark.flaky(reruns=5, reruns_delay=10)
-def test_pods_available(kube_cluster: Cluster, ic_deployment: List[pykube.Deployment]):
+def test_pods_available(ic_deployment: List[pykube.Deployment]):
     for s in ic_deployment:
         assert int(s.obj["status"]["readyReplicas"]) == int(
             s.obj["spec"]["replicas"])
