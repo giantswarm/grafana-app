@@ -1,4 +1,11 @@
-skip-steps: smoke
+app-tests-app-config-file: tests/test-values.yaml
+app-tests-deploy-namespace: monitoring
 
-functional-tests-cluster-type: kind
+smoke-tests-cluster-type: kind
+
+upgrade-tests-cluster-type: kind
+upgrade-tests-app-catalog-url: https://giantswarm.github.io/giantswarm-catalog
+upgrade-tests-app-config-file: tests/test-values.yaml
+
+skip-steps: [functional]
 

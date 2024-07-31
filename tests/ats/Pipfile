@@ -4,11 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pytest-helm-charts = ">=0.3.1"
-pytest = ">=6.1.2"
-pytest-rerunfailures = "*"
-
-[dev-packages]
+pytest-helm-charts = ">=1.0.2"
+pytest = ">=6.2.5"
+pykube-ng = ">=22.1.0"
+pytest-rerunfailures = "~=14.0"
+requests = "~=2.32.1"
 
 [requires]
-python_version = "3.8"
+python_version = "3.9"
