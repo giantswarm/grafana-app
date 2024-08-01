@@ -110,4 +110,3 @@ grafana:
       searchNamespace: ALL
     image:
       repository: giantswarm/k8s-sidecar
-
