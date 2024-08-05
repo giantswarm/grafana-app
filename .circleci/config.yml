@@ -13,6 +13,13 @@ jobs:
 workflows:
   package-and-push-chart-on-tag:
     jobs:
+      - template-chart:
+          name: "template-chart"
+          filters:
+            branches:
+              ignore:
+                - master
+
       - architect/push-to-app-catalog:
           context: "architect"
           executor: "app-build-suite"
@@ -26,6 +33,8 @@ workflows:
           filters:
             tags:
               only: /^v.*/
+          requires:
+            - "template-chart"
 
       - architect/push-to-app-catalog:
           context: "architect"
@@ -39,15 +48,8 @@ workflows:
           filters:
             tags:
               only: /^v.*/
-
-      - template-chart:
-          name: "template-chart"
-          filters:
-            branches:
-              ignore:
-                - master
           requires:
-            - "app-catalog"
+            - "template-chart"
       
       - architect/run-tests-with-ats:
           name: run-chart-tests-with-ats
