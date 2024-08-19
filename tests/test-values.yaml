@@ -1,0 +1,112 @@
+global:
+  imageRegistry: gsoci.azurecr.io
+grafana:
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+      - allowUiUpdates: false
+        disableDeletion: true
+        editable: false
+        folder: Giant Swarm private dashboards
+        folderUid: GMtRhFeGz
+        name: private
+        options:
+          path: /var/lib/grafana/dashboards/private
+        type: file
+        updateIntervalSeconds: 60
+      - allowUiUpdates: false
+        disableDeletion: true
+        editable: false
+        folder: Giant Swarm public dashboards
+        folderUid: b6utHHg7z
+        name: public
+        options:
+          path: /var/lib/grafana/dashboards/public
+        type: file
+        updateIntervalSeconds: 60
+      - allowUiUpdates: false
+        disableDeletion: true
+        editable: false
+        folder: Your dashboards
+        folderUid: customerDashboards
+        name: customer-provided
+        options:
+          path: /var/lib/grafana/dashboards/customer
+        type: file
+        updateIntervalSeconds: 60
+  grafana.ini:
+    analytics:
+      check_for_updates: false
+      feedback_links_enabled: false
+      reporting_enabled: false
+    auth:
+      disable_login_form: true
+      disable_signout_menu: true
+    auth.basic:
+      enabled: true
+    auth.generic_oauth:
+      allow_assign_grafana_admin: true
+      allow_sign_up: true
+      api_url: https://dex.grizzly.gaws.gigantic.io/userinfo
+      auth_url: https://dex.grizzly.gaws.gigantic.io/auth
+      auto_login: true
+      client_id: 2qRgNb5qQBk3QqWxI1WLgB5zTQ1M4eB+
+      enabled: true
+      name: grafana-dex
+      role_attribute_path: contains(groups, 'giantswarm-ad:giantswarm-admins')  &&
+        'GrafanaAdmin' || contains(groups, 'customer:giantswarm:Employees') && 'Viewer'
+        || contains (groups, 'giantswarm-github:giantswarm:giantswarm-admins')  &&
+        'GrafanaAdmin'
+      role_attribute_strict: true
+      scopes: openid profile email groups offline_access
+      token_url: https://dex.grizzly.gaws.gigantic.io/token
+      use_refresh_token: true
+    dashboards:
+      default_home_dashboard_path: /var/lib/grafana/dashboards/public/home/home.json
+    public_dashboards:
+      enabled: false
+    security:
+      cookie_secure: true
+      disable_gravatar: true
+    server:
+      protocol: http
+      root_url: https://grafana.grizzly.gaws.gigantic.io
+    users:
+      allow_org_create: false
+      allow_sign_up: false
+      viewers_can_edit: true
+  image:
+    repository: giantswarm/grafana
+  ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-giantswarm
+      kubernetes.io/tls-acme: "true"
+    enabled: true
+    hosts:
+    - grafana.grizzly.gaws.gigantic.io
+    ingressClassName: nginx
+    tls:
+    - hosts:
+      - grafana.grizzly.gaws.gigantic.io
+      secretName: grafana-tls
+  rbac:
+    pspEnabled: false
+  serviceMonitor:
+    enabled: true
+  sidecar:
+    dashboards:
+      SCProvider: false
+      enabled: true
+      folder: /var/lib/grafana/dashboards
+      label: app.giantswarm.io/kind
+      labelValue: dashboard
+      searchNamespace: ALL
+    datasources:
+      enabled: true
+      label: app.giantswarm.io/kind
+      labelValue: datasource
+      resource: both
+      searchNamespace: ALL
+    image:
+      repository: giantswarm/k8s-sidecar

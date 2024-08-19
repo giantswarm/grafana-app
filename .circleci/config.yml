@@ -1,10 +1,25 @@
 version: 2.1
 orbs:
   architect: giantswarm/architect@5.4.0
+jobs:
+  template-chart:
+    docker:
+      - image: giantswarm/helm-chart-testing:v3.11.0
+    steps:
+      - checkout
+      - run: cd helm/grafana && helm dep up
+      - run: helm template helm/grafana
 
 workflows:
   package-and-push-chart-on-tag:
     jobs:
+      - template-chart:
+          name: "template-chart"
+          filters:
+            branches:
+              ignore:
+                - master
+
       - architect/push-to-app-catalog:
           context: "architect"
           executor: "app-build-suite"
@@ -18,6 +33,8 @@ workflows:
           filters:
             tags:
               only: /^v.*/
+          requires:
+            - "template-chart"
 
       - architect/push-to-app-catalog:
           context: "architect"
@@ -31,6 +48,18 @@ workflows:
           filters:
             tags:
               only: /^v.*/
+          requires:
+            - "template-chart"
+      
+      - architect/run-tests-with-ats:
+          name: run-chart-tests-with-ats
+          filters:
+            # Do not trigger the job on merge to master.
+            branches:
+              ignore:
+                - master
+          requires:
+            - "app-catalog"
 
       - architect/push-to-app-collection:
           context: "architect"
@@ -139,12 +168,3 @@ workflows:
               ignore: /.*/
             tags:
               only: /^v.*/
-#      - architect/run-tests-with-ats:
-#          name: execute chart tests
-#          filters:
-#            # Do not trigger the job on merge to master.
-#            branches:
-#              ignore:
-#                - master
-#          requires:
-#            - "package and push grafana chart"
