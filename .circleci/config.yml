@@ -15,10 +15,6 @@ workflows:
     jobs:
       - template-chart:
           name: "template-chart"
-          filters:
-            branches:
-              ignore:
-                - master
 
       - architect/push-to-app-catalog:
           context: "architect"
@@ -50,14 +46,14 @@ workflows:
               only: /^v.*/
           requires:
             - "template-chart"
-      
+
       - architect/run-tests-with-ats:
           name: run-chart-tests-with-ats
           filters:
-            # Do not trigger the job on merge to master.
+            # Do not trigger the job on merge to main.
             branches:
               ignore:
-                - master
+                - main
           requires:
             - "app-catalog"
 
