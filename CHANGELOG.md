@@ -7,7 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Attempt to fix CI builds on tags, take 2.
+
 ## [2.16.2] - 2024-10-07
+
+### Fixed
+
+- Attempt to fix CI builds on tags.
 
 ## [2.16.1] - 2024-10-07
 
