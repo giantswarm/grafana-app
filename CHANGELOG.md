@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.16.3] - 2024-10-08
+
 ### Fixed
 
 - Attempt to fix CI builds on tags, take 2.
@@ -297,7 +299,8 @@ Added:
 - images retagged for Giant Swarm registries
 - simple functionality test to get login web page
 
-[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.16.2...HEAD
+[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.16.3...HEAD
+[2.16.3]: https://github.com/giantswarm/grafana-app/compare/v2.16.2...v2.16.3
 [2.16.2]: https://github.com/giantswarm/grafana-app/compare/v2.16.1...v2.16.2
 [2.16.1]: https://github.com/giantswarm/grafana-app/compare/v2.16.0...v2.16.1
 [2.16.0]: https://github.com/giantswarm/grafana-app/compare/v2.15.0...v2.16.0
