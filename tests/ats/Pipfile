@@ -10,4 +10,4 @@ pykube-ng = ">=22.1.0"
 pytest-rerunfailures = "~=14.0"
 
 [requires]
-python_version = "3.9"
+python_version = "3.12"
