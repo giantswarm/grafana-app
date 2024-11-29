@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Add an nginx deny rule to block access to the `/swagger` endpoint by default.
+
+### Changed
+
 - upgrade grafana chart: 8.5.12 => 8.6.0
 
 ## [2.17.0] - 2024-11-07
