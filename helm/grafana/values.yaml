@@ -221,7 +221,7 @@ grafana:
     hosts:
       - chart-example.local
     ## Extra paths to prepend to every host configuration. This is useful when working with annotation based services.
-    extraPaths: []
+    extraPaths:
     # - path: /*
     #   backend:
     #     serviceName: ssl-redirect
@@ -234,6 +234,29 @@ grafana:
     #       name: ssl-redirect
     #       port:
     #         name: use-annotation
+    #
+    # Disable some paths by default
+      - path: /swagger
+        pathType: Prefix
+        backend:
+          service:
+            name: none
+            port:
+              number: 1111
+      - path: /metrics
+        pathType: Prefix
+        backend:
+          service:
+            name: none
+            port:
+              number: 1111
+      - path: /api/health
+        pathType: Prefix
+        backend:
+          service:
+            name: none
+            port:
+              number: 1111
 
 
     tls: []
