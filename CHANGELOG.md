@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.18.0] - 2024-12-03
+
 ### Changed
 
 - Add Ingress dummy paths to block access to the `/swagger`, `/metrics`, and `/api/health` endpoints by default.
@@ -314,7 +316,8 @@ Added:
 - images retagged for Giant Swarm registries
 - simple functionality test to get login web page
 
-[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.17.0...HEAD
+[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.18.0...HEAD
+[2.18.0]: https://github.com/giantswarm/grafana-app/compare/v2.17.0...v2.18.0
 [2.17.0]: https://github.com/giantswarm/grafana-app/compare/v2.16.3...v2.17.0
 [2.16.3]: https://github.com/giantswarm/grafana-app/compare/v2.16.2...v2.16.3
 [2.16.2]: https://github.com/giantswarm/grafana-app/compare/v2.16.1...v2.16.2
