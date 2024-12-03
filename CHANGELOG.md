@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Add an nginx deny rule to block access to the `/swagger` endpoint by default.
+- Add Ingress dummy paths to block access to the `/swagger`, `/metrics`, and `/api/health` endpoints by default.
 
 ### Changed
 
