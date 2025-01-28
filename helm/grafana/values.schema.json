@@ -85,7 +85,7 @@
                     "type": "object",
                     "properties": {
                         "env": {
-                            "type": "object"
+                            "type": ["object", "array"]
                         },
                         "envFromSecret": {
                             "type": "string"
@@ -122,7 +122,7 @@
                     "type": "boolean"
                 },
                 "env": {
-                    "type": "object"
+                    "type": ["object", "array"]
                 },
                 "envFromConfigMaps": {
                     "type": "array"
@@ -131,7 +131,7 @@
                     "type": "string"
                 },
                 "envFromSecrets": {
-                    "type": "array"
+                    "type": ["object", "array"]
                 },
                 "envRenderSecret": {
                     "type": "object"
@@ -696,7 +696,7 @@
                                     "type": "boolean"
                                 },
                                 "env": {
-                                    "type": "object"
+                                    "type": ["object", "array"]
                                 },
                                 "extraMounts": {
                                     "type": "array"

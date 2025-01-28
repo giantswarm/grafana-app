@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- helm schema now accepts array for `env`
+
 ## [2.18.0] - 2024-12-03
 
 ### Changed
