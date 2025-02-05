@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eu
+set -euo pipefail
 
 # database schema
 #
@@ -20,19 +20,19 @@ set -eu
 #);
 
 usage() {
-  echo "Usage: $0 --database-file <database-file> --orgs-file <orgs-file>"
+  echo "Usage: $0 --database-file <database-file> --configmap-name <configmap-name> --configmap-data-key <configmap-data-key>"
 }
 
 update_orgs() {
   local database_file="$1"
-  local orgs_file="$2"
+  local data="$2"
 
 
   # Prepare sqlite transaction
   local sqlite_transaction="BEGIN TRANSACTION;\n"
 
   # Transform yaml array into lines
-  orgs="$(yq -c '.[]' "$orgs_file")"
+  orgs="$(echo "$data" | yq -c '.[]')"
   orgs_count="$(echo "$orgs" | wc -l)"
   echo "Updating $orgs_count organizations"
 
@@ -58,13 +58,19 @@ update_orgs() {
 
 main() {
   local database_file=""
-  local orgs_file=""
+  local configmap_name=""
+  local configmap_data_key=""
 
   # Handle arguments
-  ARGS=$(getopt -o 'd:ho:' --long 'database-file:,help,orgs-file:' -- "$@")
+  ARGS=$(getopt -o 'c:d:hk:' --long 'configmap-name:,configmap-data-key:,database-file:,help' -- "$@")
   eval set -- "$ARGS"
   while true; do
     case "$1" in
+      -c|--configmap-name)
+        configmap_name="$2"
+        shift 2
+        continue
+        ;;
       -d|--database-file)
         database_file="$2"
         shift 2
@@ -74,8 +80,8 @@ main() {
         usage
         exit 0
         ;;
-      -o|--orgs-file)
-        orgs_file="$2"
+      -k|--configmap-data-key)
+        configmap_data_key="$2"
         shift 2
         continue
         ;;
@@ -91,21 +97,24 @@ main() {
   done
 
   # Validate arguments
-  test -n "$orgs_file" || { echo "Missing required argument: --orgs-file"; exit 1; }
-  test -f "$orgs_file" || { echo "File not found: $orgs_file"; exit 1; }
   test -n "$database_file" || { echo "Missing required argument: --database-file"; exit 1; }
   test -f "$database_file" || { echo "File not found: $database_file"; exit 1; }
-
-  local watch_dir="$(dirname "$orgs_file")"
+  test -n "$configmap_name" || { echo "Missing required argument: --configmap-name"; exit 1; }
+  test -n "$configmap_data_key" || { echo "Missing required argument: --configmap-data-key"; exit 1; }
 
   echo "Initializing organizations"
-  update_orgs "$database_file" "$orgs_file"
+  data="$(kubectl get configmap "$configmap_name" -o json | jq -r '.data["'"$configmap_data_key"'"]')"
+  update_orgs "$database_file" "$data"
   echo
 
-  echo "Watching for changes in $watch_dir"
-  while inotifywait -e modify "$watch_dir"; do
-    update_orgs "$database_file" "$orgs_file"
+  echo "Watching for changes"
+  exec 5< <(kubectl get configmap "$configmap_name" -o json --watch --watch-only | jq --unbuffered -c '.data["'"$configmap_data_key"'"]')
+  while read -r <&5 raw_data; do
+    data="$(echo "$raw_data"|yq -r .)"
+    update_orgs "$database_file" "$data"
+    #kubectl patch grafanaorganization giantswarm --type=merge --subresource status --patch 'status: {orgID: 2}'
   done
+  exec 5<&-
 }
 
 main "$@"
