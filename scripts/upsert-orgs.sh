@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -euo pipefail
+set -eu
 
 # database schema
 #
@@ -23,54 +23,37 @@ usage() {
   echo "Usage: $0 --database-file <database-file> --configmap-name <configmap-name> --configmap-data-key <configmap-data-key>"
 }
 
-update_orgs() {
+update_org() {(
+  set -eu
   local database_file="$1"
-  local data="$2"
+  local name="$2"
+  local org="$3"
 
+  # Read organization details
+  local org_name="$(echo "$org"|jq -r '.spec.displayName|strings')"
+  local org_id="$(echo "$org"|jq -r '.metadata.labels.orgID|strings')"
+  test -n "$org_id" || { echo "Skipped organization: name='"$name"', missing orgID label"; return 1; }
+  test -n "$org_name" || { echo "Skipped organization: name='"$name"', missing displayName"; return 1; }
 
-  # Prepare sqlite transaction
-  local sqlite_transaction="BEGIN TRANSACTION;\n"
+  # Prepare sqlite command
+  local sqlite_command="REPLACE INTO org (id, name, version, address1, address2, city, state, zip_code, country, billing_email, created, updated) VALUES ($org_id, '${org_name}', 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, datetime('now'), datetime('now'));\n"
 
-  # Transform yaml array into lines
-  orgs="$(echo "$data" | yq -c '.[]')"
-  orgs_count="$(echo "$orgs" | wc -l)"
-  echo "Updating $orgs_count organizations"
-
-  # Loop over each orgs lines
-  exec 6< <(echo "$orgs")
-  while read -r <&6 org; do
-    # Get organization id and name
-    name="$(echo "$org" | jq -r '.name')"
-    id="$(echo "$org" | jq -r '.id')"
-    echo "Processing organization: id=$id name=$name"
-    sqlite_transaction+="REPLACE INTO org (id, name, version, address1, address2, city, state, zip_code, country, billing_email, created, updated) VALUES ($id, '${name}', 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, datetime('now'), datetime('now'));\n"
-  done
-  exec 6<&-
-
-  sqlite_transaction+="COMMIT;"
-
-  # Execute sqlite transaction
+  # Execute sqlite command
   #cat <(echo -e "$sqlite_transaction")
-  sqlite3 "$database_file" < <(echo -e "$sqlite_transaction")
+  sqlite3 "$database_file" < <(echo -e "$sqlite_command")
 
-  echo "Updated $orgs_count organizations"
-}
+  # Update organization orgID status
+  kubectl patch grafanaorganization "$name" --type=merge --subresource status --patch 'status: {orgID: '"$org_id"'}' || return 1
+)}
 
 main() {
   local database_file=""
-  local configmap_name=""
-  local configmap_data_key=""
 
   # Handle arguments
-  ARGS=$(getopt -o 'c:d:hk:' --long 'configmap-name:,configmap-data-key:,database-file:,help' -- "$@")
+  ARGS=$(getopt -o 'd:h' --long 'database-file:,help' -- "$@")
   eval set -- "$ARGS"
   while true; do
     case "$1" in
-      -c|--configmap-name)
-        configmap_name="$2"
-        shift 2
-        continue
-        ;;
       -d|--database-file)
         database_file="$2"
         shift 2
@@ -79,11 +62,6 @@ main() {
       -h|--help)
         usage
         exit 0
-        ;;
-      -k|--configmap-data-key)
-        configmap_data_key="$2"
-        shift 2
-        continue
         ;;
       '--')
         shift
@@ -99,20 +77,34 @@ main() {
   # Validate arguments
   test -n "$database_file" || { echo "Missing required argument: --database-file"; exit 1; }
   test -f "$database_file" || { echo "File not found: $database_file"; exit 1; }
-  test -n "$configmap_name" || { echo "Missing required argument: --configmap-name"; exit 1; }
-  test -n "$configmap_data_key" || { echo "Missing required argument: --configmap-data-key"; exit 1; }
 
   echo "Initializing organizations"
-  data="$(kubectl get configmap "$configmap_name" -o json | jq -r '.data["'"$configmap_data_key"'"]')"
-  update_orgs "$database_file" "$data"
+  exec 5< <(kubectl get grafanaorganizations -o json | jq -c '.items[]')
+  while read -r <&5 org; do
+    local name="$(echo "$org"|jq -r '.metadata.name|strings')"
+    test -n "$name" || { echo "Error organization name missing"; exit 1; }
+    echo "Updating organization $name"
+    update_org "$database_file" "$name" "$org" || continue
+    echo "Updated organization $name"
+  done
   echo
 
   echo "Watching for changes"
-  exec 5< <(kubectl get configmap "$configmap_name" -o json --watch --watch-only | jq --unbuffered -c '.data["'"$configmap_data_key"'"]')
-  while read -r <&5 raw_data; do
-    data="$(echo "$raw_data"|yq -r .)"
-    update_orgs "$database_file" "$data"
-    #kubectl patch grafanaorganization giantswarm --type=merge --subresource status --patch 'status: {orgID: 2}'
+  exec 5< <(kubectl get grafanaorganizations -o json --watch --watch-only --output-watch-events=true | jq --unbuffered -c .)
+  while read -r <&5 raw_event; do
+    # Skip DELETED events
+    local event_type="$(echo "$raw_event"|jq -r '.type|strings')"
+    test "$event_type" == "DELETED" && continue
+
+    local org="$(echo "$raw_event"|jq -c '.object')"
+    local deletionTimestamp="$(echo "$org"|jq -r '.metadata.deletionTimestamp|strings')"
+    test -n "$deletionTimestamp" && continue
+
+    local name="$(echo "$org"|jq -r '.metadata.name|strings')"
+    test -n "$name" || { echo "Error organization name missing"; exit 1; }
+    echo "Updating organization $name"
+    update_org "$database_file" "$name" "$org" || continue
+    echo "Updated organization $name"
   done
   exec 5<&-
 }
