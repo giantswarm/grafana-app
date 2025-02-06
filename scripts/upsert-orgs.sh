@@ -2,23 +2,6 @@
 
 set -eu
 
-# database schema
-#
-#CREATE TABLE `org` (
-#`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
-#, `version` INTEGER NOT NULL
-#, `name` TEXT NOT NULL
-#, `address1` TEXT NULL
-#, `address2` TEXT NULL
-#, `city` TEXT NULL
-#, `state` TEXT NULL
-#, `zip_code` TEXT NULL
-#, `country` TEXT NULL
-#, `billing_email` TEXT NULL
-#, `created` DATETIME NOT NULL
-#, `updated` DATETIME NOT NULL
-#);
-
 usage() {
   echo "Usage: $0 --database-file <database-file> --configmap-name <configmap-name> --configmap-data-key <configmap-data-key>"
 }
