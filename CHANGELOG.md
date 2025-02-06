@@ -7,14 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- upgrade grafana chart: 8.6.4 => 8.9.0
+- upgrade grafana : 11.3.1 => 11.5.1
+
 ## [2.18.0] - 2024-12-03
 
 ### Changed
 
 - Add Ingress dummy paths to block access to the `/swagger`, `/metrics`, and `/api/health` endpoints by default.
-
-### Changed
-
 - upgrade grafana chart: 8.5.12 => 8.6.0
 
 ## [2.17.0] - 2024-11-07
