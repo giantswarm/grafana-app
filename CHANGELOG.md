@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add `postgresql-cluster` template in the helm chart.
+
 ## [2.15.0] - 2024-08-19
 
 ### Changed

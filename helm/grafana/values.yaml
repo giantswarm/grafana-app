@@ -5,6 +5,17 @@ global:
 ciliumNetworkPolicy:
   enabled: true
 
+## Grafana postgresql database
+grafanaDatabase:
+  enabled: false
+  # provider is either "capa" or "capz"
+  provider: ""
+  # irsaPrefix is the irsa annotation prefix coming before the ":role/" part. Only for capa provider
+  # irsaPrefix: ""
+  # baseUrl is the "codename" ofthe installation
+  baseUrl: ""
+
+
 grafana:
   rbac:
     create: true
