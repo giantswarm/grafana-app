@@ -1,5 +1,5 @@
 {{- if .Values.ciliumNetworkPolicy.enabled -}}
-apiVersion: "cilium.io/v2"
+apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
   labels:
