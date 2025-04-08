@@ -1,16 +1,17 @@
-{{- if .Values.grafanaDatabase.enabled }}
+{{- if .Values.database.enabled }}
 # Pod monitor used to monitor the postgresql cluster. We cannot use .spec.enablePodMonitor because we cannot add the observability.giantswarm.io/tenant label
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
   labels:
     observability.giantswarm.io/tenant: giantswarm
-  name: {{ .Chart.Name }}-{{ .Values.grafanaDatabase.databaseSuffix }}
+    {{- include "labels.selector" . | nindent 4 }}
+  name: {{ .Chart.Name }}-{{ .Values.database.clusterName }}
   namespace: {{ .Release.Namespace }}
 spec:
   selector:
     matchLabels:
-      cnpg.io/cluster: {{ .Chart.Name }}-{{ .Values.grafanaDatabase.databaseSuffix }}
+      cnpg.io/cluster: {{ .Chart.Name }}-{{ .Values.database.clusterName }}
   podMetricsEndpoints:
   - port: metrics
 {{- end }}

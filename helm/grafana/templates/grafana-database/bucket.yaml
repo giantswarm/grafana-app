@@ -1,4 +1,4 @@
-{{- if .Values.grafanaDatabase.enabled }}
+{{- if .Values.database.enabled }}
 # Database backup storage
 apiVersion: objectstorage.giantswarm.io/v1alpha1
 kind: Bucket
@@ -8,21 +8,21 @@ metadata:
     meta.helm.sh/release-namespace: {{ .Release.Namespace }}
   labels:
     {{- include "labels.selector" . | nindent 4 }}
-  name: giantswarm-{{ .Values.grafanaDatabase.baseUrl }}-{{ .Chart.Name }}-{{ .Values.grafanaDatabase.databaseSuffix }}
+  name: giantswarm-{{ .Values.database.baseUrl }}-{{ .Chart.Name }}-{{ .Values.database.clusterName }}
   namespace: {{ .Release.Namespace }}
 spec:
-  name: giantswarm-{{ .Values.grafanaDatabase.baseUrl }}-{{ .Chart.Name }}-{{ .Values.grafanaDatabase.databaseSuffix }}
+  name: giantswarm-{{ .Values.database.baseUrl }}-{{ .Chart.Name }}-{{ .Values.database.clusterName }}
   expirationPolicy:
     days: 100
   accessRole:
-    roleName: giantswarm-{{ .Values.grafanaDatabase.baseUrl }}-{{ .Chart.Name }}-{{ .Values.grafanaDatabase.databaseSuffix }}
-    serviceAccountName: {{ .Chart.Name }}-{{ .Values.grafanaDatabase.databaseSuffix }}
+    roleName: giantswarm-{{ .Values.database.baseUrl }}-{{ .Chart.Name }}-{{ .Values.database.clusterName }}
+    serviceAccountName: {{ .Chart.Name }}-{{ .Values.database.clusterName }}
     serviceAccountNamespace: {{ .Release.Namespace }}
   tags:
   - key: app
     value: {{ .Chart.Name }}
   - key: installation
-    value: {{ .Values.grafanaDatabase.baseUrl }}
+    value: {{ .Values.database.baseUrl }}
   - key: name
-    value: giantswarm-{{ .Values.grafanaDatabase.baseUrl }}-{{ .Chart.Name }}-{{ .Values.grafanaDatabase.databaseSuffix }}
+    value: giantswarm-{{ .Values.database.baseUrl }}-{{ .Chart.Name }}-{{ .Values.database.clusterName }}
 {{- end }}
