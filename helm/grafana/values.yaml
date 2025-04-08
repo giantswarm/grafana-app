@@ -153,7 +153,7 @@ grafana:
   downloadDashboardsImage:
     registry: gsoci.azurecr.io
     repository: giantswarm/curl
-    tag: 8.9.1
+    tag: 8.13.0
     sha: ""
     pullPolicy: IfNotPresent
 
@@ -234,7 +234,7 @@ grafana:
     hosts:
       - chart-example.local
     ## Extra paths to prepend to every host configuration. This is useful when working with annotation based services.
-    extraPaths: []
+    extraPaths:
     # - path: /*
     #   backend:
     #     serviceName: ssl-redirect
@@ -247,6 +247,29 @@ grafana:
     #       name: ssl-redirect
     #       port:
     #         name: use-annotation
+    #
+    # Disable some paths by default
+      - path: /swagger
+        pathType: Prefix
+        backend:
+          service:
+            name: none
+            port:
+              number: 1111
+      - path: /metrics
+        pathType: Prefix
+        backend:
+          service:
+            name: none
+            port:
+              number: 1111
+      - path: /api/health
+        pathType: Prefix
+        backend:
+          service:
+            name: none
+            port:
+              number: 1111
 
 
     tls: []
@@ -354,7 +377,7 @@ grafana:
     image:
       registry: gsoci.azurecr.io
       repository: giantswarm/busybox
-      tag: "1.36.1"
+      tag: "1.37.0"
       sha: ""
       pullPolicy: IfNotPresent
 
@@ -758,7 +781,7 @@ grafana:
     image:
       registry: gsoci.azurecr.io
       repository: giantswarm/k8s-sidecar
-      tag: 1.27.5
+      tag: 1.30.3
       sha: ""
     imagePullPolicy: IfNotPresent
     resources: {}

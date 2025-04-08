@@ -1,10 +1,10 @@
 version: 2.1
 orbs:
-  architect: giantswarm/architect@5.4.0
+  architect: giantswarm/architect@5.12.1
 jobs:
   template-chart:
     docker:
-      - image: giantswarm/helm-chart-testing:v3.11.0
+      - image: giantswarm/helm-chart-testing:v3.12.0
     steps:
       - checkout
       - run: cd helm/grafana && helm dep up
@@ -15,10 +15,10 @@ workflows:
     jobs:
       - template-chart:
           name: "template-chart"
+          # Trigger job on git tag.
           filters:
-            branches:
-              ignore:
-                - master
+            tags:
+              only: /^v.*/
 
       - architect/push-to-app-catalog:
           context: "architect"
@@ -50,14 +50,14 @@ workflows:
               only: /^v.*/
           requires:
             - "template-chart"
-      
+
       - architect/run-tests-with-ats:
           name: run-chart-tests-with-ats
           filters:
-            # Do not trigger the job on merge to master.
+            # Do not trigger the job on merge to main.
             branches:
               ignore:
-                - master
+                - main
           requires:
             - "app-catalog"
 
@@ -91,10 +91,10 @@ workflows:
 
       - architect/push-to-app-collection:
           context: "architect"
-          name: vsphere-app-collection
+          name: proxmox-app-collection
           app_name: "grafana"
           app_namespace: "monitoring"
-          app_collection_repo: "vsphere-app-collection"
+          app_collection_repo: "proxmox-app-collection"
           requires:
             - control-plane-catalog
           filters:
@@ -116,6 +116,7 @@ workflows:
               ignore: /.*/
             tags:
               only: /^v.*/
+
       - architect/push-to-app-collection:
           context: "architect"
           name: capz-app-collection
@@ -129,19 +130,7 @@ workflows:
               ignore: /.*/
             tags:
               only: /^v.*/
-      - architect/push-to-app-collection:
-          context: "architect"
-          name: gcp-app-collection
-          app_name: "grafana"
-          app_namespace: "monitoring"
-          app_collection_repo: "gcp-app-collection"
-          requires:
-            - control-plane-catalog
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v.*/
+
       - architect/push-to-app-collection:
           context: architect
           name: cloud-director-app-collection
@@ -155,6 +144,7 @@ workflows:
               ignore: /.*/
             tags:
               only: /^v.*/
+
       - architect/push-to-app-collection:
           context: "architect"
           name: vsphere-app-collection

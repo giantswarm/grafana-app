@@ -11,6 +11,58 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add `grafana-database` templates in the helm chart.
 
+## [2.20.0] - 2025-04-07
+
+### Changed
+
+- upgrade grafana chart: 8.9.0 => 8.10.4
+
+## [2.19.0] - 2025-02-06
+
+### Changed
+
+- upgrade grafana chart: 8.6.4 => 8.9.0
+- upgrade grafana : 11.3.1 => 11.5.1
+
+## [2.18.0] - 2024-12-03
+
+### Changed
+
+- Add Ingress dummy paths to block access to the `/swagger`, `/metrics`, and `/api/health` endpoints by default.
+- upgrade grafana chart: 8.5.12 => 8.6.0
+
+## [2.17.0] - 2024-11-07
+
+### Changed
+
+- upgrade grafana chart: 8.5.2 => 8.5.12
+- upgrade grafana : 11.2.1 => 11.3.0
+
+## [2.16.3] - 2024-10-08
+
+### Fixed
+
+- Attempt to fix CI builds on tags, take 2.
+
+## [2.16.2] - 2024-10-07
+
+### Fixed
+
+- Attempt to fix CI builds on tags.
+
+## [2.16.1] - 2024-10-07
+
+### Fixed
+
+- Fix CI jobs generating new releases
+
+## [2.16.0] - 2024-10-07
+
+### Changed
+
+- upgrade grafana chart: 8.3.4 => 8.5.2
+- upgrade grafana : 11.1.3 => 11.2.1
+
 ## [2.15.0] - 2024-08-19
 
 ### Changed
@@ -278,7 +330,15 @@ Added:
 - images retagged for Giant Swarm registries
 - simple functionality test to get login web page
 
-[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.15.0...HEAD
+[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.20.0...HEAD
+[2.20.0]: https://github.com/giantswarm/grafana-app/compare/v2.19.0...v2.20.0
+[2.19.0]: https://github.com/giantswarm/grafana-app/compare/v2.18.0...v2.19.0
+[2.18.0]: https://github.com/giantswarm/grafana-app/compare/v2.17.0...v2.18.0
+[2.17.0]: https://github.com/giantswarm/grafana-app/compare/v2.16.3...v2.17.0
+[2.16.3]: https://github.com/giantswarm/grafana-app/compare/v2.16.2...v2.16.3
+[2.16.2]: https://github.com/giantswarm/grafana-app/compare/v2.16.1...v2.16.2
+[2.16.1]: https://github.com/giantswarm/grafana-app/compare/v2.16.0...v2.16.1
+[2.16.0]: https://github.com/giantswarm/grafana-app/compare/v2.15.0...v2.16.0
 [2.15.0]: https://github.com/giantswarm/grafana-app/compare/v2.14.0...v2.15.0
 [2.14.0]: https://github.com/giantswarm/grafana-app/compare/v2.13.0...v2.14.0
 [2.13.0]: https://github.com/giantswarm/grafana-app/compare/v2.12.0...v2.13.0
