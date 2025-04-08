@@ -10,5 +10,33 @@ metadata:
 spec:
   instances: 2
   storage:
-  size: 1Gi
+    size: 1Gi
+  backup:
+    barmanObjectStore:
+      data:
+        compression: gzip
+      wal:
+        compression: gzip
+      {{- if (eq .Values.database.provider "capa") }}
+      destinationPath: s3://giantswarm-{{ .Values.database.baseUrl }}-{{ .Chart.Name }}-{{ .Values.database.clusterName }}/
+      s3Credentials:
+        inheritFromIAMRole: true
+      {{- end }}
+      {{- if (eq .Values.database.provider "capz") }}
+      destinationPath: https://${accountName}.blob.core.windows.net/giantswarm-{{ .Values.database.baseUrl }}-{{ .Chart.Name }}-{{ .Values.database.clusterName }}
+      azureCredentials:
+        storageAccount:
+          name: giantswarm-{{ .Values.database.baseUrl }}-{{ .Chart.Name }}-{{ .Values.database.clusterName }}
+          key: accountName
+        storageKey:
+          name: giantswarm-{{ .Values.database.baseUrl }}-{{ .Chart.Name }}-{{ .Values.database.clusterName }}
+          key: accountKey
+      {{- end }}
+    retentionPolicy: "30d"
+    {{- if (eq .Values.database.provider "capa") }}
+    serviceAccountTemplate:
+      metadata:
+        annotations:
+          eks.amazonaws.com/role-arn: {{ .Values.database.irsaPrefix }}:role/giantswarm-{{ .Values.database.baseUrl }}-{{ .Chart.Name }}-{{ .Values.database.clusterName }}
+    {{- end }}
 {{- end }}
