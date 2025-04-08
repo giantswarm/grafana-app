@@ -10,6 +10,17 @@
                 }
             }
         },
+        "database": {
+            "type": "object",
+            "properties": {
+                "clusterName": {
+                    "type": "string"
+                },
+                "enabled": {
+                    "type": "boolean"
+                }
+            }
+        },
         "global": {
             "type": "object",
             "properties": {
@@ -368,7 +379,39 @@
                             "type": "boolean"
                         },
                         "extraPaths": {
-                            "type": "array"
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "backend": {
+                                        "type": "object",
+                                        "properties": {
+                                            "service": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "port": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "number": {
+                                                                "type": "integer"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "path": {
+                                        "type": "string"
+                                    },
+                                    "pathType": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
                         },
                         "hosts": {
                             "type": "array",

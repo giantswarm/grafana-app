@@ -5,6 +5,12 @@ global:
 ciliumNetworkPolicy:
   enabled: true
 
+## Grafana postgresql database
+database:
+  enabled: false
+  # The postgresql cluster name will be <release-name>-<clusterName>
+  clusterName: postgresql
+
 grafana:
   rbac:
     create: true
