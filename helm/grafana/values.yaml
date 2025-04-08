@@ -12,9 +12,6 @@ database:
   clusterName: postgresql
   # irsaPrefix is the irsa annotation prefix coming before the ":role/" part. Only for capa provider
   # irsaPrefix: ""
-  # baseUrl is the "codename" of the installation
-  baseUrl: ""
-
 
 grafana:
   rbac:

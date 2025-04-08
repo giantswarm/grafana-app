@@ -13,9 +13,6 @@
         "database": {
             "type": "object",
             "properties": {
-                "baseUrl": {
-                    "type": "string"
-                },
                 "clusterName": {
                     "type": "string"
                 },
