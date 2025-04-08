@@ -10,8 +10,6 @@ database:
   enabled: false
   # The postgresql cluster name will be <release-name>-<clusterName>
   clusterName: postgresql
-  # irsaPrefix is the irsa annotation prefix coming before the ":role/" part. Only for capa provider
-  # irsaPrefix: ""
 
 grafana:
   rbac:
