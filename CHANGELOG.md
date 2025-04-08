@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add `grafana-database` templates in the helm chart.
+- Add `bucket` template and backup config in postgresql-cluster template in the grafana-database folder.
 
 ## [2.20.0] - 2025-04-07
 
