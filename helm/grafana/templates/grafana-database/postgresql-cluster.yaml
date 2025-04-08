@@ -1,0 +1,40 @@
+{{- if .Values.grafanaDatabase.enabled }}
+# Postgresql cluster
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: {{ .Chart.Name }}-{{ .Values.grafanaDatabase.databaseSuffix }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  instances: 2
+  storage:
+  size: 1Gi
+  backup:
+    barmanObjectStore:
+      data:
+        compression: gzip
+      wal:
+        compression: gzip
+      {{- if (eq .Values.grafanaDatabase.provider "capa") }}
+      destinationPath: s3://giantswarm-{{ .Values.grafanaDatabase.baseUrl }}-{{ .Chart.Name }}-{{ .Values.grafanaDatabase.databaseSuffix }}/
+      s3Credentials:
+        inheritFromIAMRole: true
+      {{- end }}
+      {{- if (eq .Values.grafanaDatabase.provider "capz") }}
+      destinationPath: https://${accountName}.blob.core.windows.net/giantswarm-{{ .Values.grafanaDatabase.baseUrl }}-{{ .Chart.Name }}-{{ .Values.grafanaDatabase.databaseSuffix }}
+      azureCredentials:
+        storageAccount:
+          name: giantswarm-{{ .Values.grafanaDatabase.baseUrl }}-{{ .Chart.Name }}-{{ .Values.grafanaDatabase.databaseSuffix }}
+          key: accountName
+        storageKey:
+          name: giantswarm-{{ .Values.grafanaDatabase.baseUrl }}-{{ .Chart.Name }}-{{ .Values.grafanaDatabase.databaseSuffix }}
+          key: accountKey
+      {{- end }}
+    retentionPolicy: "30d"
+    {{- if (eq .Values.grafanaDatabase.provider "capa") }}
+    serviceAccountTemplate:
+      metadata:
+        annotations:
+          eks.amazonaws.com/role-arn: {{ .Values.grafanaDatabase.irsaPrefix }}:role/giantswarm-{{ .Values.grafanaDatabase.baseUrl }}-{{ .Chart.Name }}-{{ .Values.grafanaDatabase.databaseSuffix }}
+    {{- end }}
+{{- end }}

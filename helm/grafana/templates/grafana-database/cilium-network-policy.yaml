@@ -1,0 +1,41 @@
+{{- if .Values.grafanaDatabase.enabled }}
+# CNPs to allow grafana to access postgresql
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: {{ .Chart.Name }}-{{ .Values.grafanaDatabase.databaseSuffix }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  endpointSelector:
+    matchLabels:
+      cnpg.io/cluster: {{ .Chart.Name }}-{{ .Values.grafanaDatabase.databaseSuffix }}
+  egress:
+    # Allow egress to other CNPG cluster members.
+    - toEndpoints:
+        - matchLabels:
+            cnpg.io/cluster: {{ .Chart.Name }}-{{ .Values.grafanaDatabase.databaseSuffix }}
+      toPorts:
+        - ports:
+            - port: "5432"
+    # Allow egress to world an apiserver for object storage
+    - toEntities:
+      - world
+      - kube-apiserver
+  ingress:
+    - fromEndpoints:
+        # Allow ingress from alloy-metrics
+        - matchLabels:
+            app.kubernetes.io/instance: alloy-metrics
+        # Allow ingress from grafana
+        - matchLabels:
+            app.kubernetes.io/instance: {{ .Chart.Name }}
+        # Allow ingress from prometheus-agent
+        - matchLabels:
+            app.kubernetes.io/instance: prometheus-agent
+        # Allow ingress from other CNPG cluster members (including join pods)
+        - matchLabels:
+            cnpg.io/cluster: {{ .Chart.Name }}-postgresql
+      toPorts:
+        - ports:
+            - port: "5432"
+{{- end }}

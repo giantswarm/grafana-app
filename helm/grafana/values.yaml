@@ -8,7 +8,9 @@ ciliumNetworkPolicy:
 ## Grafana postgresql database
 grafanaDatabase:
   enabled: false
-  # provider is either "capa" or "capz"
+  # The postgresql cluster name will be <release-name>-<databaseSuffix>
+  databaseSuffix: postgresql
+  # rovider is either "capa" or "capz"
   provider: ""
   # irsaPrefix is the irsa annotation prefix coming before the ":role/" part. Only for capa provider
   # irsaPrefix: ""
