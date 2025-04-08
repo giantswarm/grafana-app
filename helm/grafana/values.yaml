@@ -10,11 +10,9 @@ database:
   enabled: false
   # The postgresql cluster name will be <release-name>-<clusterName>
   clusterName: postgresql
-  # rovider is either "capa" or "capz"
-  provider: ""
   # irsaPrefix is the irsa annotation prefix coming before the ":role/" part. Only for capa provider
   # irsaPrefix: ""
-  # baseUrl is the "codename" ofthe installation
+  # baseUrl is the "codename" of the installation
   baseUrl: ""
 
 

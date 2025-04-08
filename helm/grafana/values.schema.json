@@ -21,9 +21,6 @@
                 },
                 "enabled": {
                     "type": "boolean"
-                },
-                "provider": {
-                    "type": "string"
                 }
             }
         },
