@@ -63,34 +63,6 @@ workflows:
 
       - architect/push-to-app-collection:
           context: "architect"
-          name: aws-app-collection
-          app_name: "grafana"
-          app_namespace: "monitoring"
-          app_collection_repo: "aws-app-collection"
-          requires:
-            - control-plane-catalog
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v.*/
-
-      - architect/push-to-app-collection:
-          context: "architect"
-          name: azure-app-collection
-          app_name: "grafana"
-          app_namespace: "monitoring"
-          app_collection_repo: "azure-app-collection"
-          requires:
-            - control-plane-catalog
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v.*/
-
-      - architect/push-to-app-collection:
-          context: "architect"
           name: proxmox-app-collection
           app_name: "grafana"
           app_namespace: "monitoring"
