@@ -4,7 +4,7 @@ orbs:
 jobs:
   template-chart:
     docker:
-      - image: giantswarm/helm-chart-testing:v3.12.0
+      - image: giantswarm/helm-chart-testing:v3.13.0
     steps:
       - checkout
       - run: cd helm/grafana && helm dep up
