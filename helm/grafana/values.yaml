@@ -6,6 +6,7 @@ ciliumNetworkPolicy:
   enabled: true
 
 pgClusterRecoveryTest:
+  enabled: true
   cronjob:
     namespace: monitoring
     serviceAccount:
