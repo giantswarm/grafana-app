@@ -368,7 +368,39 @@
                             "type": "boolean"
                         },
                         "extraPaths": {
-                            "type": "array"
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "backend": {
+                                        "type": "object",
+                                        "properties": {
+                                            "service": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "port": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "number": {
+                                                                "type": "integer"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "path": {
+                                        "type": "string"
+                                    },
+                                    "pathType": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
                         },
                         "hosts": {
                             "type": "array",
@@ -936,6 +968,44 @@
                 },
                 "useStatefulSet": {
                     "type": "boolean"
+                }
+            }
+        },
+        "pgClusterRecoveryTest": {
+            "type": "object",
+            "properties": {
+                "cronjob": {
+                    "type": "object",
+                    "properties": {
+                        "namespace": {
+                            "type": "string"
+                        },
+                        "serviceAccount": {
+                            "type": "object",
+                            "properties": {
+                                "create": {
+                                    "type": "boolean"
+                                },
+                                "name": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                "enabled": {
+                    "type": "boolean"
+                },
+                "pgCluster": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "namespace": {
+                            "type": "string"
+                        }
+                    }
                 }
             }
         }

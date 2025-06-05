@@ -17,3 +17,4 @@ checks:
   - "use-namespace"
   - "dnsconfig-options"
   - "no-node-affinity"
+  - "non-existent-service-account"

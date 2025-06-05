@@ -5,6 +5,17 @@ global:
 ciliumNetworkPolicy:
   enabled: true
 
+pgClusterRecoveryTest:
+  enabled: false
+  cronjob:
+    namespace: monitoring
+    serviceAccount:
+      create: true
+      name: grafana-postgresql-recovery-test
+  pgCluster:
+    name: grafana-postgresql-recovery-test
+    namespace: monitoring
+
 grafana:
   rbac:
     create: true
