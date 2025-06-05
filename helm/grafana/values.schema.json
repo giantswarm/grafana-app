@@ -17,7 +17,7 @@
                     "type": "array"
                 },
                 "imageRegistry": {
-                    "type": ["string", "null"]
+                    "type": "null"
                 }
             }
         },
@@ -368,7 +368,39 @@
                             "type": "boolean"
                         },
                         "extraPaths": {
-                            "type": "array"
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "backend": {
+                                        "type": "object",
+                                        "properties": {
+                                            "service": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "port": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "number": {
+                                                                "type": "integer"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "path": {
+                                        "type": "string"
+                                    },
+                                    "pathType": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
                         },
                         "hosts": {
                             "type": "array",
@@ -644,10 +676,10 @@
                             "type": "boolean"
                         },
                         "name": {
-                            "type": ["string", "null"]
+                            "type": "null"
                         },
                         "nameTest": {
-                            "type": ["string", "null"]
+                            "type": "null"
                         }
                     }
                 },
@@ -690,7 +722,7 @@
                                     "type": "boolean"
                                 },
                                 "defaultFolderName": {
-                                    "type": ["string", "null"]
+                                    "type": "null"
                                 },
                                 "enabled": {
                                     "type": "boolean"
@@ -705,7 +737,7 @@
                                     "type": "string"
                                 },
                                 "folderAnnotation": {
-                                    "type": ["string", "null"]
+                                    "type": "null"
                                 },
                                 "label": {
                                     "type": "string"
@@ -743,10 +775,10 @@
                                     "type": "string"
                                 },
                                 "script": {
-                                    "type": ["string", "null"]
+                                    "type": "null"
                                 },
                                 "searchNamespace": {
-                                    "type": ["string", "null"]
+                                    "type": "null"
                                 },
                                 "sizeLimit": {
                                     "type": "object"
@@ -778,7 +810,7 @@
                                     "type": "string"
                                 },
                                 "searchNamespace": {
-                                    "type": ["string", "null"]
+                                    "type": "null"
                                 },
                                 "sizeLimit": {
                                     "type": "object"
@@ -833,7 +865,7 @@
                                     "type": "string"
                                 },
                                 "searchNamespace": {
-                                    "type": ["string", "null"]
+                                    "type": "null"
                                 },
                                 "sizeLimit": {
                                     "type": "object"
@@ -862,7 +894,7 @@
                                     "type": "string"
                                 },
                                 "searchNamespace": {
-                                    "type": ["string", "null"]
+                                    "type": "null"
                                 },
                                 "sizeLimit": {
                                     "type": "object"
@@ -936,6 +968,44 @@
                 },
                 "useStatefulSet": {
                     "type": "boolean"
+                }
+            }
+        },
+        "pgClusterRecoveryTest": {
+            "type": "object",
+            "properties": {
+                "cronjob": {
+                    "type": "object",
+                    "properties": {
+                        "namespace": {
+                            "type": "string"
+                        },
+                        "serviceAccount": {
+                            "type": "object",
+                            "properties": {
+                                "create": {
+                                    "type": "boolean"
+                                },
+                                "name": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                "enabled": {
+                    "type": "boolean"
+                },
+                "pgCluster": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "namespace": {
+                            "type": "string"
+                        }
+                    }
                 }
             }
         }
