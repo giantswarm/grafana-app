@@ -17,7 +17,7 @@
                     "type": "array"
                 },
                 "imageRegistry": {
-                    "type": "null"
+                    "type": ["string", "null"]
                 }
             }
         },
@@ -676,10 +676,10 @@
                             "type": "boolean"
                         },
                         "name": {
-                            "type": "null"
+                            "type": ["string", "null"]
                         },
                         "nameTest": {
-                            "type": "null"
+                            "type": ["string", "null"]
                         }
                     }
                 },
@@ -722,7 +722,7 @@
                                     "type": "boolean"
                                 },
                                 "defaultFolderName": {
-                                    "type": "null"
+                                    "type": ["string", "null"]
                                 },
                                 "enabled": {
                                     "type": "boolean"
@@ -737,7 +737,7 @@
                                     "type": "string"
                                 },
                                 "folderAnnotation": {
-                                    "type": "null"
+                                    "type": ["string", "null"]
                                 },
                                 "label": {
                                     "type": "string"
@@ -775,10 +775,10 @@
                                     "type": "string"
                                 },
                                 "script": {
-                                    "type": "null"
+                                    "type": ["string", "null"]
                                 },
                                 "searchNamespace": {
-                                    "type": "null"
+                                    "type": ["string", "null"]
                                 },
                                 "sizeLimit": {
                                     "type": "object"
@@ -810,7 +810,7 @@
                                     "type": "string"
                                 },
                                 "searchNamespace": {
-                                    "type": "null"
+                                    "type": ["string", "null"]
                                 },
                                 "sizeLimit": {
                                     "type": "object"
@@ -865,7 +865,7 @@
                                     "type": "string"
                                 },
                                 "searchNamespace": {
-                                    "type": "null"
+                                    "type": ["string", "null"]
                                 },
                                 "sizeLimit": {
                                     "type": "object"
@@ -894,7 +894,7 @@
                                     "type": "string"
                                 },
                                 "searchNamespace": {
-                                    "type": "null"
+                                    "type": ["string", "null"]
                                 },
                                 "sizeLimit": {
                                     "type": "object"
