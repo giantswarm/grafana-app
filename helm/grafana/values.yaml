@@ -779,7 +779,7 @@ grafana:
     image:
       registry: gsoci.azurecr.io
       repository: giantswarm/k8s-sidecar
-      tag: 1.30.3
+      tag: 1.30.5
       sha: ""
     imagePullPolicy: IfNotPresent
     resources: {}
