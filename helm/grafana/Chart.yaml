@@ -13,7 +13,7 @@ dependencies:
     version: 9.2.1
     repository: https://grafana.github.io/helm-charts
   - name: pg-cluster-recovery-test
-    version: 0.1.3
+    version: 0.1.5
     repository: https://giantswarm.github.io/giantswarm-catalog
     alias: pgClusterRecoveryTest
     condition: pgClusterRecoveryTest.enabled
