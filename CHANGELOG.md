@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.24.1] - 2025-07-03
+
 ### Changed
 
 - Updated pg-cluster-recovery-test subchart: v0.1.5 => v0.1.6
@@ -373,7 +375,8 @@ Added:
 - images retagged for Giant Swarm registries
 - simple functionality test to get login web page
 
-[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.24.0...HEAD
+[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.24.1...HEAD
+[2.24.1]: https://github.com/giantswarm/grafana-app/compare/v2.24.0...v2.24.1
 [2.24.0]: https://github.com/giantswarm/grafana-app/compare/v2.23.0...v2.24.0
 [2.23.0]: https://github.com/giantswarm/grafana-app/compare/v2.22.1...v2.23.0
 [2.22.1]: https://github.com/giantswarm/grafana-app/compare/v2.22.0...v2.22.1
