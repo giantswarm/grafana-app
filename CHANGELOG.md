@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Updated pg-cluster-recovery-test subchart: v0.1.5 => v0.1.6
+
 ## [2.24.0] - 2025-06-30
 
 ### Changed
