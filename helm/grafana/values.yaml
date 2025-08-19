@@ -5,6 +5,73 @@ global:
 ciliumNetworkPolicy:
   enabled: true
 
+grafanaProxy:
+  enabled: true
+  serviceName: "grafana.example.com"
+
+postgresql:
+  enabled: true
+  clusterName: "grafana-postgresql"
+  instances: 2
+  storageSize: "2Gi"
+  imageName: "gsoci.azurecr.io/giantswarm/postgresql-cnpg:17.5"
+  provider:
+    kind: "capz"
+    region: "westeurope"
+    controlPlane:
+      account: "1234567890"
+  codename: "my-installation"
+  customer: "my-customer"
+  grafanaDatabase:
+    backupName: "backup-2025-08-28"
+    recoveryBackupName: "recovery-backup-2025-08-28"
+    recoveryBackupTime: ""
+  backups:
+    enabled: true
+    createBucket: true
+    bucketName: "giantswarm-{{ .Values.postgresql.codename }}-grafana-postgresql"
+    bucketRetentionDays: 45
+  networkPolicy:
+    enabled: true
+    # List of app instances allowed to connect to the database
+    ingressAllowLabels:
+      - "alloy-metrics"
+      - "grafana"
+      - "prometheus-agent"
+  podMonitor:
+    enabled: true
+    tenantLabel: "giantswarm"
+
+oidc:
+  giantswarm:
+    write_all_group: "admins"
+    write_all_groups:
+      - "giantswarm-admins"
+  customer:
+    grafana:
+      sharedOrg:
+        editor_groups:
+          - "customer-editors"
+        viewer_groups:
+          - "customer-viewers"
+
+organizations:
+  shared:
+    enabled: true
+    name: "shared-org"
+    displayName: "Shared Org"
+    tenants:
+      - "giantswarm"
+    rbac:
+      editors: []
+      viewers: []
+  giantswarm:
+    enabled: true
+    name: "giantswarm"
+    displayName: "Giant Swarm"
+    tenants:
+      - "giantswarm"
+
 pgClusterRecoveryTest:
   enabled: false
   cronjob:
@@ -779,7 +846,7 @@ grafana:
     image:
       registry: gsoci.azurecr.io
       repository: giantswarm/k8s-sidecar
-      tag: 1.30.7
+      tag: 1.30.9
       sha: ""
     imagePullPolicy: IfNotPresent
     resources: {}

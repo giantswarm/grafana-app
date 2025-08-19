@@ -1,0 +1,11 @@
+{{- if and .Values.postgresql.enabled .Values.postgresql.backups.enabled (not $.Values.postgresql.backups.disabledForCustomer) }}
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: {{ .Values.postgresql.clusterName }}-hourly-backup
+  namespace: {{ .Release.Namespace }}
+spec:
+  schedule: "0 * * * *"
+  cluster:
+    name: {{ .Values.postgresql.clusterName }}
+{{- end }}
