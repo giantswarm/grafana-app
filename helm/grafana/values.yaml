@@ -1059,3 +1059,37 @@ grafana:
     #     data:
     #       - key: grafana-admin-password
     #         name: adminPassword
+
+postgresql:
+  # -- If true, deploys a CloudNativePG PostgreSQL cluster.
+  enabled: false
+  name: grafana-postgresql
+  instances: 2
+  imageName: giantswarm/postgresql-cnpg:17.5
+  storage:
+    size: 2Gi
+  parameters:
+    max_wal_size: '512MB'
+    wal_keep_size: '128MB'
+    max_slot_wal_keep_size: '128MB'
+
+  backup:
+    # -- If true, enables backups for the PostgreSQL cluster.
+    enabled: false
+    # -- Name of the backup (used in S3/Blob path).
+    name: ""
+    retentionPolicy: "30d"
+    # -- Cron schedule for hourly backups.
+    schedule: "0 0 * * * *"
+
+  recovery:
+    # -- Name of the backup to recover from.
+    backupName: ""
+    # -- Optional timestamp for point-in-time recovery.
+    backupTime: ""
+
+  bucket:
+    # -- If true, creates an ObjectStorage Bucket CR for backups.
+    enabled: false
+    # -- Expiration policy in days.
+    expirationDays: 45
