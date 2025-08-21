@@ -1,0 +1,51 @@
+{{- if .Values.postgresqlNetworkPolicy.enabled }}
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: grafana-postgresql
+  namespace: {{ .Release.Namespace }}
+spec:
+  endpointSelector:
+    matchLabels:
+      cnpg.io/cluster: grafana-postgresql
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            cnpg.io-cluster: grafana-postgresql
+      toPorts:
+        - ports:
+            - port: "5432"
+    - toEntities:
+        - world
+        - kube-apiserver
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            app.kubernetes.io/instance: alloy-metrics
+        - matchLabels:
+            app.kubernetes.io/instance: grafana
+        - matchLabels:
+            app.kubernetes.io/instance: prometheus-agent
+        - matchLabels:
+            cnpg.io/cluster: grafana-postgresql
+      toPorts:
+        - ports:
+            - port: "5432"
+---
+{{- end }}
+{{- if .Values.postgresqlPodMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: grafana-postgresql-extra
+  namespace: {{ .Release.Namespace }}
+  labels:
+    observability.giantswarm.io/tenant: giantswarm
+spec:
+  selector:
+    matchLabels:
+      cnpg.io/cluster: grafana-postgresql
+  podMetricsEndpoints:
+    - port: metrics
+---
+{{- end }}
