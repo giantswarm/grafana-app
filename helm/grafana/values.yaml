@@ -6,11 +6,11 @@ ciliumNetworkPolicy:
   enabled: true
 
 grafanaProxy:
-  enabled: true
-  serviceName: "grafana.example.com"
+  enabled: false
+  serviceName: ""
 
 postgresql:
-  enabled: true
+  enabled: false
   clusterName: "grafana-postgresql"
   instances: 2
   storageSize: "2Gi"
@@ -23,23 +23,22 @@ postgresql:
   codename: "my-installation"
   customer: "my-customer"
   grafanaDatabase:
-    backupName: "backup-2025-08-28"
-    recoveryBackupName: "recovery-backup-2025-08-28"
+    backupName: ""
+    recoveryBackupName: ""
     recoveryBackupTime: ""
   backups:
-    enabled: true
-    createBucket: true
+    enabled: false
+    createBucket: false
     bucketName: "giantswarm-{{ .Values.postgresql.codename }}-grafana-postgresql"
     bucketRetentionDays: 45
-  networkPolicy:
+  ciliumNetworkPolicy:
     enabled: true
-    # List of app instances allowed to connect to the database
     ingressAllowLabels:
       - "alloy-metrics"
       - "grafana"
       - "prometheus-agent"
   podMonitor:
-    enabled: true
+    enabled: false
     tenantLabel: "giantswarm"
 
 oidc:
@@ -1115,14 +1114,3 @@ grafana:
   # Enable backward compatibility of kubernetes where version below 1.13 doesn't have the enableServiceLinks option
   enableKubeBackwardCompatibility: false
   useStatefulSet: false
-  # Create a dynamic manifests via values:
-  extraObjects: []
-    # - apiVersion: "kubernetes-client.io/v1"
-    #   kind: ExternalSecret
-    #   metadata:
-    #     name: grafana-secrets
-    #   spec:
-    #     backendType: gcpSecretsManager
-    #     data:
-    #       - key: grafana-admin-password
-    #         name: adminPassword

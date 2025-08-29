@@ -1,4 +1,4 @@
-{{- if .Values.postgresql.networkPolicy.enabled }}
+{{- if .Values.postgresql.ciliumNetworkPolicy.enabled }}
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
@@ -22,7 +22,7 @@ spec:
       - kube-apiserver
   ingress:
     - fromEndpoints:
-      {{- range .Values.postgresql.networkPolicy.ingressAllowLabels }}
+      {{- range .Values.postgresql.ciliumNetworkPolicy.ingressAllowLabels }}
       - matchLabels:
           app.kubernetes.io/instance: {{ . }}
       {{- end }}
