@@ -43,3 +43,61 @@ Return the appropriate apiVersion for podDisruptionBudget.
     {{- print "policy/v1beta1" -}}
   {{- end -}}
 {{- end -}}
+
+{{/*
+PostgreSQL provider-specific helpers
+*/}}
+
+{{/*
+Check if provider is AWS (using shared-config value)
+*/}}
+{{- define "postgresql.isAWS" -}}
+{{- if (eq $.Values.postgresql.provider.kind $.Values.postgresql.provider.awsKind) -}}
+true
+{{- end -}}
+{{- end -}}
+
+{{/*
+Check if provider is Azure (using shared-config value)
+*/}}
+{{- define "postgresql.isAzure" -}}
+{{- if (eq $.Values.postgresql.provider.kind $.Values.postgresql.provider.azureKind) -}}
+true
+{{- end -}}
+{{- end -}}
+
+{{/*
+Get backup destination path based on provider
+*/}}
+{{- define "postgresql.backupDestinationPath" -}}
+{{- if (include "postgresql.isAWS" .) -}}
+{{ $.Values.postgresql.backups.aws.destinationPath }}/{{ $.Values.postgresql.grafanaDatabase.backupName }}/
+{{- else if (include "postgresql.isAzure" .) -}}
+{{ $.Values.postgresql.backups.azure.destinationPath }}/{{ $.Values.postgresql.grafanaDatabase.backupName }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Get recovery destination path based on provider
+*/}}
+{{- define "postgresql.recoveryDestinationPath" -}}
+{{- if (include "postgresql.isAWS" .) -}}
+{{ $.Values.postgresql.backups.aws.destinationPath }}/{{ $.Values.postgresql.grafanaDatabase.recoveryBackupName }}/
+{{- else if (include "postgresql.isAzure" .) -}}
+{{ $.Values.postgresql.backups.azure.destinationPath }}/{{ $.Values.postgresql.grafanaDatabase.recoveryBackupName }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Get AWS IAM role ARN (from shared-config)
+*/}}
+{{- define "postgresql.awsIamRoleArn" -}}
+{{ $.Values.postgresql.provider.aws.iamRoleArn }}
+{{- end -}}
+
+{{/*
+Get Azure storage account name (from shared-config)
+*/}}
+{{- define "postgresql.azureStorageAccountName" -}}
+{{ $.Values.postgresql.provider.azure.storageAccountName }}
+{{- end -}}

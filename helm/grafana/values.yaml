@@ -5,6 +5,72 @@ global:
 ciliumNetworkPolicy:
   enabled: true
 
+grafanaProxy:
+  enabled: false
+  serviceName: ""
+
+postgresql:
+  enabled: false
+  clusterName: "grafana-postgresql"
+  instances: 2
+  storageSize: "2Gi"
+  imageName: "gsoci.azurecr.io/giantswarm/postgresql-cnpg:17.5"
+  provider:
+    kind: "capz"
+    region: "westeurope"
+    controlPlane:
+      account: "1234567890"
+  codename: "my-installation"
+  customer: "my-customer"
+  grafanaDatabase:
+    backupName: ""
+    recoveryBackupName: ""
+    recoveryBackupTime: ""
+  backups:
+    enabled: false
+    createBucket: false
+    bucketName: "giantswarm-{{ .Values.postgresql.codename }}-grafana-postgresql"
+    bucketRetentionDays: 45
+  ciliumNetworkPolicy:
+    enabled: true
+    ingressAllowLabels:
+      - "alloy-metrics"
+      - "grafana"
+      - "prometheus-agent"
+  podMonitor:
+    enabled: false
+    tenantLabel: "giantswarm"
+
+oidc:
+  giantswarm:
+    write_all_group: "admins"
+    write_all_groups:
+      - "giantswarm-admins"
+  customer:
+    grafana:
+      sharedOrg:
+        editor_groups:
+          - "customer-editors"
+        viewer_groups:
+          - "customer-viewers"
+
+organizations:
+  shared:
+    enabled: true
+    name: "shared-org"
+    displayName: "Shared Org"
+    tenants:
+      - "giantswarm"
+    rbac:
+      editors: []
+      viewers: []
+  giantswarm:
+    enabled: true
+    name: "giantswarm"
+    displayName: "Giant Swarm"
+    tenants:
+      - "giantswarm"
+
 pgClusterRecoveryTest:
   enabled: false
   cronjob:
@@ -1048,14 +1114,3 @@ grafana:
   # Enable backward compatibility of kubernetes where version below 1.13 doesn't have the enableServiceLinks option
   enableKubeBackwardCompatibility: false
   useStatefulSet: false
-  # Create a dynamic manifests via values:
-  extraObjects: []
-    # - apiVersion: "kubernetes-client.io/v1"
-    #   kind: ExternalSecret
-    #   metadata:
-    #     name: grafana-secrets
-    #   spec:
-    #     backendType: gcpSecretsManager
-    #     data:
-    #       - key: grafana-admin-password
-    #         name: adminPassword

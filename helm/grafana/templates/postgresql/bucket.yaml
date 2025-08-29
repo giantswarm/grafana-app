@@ -1,0 +1,26 @@
+{{- if and .Values.postgresql.enabled .Values.postgresql.backups.createBucket (or (include "postgresql.isAWS" .) (include "postgresql.isAzure" .)) }}
+apiVersion: s3.aws.crossplane.io/v1beta1
+kind: Bucket
+metadata:
+  name: {{ .Values.postgresql.backups.bucketName }}
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    meta.helm.sh/release-name: {{ .Release.Name }}
+    meta.helm.sh/release-namespace: {{ .Release.Namespace }}
+  labels: {{- include "labels.selector" . | nindent 4 }}
+spec:
+  name: {{ .Values.postgresql.backups.bucketName }}
+  expirationPolicy:
+    days: {{ .Values.postgresql.backups.bucketRetentionDays }}
+  accessRole:
+    roleName: {{ .Values.postgresql.backups.bucketName }}
+    serviceAccountName: {{ .Values.postgresql.clusterName }}
+    serviceAccountNamespace: {{ .Release.Namespace }}
+  tags:
+    - key: app
+      value: {{ include "name" . }}
+    - key: installation
+      value: {{ $.Values.postgresql.codename }}
+    - key: name
+      value: {{ .Values.postgresql.backups.bucketName }}
+{{- end }}

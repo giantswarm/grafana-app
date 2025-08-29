@@ -1,0 +1,79 @@
+{{- if .Values.postgresql.enabled }}
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  labels:
+    observability.giantswarm.io/tenant: giantswarm
+  name: {{ .Values.postgresql.clusterName }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  instances: {{ .Values.postgresql.instances }}
+  imageName: {{ .Values.postgresql.imageName }}
+  storage:
+    size: {{ .Values.postgresql.storageSize }}
+  postgresql:
+    parameters:
+      max_wal_size: '512MB'
+      wal_keep_size: '128MB'
+      max_slot_wal_keep_size: '128MB'
+
+  {{- if and $.Values.postgresql.grafanaDatabase.recoveryBackupName (ne $.Values.postgresql.grafanaDatabase.recoveryBackupName $.Values.postgresql.grafanaDatabase.backupName) }}
+  bootstrap:
+    recovery:
+      source: grafana-postgresql
+      {{- if $.Values.postgresql.grafanaDatabase.recoveryBackupTime }}
+      recoveryTarget:
+        targetTime: {{ $.Values.postgresql.grafanaDatabase.recoveryBackupTime }}
+      {{- end }}
+  externalClusters:
+    - name: grafana-postgresql
+      barmanObjectStore:
+        {{- if (include "postgresql.isAWS" .) }}
+        destinationPath: {{ include "postgresql.recoveryDestinationPath" . }}
+        s3Credentials:
+          inheritFromIAMRole: true
+        {{- end }}
+        {{- if (include "postgresql.isAzure" .) }}
+        destinationPath: {{ include "postgresql.recoveryDestinationPath" . }}
+        azureCredentials:
+          storageAccount:
+            name: {{ include "postgresql.azureStorageAccountName" . }}
+            key: accountName
+          storageKey:
+            name: {{ include "postgresql.azureStorageAccountName" . }}
+            key: accountKey
+        {{- end }}
+        wal:
+          maxParallel: 8
+  {{- end }}
+  {{- if and ($.Values.postgresql.grafanaDatabase.backupName) (not $.Values.postgresql.backups.disabledForCustomer) }}
+  backup:
+    barmanObjectStore:
+      data:
+        compression: gzip
+      wal:
+        compression: gzip
+      {{- if (include "postgresql.isAWS" .) }}
+      destinationPath: {{ include "postgresql.backupDestinationPath" . }}
+      s3Credentials:
+        inheritFromIAMRole: true
+      {{- end }}
+      {{- if (include "postgresql.isAzure" .) }}
+      destinationPath: {{ include "postgresql.backupDestinationPath" . }}
+      azureCredentials:
+        storageAccount:
+          name: {{ include "postgresql.azureStorageAccountName" . }}
+          key: accountName
+        storageKey:
+          name: {{ include "postgresql.azureStorageAccountName" . }}
+          key: accountKey
+      {{- end }}
+      retentionPolicy: "30d"
+  {{- end }}
+  {{- if (include "postgresql.isAWS" .) }}
+  serviceAccountTemplate:
+    metadata:
+      annotations:
+        eks.amazonaws.com/role-arn: {{ include "postgresql.awsIamRoleArn" . }}
+  {{- end }}
+{{- end }}
