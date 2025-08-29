@@ -1,6 +1,6 @@
 apiVersion: v2
 name: grafana
-version: 2.25.0
+version: 2.25.2
 appVersion: 12.1.0
 kubeVersion: "^1.8.0-0"
 description: The leading tool for querying and visualizing time series and metrics.
@@ -10,10 +10,10 @@ sources:
   - https://github.com/grafana/helm-charts/tree/main/charts/grafana
 dependencies:
   - name: grafana
-    version: 9.3.2
+    version: 9.3.6
     repository: https://grafana.github.io/helm-charts
   - name: pg-cluster-recovery-test
-    version: 0.2.0
+    version: 0.2.3
     repository: https://giantswarm.github.io/giantswarm-catalog
     alias: pgClusterRecoveryTest
     condition: pgClusterRecoveryTest.enabled
