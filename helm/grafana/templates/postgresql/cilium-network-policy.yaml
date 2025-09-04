@@ -1,4 +1,4 @@
-{{- if .Values.postgresql.ciliumNetworkPolicy.enabled }}
+{{- if and .Values.postgresql.enabled .Values.postgresql.ciliumNetworkPolicy.enabled }}
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
