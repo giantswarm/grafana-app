@@ -45,59 +45,49 @@ Return the appropriate apiVersion for podDisruptionBudget.
 {{- end -}}
 
 {{/*
-PostgreSQL provider-specific helpers
+Generates the storage bucket name
+This is used for both S3 buckets and Azure storage accounts/secrets.
 */}}
-
-{{/*
-Check if provider is AWS (using shared-config value)
-*/}}
-{{- define "postgresql.isAWS" -}}
-{{- if (eq $.Values.postgresql.provider.kind $.Values.postgresql.provider.awsKind) -}}
-true
-{{- end -}}
+{{- define "chart.storageBucket.name" -}}
+{{- .Values.storageBucket.bucketName | default (printf "giantswarm-%s-%s" .Values.global.codename .Values.postgresql.clusterName) -}}
 {{- end -}}
 
 {{/*
-Check if provider is Azure (using shared-config value)
+Constructs the full AWS IAM Role ARN.
 */}}
-{{- define "postgresql.isAzure" -}}
-{{- if (eq $.Values.postgresql.provider.kind $.Values.postgresql.provider.azureKind) -}}
-true
-{{- end -}}
+{{- define "chart.aws.iamRoleArn" -}}
+{{- printf "arn:aws:iam::%s:role/%s" .Values.global.provider.account (include "chart.storageBucket.name" .) -}}
 {{- end -}}
 
 {{/*
-Get backup destination path based on provider
+Constructs the S3 destination path for new backups.
+Result: s3://<bucket-name>/<backup-name>/
 */}}
-{{- define "postgresql.backupDestinationPath" -}}
-{{- if (include "postgresql.isAWS" .) -}}
-{{ $.Values.postgresql.backups.aws.destinationPath }}/{{ $.Values.postgresql.grafanaDatabase.backupName }}/
-{{- else if (include "postgresql.isAzure" .) -}}
-{{ $.Values.postgresql.backups.azure.destinationPath }}/{{ $.Values.postgresql.grafanaDatabase.backupName }}
-{{- end -}}
+{{- define "chart.s3.backupPath" -}}
+{{- printf "s3://%s/%s/" (include "chart.storageBucket.name" .) .Values.postgresql.backup.name -}}
 {{- end -}}
 
 {{/*
-Get recovery destination path based on provider
+Constructs the S3 source path for recovery.
+Result: s3://<bucket-name>/<recovery-name>/
 */}}
-{{- define "postgresql.recoveryDestinationPath" -}}
-{{- if (include "postgresql.isAWS" .) -}}
-{{ $.Values.postgresql.backups.aws.destinationPath }}/{{ $.Values.postgresql.grafanaDatabase.recoveryBackupName }}/
-{{- else if (include "postgresql.isAzure" .) -}}
-{{ $.Values.postgresql.backups.azure.destinationPath }}/{{ $.Values.postgresql.grafanaDatabase.recoveryBackupName }}
-{{- end -}}
+{{- define "chart.s3.recoveryPath" -}}
+{{- printf "s3://%s/%s/" (include "chart.storageBucket.name" .) .Values.postgresql.recovery.name -}}
 {{- end -}}
 
 {{/*
-Get AWS IAM role ARN (from shared-config)
+Constructs the Azure Blob Storage destination path for backups.
+The storage account name is truncated to 24 characters as required by Azure.
 */}}
-{{- define "postgresql.awsIamRoleArn" -}}
-{{ $.Values.postgresql.provider.aws.iamRoleArn }}
+{{- define "chart.azure.backupPath" -}}
+{{- $accountName := printf "%.24s" (include "chart.storageBucket.name" .) -}}
+{{- printf "https://%s.blob.core.windows.net/giantswarm-%s-%s" $accountName .Values.global.codename .Values.postgresql.backup.name -}}
 {{- end -}}
 
 {{/*
-Get Azure storage account name (from shared-config)
+Constructs the Azure Blob Storage source path for recovery.
 */}}
-{{- define "postgresql.azureStorageAccountName" -}}
-{{ $.Values.postgresql.provider.azure.storageAccountName }}
+{{- define "chart.azure.recoveryPath" -}}
+{{- $accountName := printf "%.24s" (include "chart.storageBucket.name" .) -}}
+{{- printf "https://%s.blob.core.windows.net/giantswarm-%s-%s" $accountName .Values.global.codename .Values.postgresql.recovery.name -}}
 {{- end -}}

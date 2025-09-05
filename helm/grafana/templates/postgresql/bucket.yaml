@@ -1,26 +1,27 @@
-{{- if and .Values.postgresql.enabled .Values.postgresql.backups.createBucket (or (include "postgresql.isAWS" .) (include "postgresql.isAzure" .)) }}
-apiVersion: s3.aws.crossplane.io/v1beta1
+{{- if and .Values.storageBucket.enabled (or (eq .Values.global.provider.kind "aws") (eq .Values.global.provider.kind "azure")) }}
+apiVersion: objectstorage.giantswarm.io/v1alpha1
 kind: Bucket
 metadata:
-  name: {{ .Values.postgresql.backups.bucketName }}
-  namespace: {{ .Release.Namespace }}
   annotations:
     meta.helm.sh/release-name: {{ .Release.Name }}
     meta.helm.sh/release-namespace: {{ .Release.Namespace }}
-  labels: {{- include "labels.selector" . | nindent 4 }}
+  labels:
+  {{- toYaml .Values.storageBucket.labels | nindent 4 }}
+  name: {{ include "chart.storageBucket.name" . }}
+  namespace: {{ .Release.Namespace }}
 spec:
-  name: {{ .Values.postgresql.backups.bucketName }}
-  expirationPolicy:
-    days: {{ .Values.postgresql.backups.bucketRetentionDays }}
   accessRole:
-    roleName: {{ .Values.postgresql.backups.bucketName }}
+    roleName: {{ include "chart.storageBucket.name" . }}
     serviceAccountName: {{ .Values.postgresql.clusterName }}
     serviceAccountNamespace: {{ .Release.Namespace }}
+  expirationPolicy:
+    days: {{ .Values.storageBucket.bucketRetentionDays }}
+  name: {{ include "chart.storageBucket.name" . }}
   tags:
-    - key: app
-      value: {{ include "name" . }}
-    - key: installation
-      value: {{ $.Values.postgresql.codename }}
-    - key: name
-      value: {{ .Values.postgresql.backups.bucketName }}
+  - key: app
+    value: {{ .Chart.Name }}
+  - key: installation
+    value: {{ .Values.global.codename  }}
+  - key: name
+    value: {{ include "chart.storageBucket.name" . }}
 {{- end }}

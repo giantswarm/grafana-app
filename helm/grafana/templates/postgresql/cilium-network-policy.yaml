@@ -5,31 +5,28 @@ metadata:
   name: {{ .Values.postgresql.clusterName }}
   namespace: {{ .Release.Namespace }}
 spec:
+  egress:
+  - toEndpoints:
+    - matchLabels:
+        cnpg.io/cluster: {{ .Values.postgresql.clusterName }}
+    toPorts:
+    - ports:
+      - port: "5432"
+  - toEntities:
+    - world
+    - kube-apiserver
   endpointSelector:
     matchLabels:
       cnpg.io/cluster: {{ .Values.postgresql.clusterName }}
-  egress:
-    # Allow egress to other CNPG cluster members.
-    - toEndpoints:
-        - matchLabels:
-            cnpg.io/cluster: {{ .Values.postgresql.clusterName }}
-      toPorts:
-        - ports:
-            - port: "5432"
-    # Allow egress to world and apiserver for object storage
-    - toEntities:
-      - world
-      - kube-apiserver
   ingress:
-    - fromEndpoints:
-      {{- range .Values.postgresql.ciliumNetworkPolicy.ingressAllowLabels }}
-      - matchLabels:
-          app.kubernetes.io/instance: {{ . }}
-      {{- end }}
-      # Allow ingress from other CNPG cluster members (including join pods)
-      - matchLabels:
-          cnpg.io/cluster: {{ .Values.postgresql.clusterName }}
-      toPorts:
-        - ports:
-            - port: "5432"
+  - fromEndpoints:
+    {{- range .Values.postgresql.ciliumNetworkPolicy.ingressAllowLabels }}
+    - matchLabels:
+        app.kubernetes.io/instance: {{ . }}
+    {{- end }}
+    - matchLabels:
+        cnpg.io/cluster: {{ .Values.postgresql.clusterName }}
+    toPorts:
+    - ports:
+      - port: "5432"
 {{- end }}
