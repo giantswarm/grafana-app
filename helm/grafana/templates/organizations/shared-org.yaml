@@ -2,16 +2,16 @@
 apiVersion: observability.giantswarm.io/v1alpha1
 kind: GrafanaOrganization
 metadata:
-  name: {{ .Values.organizations.shared.name }}
+  name: shared-org
 spec:
-  displayName: {{ .Values.organizations.shared.displayName }}
+  displayName: Shared Org
   rbac:
     {{- with .Values.organizations.shared.rbac }}
     admins:
-      {{- if $.Values.oidc.giantswarm.write_all_group }}
-      - {{ $.Values.oidc.giantswarm.write_all_group }}
+      {{- if .Values.oidc.giantswarm.write_all_group }}
+      - {{ .Values.oidc.giantswarm.write_all_group }}
       {{- end }}
-      {{- with $.Values.oidc.giantswarm.write_all_groups }}
+      {{- with .Values.oidc.giantswarm.write_all_groups }}
       {{- toYaml . | nindent 6 }}
       {{- end }}
     {{- if .editors }}

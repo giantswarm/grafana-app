@@ -1044,6 +1044,7 @@ grafana:
   # Enable backward compatibility of kubernetes where version below 1.13 doesn't have the enableServiceLinks option
   enableKubeBackwardCompatibility: false
   useStatefulSet: false
+  extraObjects: []
 
 global:
   codename: "" 
