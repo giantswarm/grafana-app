@@ -1050,6 +1050,7 @@ global:
   customer: ""
   baseDomain: ""
   imageRegistry: ""
+  imagePullSecrets: []
   provider:
     kind: "" 
     account: "1234567890"
