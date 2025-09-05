@@ -1080,7 +1080,8 @@ postgresql:
       - ""
 
 storageBucket:
-  createBucket: false
+  enabled: false
+  bucketName: ""  
   bucketRetentionDays: 45
 
 podMonitor:
