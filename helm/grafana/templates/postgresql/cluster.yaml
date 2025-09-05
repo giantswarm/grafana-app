@@ -13,17 +13,17 @@ spec:
       data:
         compression: gzip
       {{- if eq .Values.global.provider.kind "aws" }}
-      destinationPath: {{ include "chart.s3.backupPath" . }}
+      destinationPath: {{ include "s3.backupPath" . }}
       s3Credentials:
         inheritFromIAMRole: true
       {{- else if eq .Values.global.provider.kind "azure" }}
-      destinationPath: {{ include "chart.azure.backupPath" . }}
+      destinationPath: {{ include "azure.backupPath" . }}
       azureCredentials:
         storageAccount:
-          name: {{ include "chart.storageBucket.name" . }}
+          name: {{  .Values.storageBucket.bucketName }}
           key: accountName
         storageKey:
-          name: {{ include "chart.storageBucket.name" . }}
+          name: {{  .Values.storageBucket.bucketName }}
           key: accountKey
       {{- end }}
       wal:
@@ -41,17 +41,17 @@ spec:
   externalClusters:
   - barmanObjectStore:
       {{- if eq .Values.global.provider.kind "aws" }}
-      destinationPath: {{ include "chart.s3.recoveryPath" . }}
+      destinationPath: {{ include "s3.recoveryPath" . }}
       s3Credentials:
         inheritFromIAMRole: true
       {{- else if eq .Values.global.provider.kind "azure" }}
-      destinationPath: {{ include "chart.azure.recoveryPath" . }}
+      destinationPath: {{ include "azure.recoveryPath" . }}
       azureCredentials:
         storageAccount:
-          name: {{ include "chart.storageBucket.name" . }}
+          name: {{  .Values.storageBucket.bucketName }}
           key: accountName
         storageKey:
-          name: {{ include "chart.storageBucket.name" . }}
+          name: {{  .Values.storageBucket.bucketName }}
           key: accountKey
       {{- end }}
       wal:
@@ -69,7 +69,7 @@ spec:
   serviceAccountTemplate:
     metadata:
       annotations:
-        eks.amazonaws.com/role-arn: {{ include "chart.aws.iamRoleArn" . }}
+        eks.amazonaws.com/role-arn: {{ include "aws.iamRoleArn" . }}
   {{- end }}
   storage:
     size: {{ .Values.postgresql.storageSize }}
