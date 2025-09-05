@@ -45,17 +45,9 @@ Return the appropriate apiVersion for podDisruptionBudget.
 {{- end -}}
 
 {{/*
-Generates the storage bucket name
-This is used for both S3 buckets and Azure storage accounts/secrets.
-*/}}
-{{- define "chart.storageBucket.name" -}}
-{{- .Values.storageBucket.bucketName | default (printf "giantswarm-%s-%s" .Values.global.codename .Values.postgresql.clusterName) -}}
-{{- end -}}
-
-{{/*
 Constructs the full AWS IAM Role ARN.
 */}}
-{{- define "chart.aws.iamRoleArn" -}}
+{{- define "aws.iamRoleArn" -}}
 {{- printf "arn:aws:iam::%s:role/%s" .Values.global.provider.account (include "chart.storageBucket.name" .) -}}
 {{- end -}}
 
@@ -63,7 +55,7 @@ Constructs the full AWS IAM Role ARN.
 Constructs the S3 destination path for new backups.
 Result: s3://<bucket-name>/<backup-name>/
 */}}
-{{- define "chart.s3.backupPath" -}}
+{{- define "s3.backupPath" -}}
 {{- printf "s3://%s/%s/" (include "chart.storageBucket.name" .) .Values.postgresql.backup.name -}}
 {{- end -}}
 
@@ -71,7 +63,7 @@ Result: s3://<bucket-name>/<backup-name>/
 Constructs the S3 source path for recovery.
 Result: s3://<bucket-name>/<recovery-name>/
 */}}
-{{- define "chart.s3.recoveryPath" -}}
+{{- define "s3.recoveryPath" -}}
 {{- printf "s3://%s/%s/" (include "chart.storageBucket.name" .) .Values.postgresql.recovery.name -}}
 {{- end -}}
 
@@ -79,7 +71,7 @@ Result: s3://<bucket-name>/<recovery-name>/
 Constructs the Azure Blob Storage destination path for backups.
 The storage account name is truncated to 24 characters as required by Azure.
 */}}
-{{- define "chart.azure.backupPath" -}}
+{{- define "azure.backupPath" -}}
 {{- $accountName := printf "%.24s" (include "chart.storageBucket.name" .) -}}
 {{- printf "https://%s.blob.core.windows.net/giantswarm-%s-%s" $accountName .Values.global.codename .Values.postgresql.backup.name -}}
 {{- end -}}
@@ -87,7 +79,7 @@ The storage account name is truncated to 24 characters as required by Azure.
 {{/*
 Constructs the Azure Blob Storage source path for recovery.
 */}}
-{{- define "chart.azure.recoveryPath" -}}
+{{- define "azure.recoveryPath" -}}
 {{- $accountName := printf "%.24s" (include "chart.storageBucket.name" .) -}}
 {{- printf "https://%s.blob.core.windows.net/giantswarm-%s-%s" $accountName .Values.global.codename .Values.postgresql.recovery.name -}}
 {{- end -}}
