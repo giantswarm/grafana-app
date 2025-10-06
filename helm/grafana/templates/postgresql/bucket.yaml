@@ -1,0 +1,27 @@
+{{- if and .Values.storageBucket.enabled (or (eq .Values.global.provider.kind "aws") (eq .Values.global.provider.kind "azure")) }}
+apiVersion: objectstorage.giantswarm.io/v1alpha1
+kind: Bucket
+metadata:
+  annotations:
+    meta.helm.sh/release-name: {{ .Release.Name }}
+    meta.helm.sh/release-namespace: {{ .Release.Namespace }}
+  labels:
+  {{- toYaml .Values.storageBucket.labels | nindent 4 }}
+  name: {{  .Values.storageBucket.bucketName }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  accessRole:
+    roleName: {{  .Values.storageBucket.bucketName }}
+    serviceAccountName: {{ .Values.postgresql.clusterName }}
+    serviceAccountNamespace: {{ .Release.Namespace }}
+  expirationPolicy:
+    days: {{ .Values.storageBucket.bucketRetentionDays }}
+  name: {{  .Values.storageBucket.bucketName }}
+  tags:
+  - key: app
+    value: {{ .Chart.Name }}
+  - key: installation
+    value: {{ .Values.global.codename  }}
+  - key: name
+    value: {{  .Values.storageBucket.bucketName }}
+{{- end }}
