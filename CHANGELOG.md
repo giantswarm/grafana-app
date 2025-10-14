@@ -9,8 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- upgrade grafana chart: 9.4.4 => 10.0.0
+- upgrade grafana chart: 9.4.4 => 10.1.0
     - Changes how `.Values.alerting.file` alerts are handled - see https://github.com/grafana/helm-charts/tree/main/charts/grafana#to-1000 for more info.
+    - upgrade grafana : 12.1.1 => 12.2.0
 
 ## [2.26.0] - 2025-09-01
 
