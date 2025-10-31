@@ -1,0 +1,38 @@
+{{- if .Values.grafanaProxy.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-nginx-config
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "labels.selector" . | nindent 4 }}
+data:
+      nginx.conf: |
+        server {
+          listen 8080 default_server;
+          listen [::]:8080 default_server;
+        
+          server_name "{{ .Values.grafanaProxy.serviceName }}";
+        
+          location / {
+              set $delimeter "";
+              if ($is_args) {
+                set $delimeter "&";
+              }
+
+              if ($args ~* "(.*)orgId=([0-9]+)(.*)") {
+                set $args $1$3;
+                set $orgId $2;
+              }
+
+              if ($args ~* "(.*)targetOrgId=([0-9]+)(.*)") {
+                set $args $1$3;
+              }
+
+              if ($orgId != '') {
+                set $args "$args${delimeter}orgId=$orgId&targetOrgId=$orgId";    
+              }
+
+              proxy_pass http://localhost:3000/;
+          }
+        }
+{{- end }}
