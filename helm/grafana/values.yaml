@@ -151,7 +151,7 @@ grafana:
   downloadDashboardsImage:
     registry: gsoci.azurecr.io
     repository: giantswarm/curl
-    tag: 8.16.0
+    tag: 8.17.0
     sha: ""
     pullPolicy: IfNotPresent
 
@@ -779,7 +779,7 @@ grafana:
     image:
       registry: gsoci.azurecr.io
       repository: giantswarm/k8s-sidecar
-      tag: 1.30.11
+      tag: 2.0.3
       sha: ""
     imagePullPolicy: IfNotPresent
     resources: {}
