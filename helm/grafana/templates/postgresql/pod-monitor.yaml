@@ -1,0 +1,15 @@
+{{- if and  .Values.postgresql.enabled  .Values.podMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  labels:
+  {{- toYaml .Values.podMonitor.labels | nindent 4 }}
+  name: {{ .Values.postgresql.clusterName }}-extra
+  namespace: {{ .Release.Namespace }}
+spec:
+  podMetricsEndpoints:
+  - port: metrics
+  selector:
+    matchLabels:
+      cnpg.io/cluster: {{ .Values.postgresql.clusterName }}
+{{- end }}

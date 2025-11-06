@@ -1,0 +1,76 @@
+{{- if .Values.postgresql.enabled -}}
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  labels:
+    observability.giantswarm.io/tenant: giantswarm
+  name: {{ .Values.postgresql.clusterName }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  {{- if .Values.postgresql.backup.name }}
+  backup:
+    barmanObjectStore:
+      data:
+        compression: gzip
+      {{- if eq .Values.global.provider.kind "aws" }}
+      destinationPath: {{ include "s3.backupPath" . }}
+      s3Credentials:
+        inheritFromIAMRole: true
+      {{- else if eq .Values.global.provider.kind "azure" }}
+      destinationPath: {{ include "azure.backupPath" . }}
+      azureCredentials:
+        storageAccount:
+          name: {{  .Values.storageBucket.bucketName }}
+          key: accountName
+        storageKey:
+          name: {{  .Values.storageBucket.bucketName }}
+          key: accountKey
+      {{- end }}
+      wal:
+        compression: gzip
+    retentionPolicy: {{ .Values.postgresql.backup.retention }}
+  {{- end }}
+  {{- if and .Values.postgresql.recovery.name (ne .Values.postgresql.recovery.name .Values.postgresql.backup.name) }}
+  bootstrap:
+    recovery:
+      {{- if .Values.postgresql.recovery.targetTime }}
+      recoveryTarget:
+        targetTime: {{ .Values.postgresql.recovery.targetTime }}
+      {{- end }}
+      source: {{ .Values.postgresql.clusterName }}
+  externalClusters:
+  - barmanObjectStore:
+      {{- if eq .Values.global.provider.kind "aws" }}
+      destinationPath: {{ include "s3.recoveryPath" . }}
+      s3Credentials:
+        inheritFromIAMRole: true
+      {{- else if eq .Values.global.provider.kind "azure" }}
+      destinationPath: {{ include "azure.recoveryPath" . }}
+      azureCredentials:
+        storageAccount:
+          name: {{  .Values.storageBucket.bucketName }}
+          key: accountName
+        storageKey:
+          name: {{  .Values.storageBucket.bucketName }}
+          key: accountKey
+      {{- end }}
+      wal:
+        maxParallel: 8
+    name: {{ .Values.postgresql.clusterName }}
+  {{- end }}
+  imageName: {{ .Values.postgresql.imageName }}
+  instances: {{ .Values.postgresql.instances }}
+  postgresql:
+    parameters:
+      max_slot_wal_keep_size: 128MB
+      max_wal_size: 512MB
+      wal_keep_size: 128MB
+  {{- if eq .Values.global.provider.kind "aws" }}
+  serviceAccountTemplate:
+    metadata:
+      annotations:
+        eks.amazonaws.com/role-arn: {{ include "aws.iamRoleArn" . }}
+  {{- end }}
+  storage:
+    size: {{ .Values.postgresql.storageSize }}
+{{- end -}}
