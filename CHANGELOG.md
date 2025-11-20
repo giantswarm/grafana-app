@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.27.3] - 2025-11-20
+
 ## [2.27.2] - 2025-11-06
 
 ### Changed
@@ -437,7 +439,8 @@ Added:
 - images retagged for Giant Swarm registries
 - simple functionality test to get login web page
 
-[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.27.2...HEAD
+[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.27.3...HEAD
+[2.27.3]: https://github.com/giantswarm/grafana-app/compare/v2.27.2...v2.27.3
 [2.27.2]: https://github.com/giantswarm/grafana-app/compare/v2.27.1...v2.27.2
 [2.27.1]: https://github.com/giantswarm/grafana-app/compare/v2.27.0...v2.27.1
 [2.27.0]: https://github.com/giantswarm/grafana-app/compare/v2.26.0...v2.27.0
