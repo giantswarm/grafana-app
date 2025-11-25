@@ -16,6 +16,57 @@ pgClusterRecoveryTest:
     name: grafana-postgresql-recovery-test
     namespace: monitoring
 
+#-- Grafana postgresql database, using CNPG
+postgresqlCluster:
+  enabled: true
+  name: grafana-postgresql
+  instances: 2
+  storage:
+    size: 2Gi
+  image:
+    registry: gsoci.azurecr.io
+    repository: giantswarm/postgresql-cnpg
+    tag: 17.7
+  #-- For IRSA access
+  serviceAccount:
+    annotations: {}
+  #-- For customers with their own object storage
+  customAccessKeys:
+    use: false
+    endpointURL: ""
+    region: null
+    accessKeyId: ""
+    secretAccessKey: ""
+  #-- For Azure object storage access
+  #   storageAccount:
+  #     name: storageAccountName
+  #     key: accountName
+  #   storageKey:
+  #     name: storageKeyName
+  #     key: accountKey
+  azureCredentials: {}
+  backup:
+    enabled: false
+    useIRSA: true
+    #-- Path to the object storage where the backups will be stored
+    # ⚠️ Needs to be different from the recovery.destinationPath
+    destinationPath: ""
+    schedule: "0 0 * * * *" # every hour
+    retentionPolicy: 30d
+    #-- Bucket CR config
+    bucket:
+      name: "giantswarm-installationName-grafana-postgresql"
+      installation: "installationName"
+  recovery:
+    enabled: false
+    useIRSA: true
+    #-- Path to the object storage from which to recover the backup
+    # ⚠️ Needs to be different from the backup.destinationPath
+    destinationPath: ""
+    #-- If one wants to recover a backup from a specific point in time
+    recoveryBackupTime: "" # e.g. "2024-01-01T12:00:00Z"
+    retentionPolicy: 30d
+
 grafana:
   rbac:
     create: true

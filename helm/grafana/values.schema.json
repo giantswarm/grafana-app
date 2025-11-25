@@ -17,7 +17,7 @@
                     "type": "array"
                 },
                 "imageRegistry": {
-                    "type": ["string", "null"]
+                    "type": "null"
                 }
             }
         },
@@ -676,10 +676,10 @@
                             "type": "boolean"
                         },
                         "name": {
-                            "type": ["string", "null"]
+                            "type": "null"
                         },
                         "nameTest": {
-                            "type": ["string", "null"]
+                            "type": "null"
                         }
                     }
                 },
@@ -722,7 +722,7 @@
                                     "type": "boolean"
                                 },
                                 "defaultFolderName": {
-                                    "type": ["string", "null"]
+                                    "type": "null"
                                 },
                                 "enabled": {
                                     "type": "boolean"
@@ -737,7 +737,7 @@
                                     "type": "string"
                                 },
                                 "folderAnnotation": {
-                                    "type": ["string", "null"]
+                                    "type": "null"
                                 },
                                 "label": {
                                     "type": "string"
@@ -775,10 +775,10 @@
                                     "type": "string"
                                 },
                                 "script": {
-                                    "type": ["string", "null"]
+                                    "type": "null"
                                 },
                                 "searchNamespace": {
-                                    "type": ["string", "null"]
+                                    "type": "null"
                                 },
                                 "sizeLimit": {
                                     "type": "object"
@@ -810,7 +810,7 @@
                                     "type": "string"
                                 },
                                 "searchNamespace": {
-                                    "type": ["string", "null"]
+                                    "type": "null"
                                 },
                                 "sizeLimit": {
                                     "type": "object"
@@ -865,7 +865,7 @@
                                     "type": "string"
                                 },
                                 "searchNamespace": {
-                                    "type": ["string", "null"]
+                                    "type": "null"
                                 },
                                 "sizeLimit": {
                                     "type": "object"
@@ -894,7 +894,7 @@
                                     "type": "string"
                                 },
                                 "searchNamespace": {
-                                    "type": ["string", "null"]
+                                    "type": "null"
                                 },
                                 "sizeLimit": {
                                     "type": "object"
@@ -1003,6 +1003,124 @@
                             "type": "string"
                         },
                         "namespace": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "postgresqlCluster": {
+            "type": "object",
+            "properties": {
+                "azureCredentials": {
+                    "type": "object"
+                },
+                "backup": {
+                    "type": "object",
+                    "properties": {
+                        "bucket": {
+                            "type": "object",
+                            "properties": {
+                                "installation": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "destinationPath": {
+                            "type": "string"
+                        },
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "retentionPolicy": {
+                            "type": "string"
+                        },
+                        "schedule": {
+                            "type": "string"
+                        },
+                        "useIRSA": {
+                            "type": "boolean"
+                        }
+                    }
+                },
+                "customAccessKeys": {
+                    "type": "object",
+                    "properties": {
+                        "accessKeyId": {
+                            "type": "string"
+                        },
+                        "endpointURL": {
+                            "type": "string"
+                        },
+                        "region": {
+                            "type": "null"
+                        },
+                        "secretAccessKey": {
+                            "type": "string"
+                        },
+                        "use": {
+                            "type": "boolean"
+                        }
+                    }
+                },
+                "enabled": {
+                    "type": "boolean"
+                },
+                "image": {
+                    "type": "object",
+                    "properties": {
+                        "registry": {
+                            "type": "string"
+                        },
+                        "repository": {
+                            "type": "string"
+                        },
+                        "tag": {
+                            "type": "number"
+                        }
+                    }
+                },
+                "instances": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "recovery": {
+                    "type": "object",
+                    "properties": {
+                        "destinationPath": {
+                            "type": "string"
+                        },
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "recoveryBackupTime": {
+                            "type": "string"
+                        },
+                        "retentionPolicy": {
+                            "type": "string"
+                        },
+                        "useIRSA": {
+                            "type": "boolean"
+                        }
+                    }
+                },
+                "serviceAccount": {
+                    "type": "object",
+                    "properties": {
+                        "annotations": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "storage": {
+                    "type": "object",
+                    "properties": {
+                        "size": {
                             "type": "string"
                         }
                     }

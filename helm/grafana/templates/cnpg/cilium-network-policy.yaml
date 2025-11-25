@@ -1,0 +1,40 @@
+{{- if and (.Values.postgresqlCluster.enabled) (.Values.ciliumNetworkPolicy.enabled) }}
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: {{ .Values.postgresqlCluster.name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  endpointSelector:
+    matchLabels:
+      {{- include "grafana.postgresql.labels" . | nindent 6 }}
+  egress:
+    # Allow egress to other CNPG cluster members.
+    - toEndpoints:
+        - matchLabels:
+            {{- include "grafana.postgresql.labels" . | nindent 12 }}
+      toPorts:
+        - ports:
+            - port: "5432"
+    # Allow egress to world and apiserver for object storage
+    - toEntities:
+      - world
+      - kube-apiserver
+  ingress:
+    - fromEndpoints:
+        # Allow ingress from alloy-metrics
+        - matchLabels:
+            app.kubernetes.io/instance: alloy-metrics
+        # Allow ingress from grafana
+        - matchLabels:
+            app.kubernetes.io/instance: grafana
+        # Allow ingress from prometheus-agent
+        - matchLabels:
+            app.kubernetes.io/instance: prometheus-agent
+        # Allow ingress from other CNPG cluster members (including join pods)
+        - matchLabels:
+            {{- include "grafana.postgresql.labels" . | nindent 12 }}
+      toPorts:
+        - ports:
+            - port: "5432"
+{{- end }}

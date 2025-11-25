@@ -1,0 +1,54 @@
+{{- if .Values.postgresqlCluster.enabled }}
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  labels:
+    {{- include "grafana.labels" . | nindent 4 }}
+    observability.giantswarm.io/tenant: giantswarm
+  name: {{ .Values.postgresqlCluster.name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  instances: {{ .Values.postgresqlCluster.instances }}
+  # used by renovate
+  # registry: gsoci.azurecr.io/giantswarm/postgresql-cnpg
+  imageName: {{ .Values.postgresqlCluster.image.registry }}/{{ .Values.postgresqlCluster.image.repository }}:{{ .Values.postgresqlCluster.image.tag }}
+  postgresql:
+    parameters:
+      # Maximum size of the WAL
+      max_wal_size: '512MB'
+      # Specifies the minimum size of past WAL files kept in the pg_wal directory
+      wal_keep_size: '128MB'
+      # Specify the maximum size of WAL files that replication slot
+      max_slot_wal_keep_size: '128MB'
+  storage:
+    size: {{ .Values.postgresqlCluster.storage.size }}
+  {{- if .Values.postgresqlCluster.recovery.enabled }}
+  bootstrap:
+    recovery:
+      source: {{ .Values.postgresqlCluster.name }}
+      {{- if .Values.postgresqlCluster.recovery.recoveryBackupTime }}
+      recoveryTarget:
+        targetTime: {{ .Values.postgresqlCluster.recovery.recoveryBackupTime }}
+      {{- end }}
+  externalClusters:
+  - name: {{ .Values.postgresqlCluster.name }}
+    plugin:
+      name: barman-cloud.cloudnative-pg.io
+      parameters:
+        barmanObjectName: {{ .Values.postgresqlCluster.name }}-objectstore-recovery
+        serverName: {{ .Values.postgresqlCluster.name }}
+  {{- end }}
+  plugins:
+  - name: barman-cloud.cloudnative-pg.io
+    isWALArchiver: true
+    parameters:
+      barmanObjectName: {{ .Values.postgresqlCluster.name }}-objectstore-backup
+  {{- if .Values.postgresqlCluster.backup.useIRSA }}
+  serviceAccountTemplate:
+    metadata:
+      {{- with .Values.postgresqlCluster.serviceAccount.annotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  {{- end }}
+{{- end }}

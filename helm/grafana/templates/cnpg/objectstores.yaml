@@ -1,0 +1,72 @@
+{{- if and (.Values.postgresqlCluster.enabled) (.Values.postgresqlCluster.backup.enabled) }}
+---
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  labels:
+    {{- include "grafana.labels" . | nindent 4 }}
+    observability.giantswarm.io/tenant: giantswarm
+  name: {{ .Values.postgresqlCluster.bucket.name }}-objectstore-backup
+  namespace: {{ .Release.Namespace }}
+spec:
+  configuration:
+  destinationPath: {{ .Values.postgresqlCluster.backup.destinationPath | quote }}
+    {{- if .Values.postgresqlCluster.backup.useIRSA }}
+    s3Credentials:
+      inheritFromIAMRole: true
+    {{- end }}
+    {{- if .Values.postgresqlCluster.customAccessKeys.use }}
+    endpointURL: {{ .grafanaDatabase.endpointURL }}
+    s3Credentials:
+      region: null
+      accessKeyId:
+        name: grafana-postgresql-access-keys
+        key: ACCESS_KEY_ID
+      secretAccessKey:
+        name: grafana-postgresql-access-keys
+        key: SECRET_ACCESS_KEY
+    {{- end }}
+    {{- with .Values.postgresqlCluster.azureCredentials }}
+    azureCredentials:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    wal:
+      compression: gzip
+  retentionPolicy: {{ .Values.postgresqlCluster.backup.retentionPolicy | quote }}
+{{- end }}
+{{- if .Values.postgresqlCluster.recovery.enabled }}
+---
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  labels:
+    {{- include "grafana.labels" . | nindent 4 }}
+    observability.giantswarm.io/tenant: giantswarm
+  name: {{ .Values.postgresqlCluster.bucket.name }}-objectstore-recovery
+  namespace: {{ .Release.Namespace }}
+spec:
+  configuration:
+    destinationPath: {{ .Values.postgresqlCluster.recovery.destinationPath | quote }}
+    {{- if .Values.postgresqlCluster.backup.useIRSA }}
+    s3Credentials:
+      inheritFromIAMRole: true
+    {{- end }}
+    {{- if .Values.postgresqlCluster.customAccessKeys.use }}
+    endpointURL: {{ .Values.postgresqlCluster.customAccessKeys.endpointURL }}
+    s3Credentials:
+      region: {{ .Values.postgresqlCluster.customAccessKeys.region }}
+      accessKeyId:
+        name: grafana-postgresql-access-keys
+        key: ACCESS_KEY_ID
+      secretAccessKey:
+        name: grafana-postgresql-access-keys
+        key: SECRET_ACCESS_KEY
+    {{- end }}
+    {{- with .Values.postgresqlCluster.azureCredentials }}
+    azureCredentials:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    wal:
+      compression: gzip
+  retentionPolicy: {{ .Values.postgresqlCluster.recovery.retentionPolicy | quote }}
+{{- end }}

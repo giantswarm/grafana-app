@@ -23,6 +23,13 @@ app.kubernetes.io/instance: {{ .Chart.Name | quote }}
 {{- end -}}
 
 {{/*
+Grafana-postgresql labels
+*/}}
+{{- define "grafana.postgresql.labels" -}}
+cnpg.io/cluster: {{ .Values.postgresqlCluster }}
+{{- end -}}
+
+{{/*
 Return the appropriate apiVersion for podSecurityPolicy.
 */}}
 {{- define "grafana.podSecurityPolicy.apiVersion" -}}
