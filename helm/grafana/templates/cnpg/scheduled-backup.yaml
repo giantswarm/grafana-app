@@ -7,7 +7,6 @@ metadata:
   name: {{ .Values.postgresqlCluster.name }}-hourly-backup
   namespace:  {{ .Release.Namespace }}
 spec:
-# At 0 minute and 0 second of every hour
   schedule: {{ .Values.postgresqlCluster.backup.schedule | quote }}
   backupOwnerReference: self
   cluster:

@@ -20,10 +20,10 @@ spec:
     s3Credentials:
       region: null
       accessKeyId:
-        name: grafana-postgresql-access-keys
+        name: {{ .Values.postgresqlCluster.bucket.name }}-access-keys
         key: ACCESS_KEY_ID
       secretAccessKey:
-        name: grafana-postgresql-access-keys
+        name: {{ .Values.postgresqlCluster.bucket.name }}-access-keys
         key: SECRET_ACCESS_KEY
     {{- end }}
     {{- with .Values.postgresqlCluster.azureCredentials }}
@@ -56,10 +56,10 @@ spec:
     s3Credentials:
       region: {{ .Values.postgresqlCluster.customAccessKeys.region }}
       accessKeyId:
-        name: grafana-postgresql-access-keys
+        name: {{ .Values.postgresqlCluster.bucket.name }}-access-keys
         key: ACCESS_KEY_ID
       secretAccessKey:
-        name: grafana-postgresql-access-keys
+        name: {{ .Values.postgresqlCluster.bucket.name }}-access-keys
         key: SECRET_ACCESS_KEY
     {{- end }}
     {{- with .Values.postgresqlCluster.azureCredentials }}
