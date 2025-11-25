@@ -4,7 +4,7 @@ apiVersion: barmancloud.cnpg.io/v1
 kind: ObjectStore
 metadata:
   labels:
-    {{- include "grafana.labels" . | nindent 4 }}
+    {{- include "grafana-app.labels" . | nindent 4 }}
     observability.giantswarm.io/tenant: giantswarm
   name: {{ .Values.postgresqlCluster.bucket.name }}-objectstore-backup
   namespace: {{ .Release.Namespace }}
@@ -40,7 +40,7 @@ apiVersion: barmancloud.cnpg.io/v1
 kind: ObjectStore
 metadata:
   labels:
-    {{- include "grafana.labels" . | nindent 4 }}
+    {{- include "grafana-app.labels" . | nindent 4 }}
     observability.giantswarm.io/tenant: giantswarm
   name: {{ .Values.postgresqlCluster.bucket.name }}-objectstore-recovery
   namespace: {{ .Release.Namespace }}

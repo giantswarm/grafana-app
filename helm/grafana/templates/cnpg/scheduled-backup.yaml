@@ -3,7 +3,7 @@ apiVersion: postgresql.cnpg.io/v1
 kind: ScheduledBackup
 metadata:
   labels:
-    {{- include "grafana.labels" . | nindent 4 }}
+    {{- include "grafana-app.labels" . | nindent 4 }}
   name: {{ .Values.postgresqlCluster.name }}-hourly-backup
   namespace:  {{ .Release.Namespace }}
 spec:
