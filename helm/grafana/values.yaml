@@ -55,6 +55,7 @@ postgresqlCluster:
     retentionPolicy: 30d
     #-- Bucket CR config
     bucket:
+      create: false
       name: "giantswarm-installationName-grafana-postgresql"
       installation: "installationName"
   recovery:

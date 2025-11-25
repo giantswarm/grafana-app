@@ -1,4 +1,4 @@
-{{- if and (.Values.postgresqlCluster.enabled) (.Values.postgresqlCluster.backup.enabled) }}
+{{- if and (.Values.postgresqlCluster.enabled) (and (.Values.postgresqlCluster.backup.enabled) (Values.postgresqlCluster.backup.bucket.create)) }}
 apiVersion: objectstorage.giantswarm.io/v1alpha1
 kind: Bucket
 metadata:

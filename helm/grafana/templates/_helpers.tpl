@@ -4,8 +4,8 @@ Common labels
 {{- define "grafana.labels" -}}
 helm.sh/chart: {{ include "grafana.chart" . }}
 {{ include "grafana.selectorLabels" . }}
-{{- if or .Chart.AppVersion .Values.image.tag }}
-app.kubernetes.io/version: {{ .Values.image.tag | default .Chart.AppVersion | quote }}
+{{- if or .Chart.AppVersion .Values.grafana.image.tag }}
+app.kubernetes.io/version: {{ .Values.grafana.image.tag | default .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- if .Values.extraLabels }}
