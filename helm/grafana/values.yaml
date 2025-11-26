@@ -32,7 +32,6 @@ postgresqlCluster:
     repository: giantswarm/postgresql-cnpg
     tag: 17.7
   objectStorage:
-    type: s3
     s3:
       #-- For IRSA access
       serviceAccount:
