@@ -10,7 +10,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   configuration:
-  destinationPath: {{ .Values.postgresqlCluster.backup.destinationPath | quote }}
+    destinationPath: {{ .Values.postgresqlCluster.backup.destinationPath | quote }}
     {{- if .Values.postgresqlCluster.backup.useIRSA }}
     s3Credentials:
       inheritFromIAMRole: true
