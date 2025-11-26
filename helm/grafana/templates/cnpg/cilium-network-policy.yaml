@@ -15,7 +15,7 @@ spec:
             {{- include "grafana.postgresql.labels" . | nindent 12 }}
       toPorts:
         - ports:
-            - port: "5432"
+            - port: {{ .Values.postgresqlCluster.port | default "5432" | quote }}
     # Allow egress to world and apiserver for object storage
     - toEntities:
       - world
@@ -36,5 +36,5 @@ spec:
             {{- include "grafana.postgresql.labels" . | nindent 12 }}
       toPorts:
         - ports:
-            - port: "5432"
+            - port: {{ .Values.postgresqlCluster.port | default "5432" | quote }}
 {{- end }}

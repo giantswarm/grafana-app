@@ -23,6 +23,8 @@ postgresqlCluster:
   instances: 2
   storage:
     size: 2Gi
+  #-- Used for the cilium network policy
+  port: 5432
   image:
     # used by renovate
     # registry: gsoci.azurecr.io
