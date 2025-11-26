@@ -24,6 +24,8 @@ postgresqlCluster:
   storage:
     size: 2Gi
   image:
+    # used by renovate
+    # registry: gsoci.azurecr.io
     registry: gsoci.azurecr.io
     repository: giantswarm/postgresql-cnpg
     tag: 17.7

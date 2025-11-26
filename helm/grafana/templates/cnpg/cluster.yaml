@@ -9,8 +9,6 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   instances: {{ .Values.postgresqlCluster.instances }}
-  # used by renovate
-  # registry: gsoci.azurecr.io/giantswarm/postgresql-cnpg
   imageName: {{ .Values.postgresqlCluster.image.registry }}/{{ .Values.postgresqlCluster.image.repository }}:{{ .Values.postgresqlCluster.image.tag }}
   postgresql:
     parameters:
