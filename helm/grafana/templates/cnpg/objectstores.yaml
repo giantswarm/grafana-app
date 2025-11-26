@@ -15,10 +15,10 @@ spec:
     s3Credentials:
       inheritFromIAMRole: true
     {{- end }}
-    {{- if .Values.postgresqlCluster.customAccessKeys.use }}
-    endpointURL: {{ .grafanaDatabase.endpointURL }}
+    {{- if .Values.postgresqlCluster.objectStorage.s3.customAccessKeys.use }}
+    endpointURL: {{ .Values.postgresqlCluster.objectStorage.s3.customAccessKeys.endpointURL }}
     s3Credentials:
-      region: null
+      region: {{ .Values.postgresqlCluster.objectStorage.s3.customAccessKeys.region }}
       accessKeyId:
         name: {{ .Values.postgresqlCluster.bucket.name }}-access-keys
         key: ACCESS_KEY_ID
@@ -26,7 +26,7 @@ spec:
         name: {{ .Values.postgresqlCluster.bucket.name }}-access-keys
         key: SECRET_ACCESS_KEY
     {{- end }}
-    {{- with .Values.postgresqlCluster.azureCredentials }}
+    {{- with .Values.postgresqlCluster.objectStorage.azure.azureCredentials }}
     azureCredentials:
       {{- toYaml . | nindent 6 }}
     {{- end }}
@@ -51,10 +51,10 @@ spec:
     s3Credentials:
       inheritFromIAMRole: true
     {{- end }}
-    {{- if .Values.postgresqlCluster.customAccessKeys.use }}
-    endpointURL: {{ .Values.postgresqlCluster.customAccessKeys.endpointURL }}
+    {{- if .Values.postgresqlCluster.objectStorage.s3.customAccessKeys.use }}
+    endpointURL: {{ .Values.postgresqlCluster.objectStorage.s3.customAccessKeys.endpointURL }}
     s3Credentials:
-      region: {{ .Values.postgresqlCluster.customAccessKeys.region }}
+      region: {{ .Values.postgresqlCluster.objectStorage.s3.customAccessKeys.region }}
       accessKeyId:
         name: {{ .Values.postgresqlCluster.bucket.name }}-access-keys
         key: ACCESS_KEY_ID
@@ -62,11 +62,10 @@ spec:
         name: {{ .Values.postgresqlCluster.bucket.name }}-access-keys
         key: SECRET_ACCESS_KEY
     {{- end }}
-    {{- with .Values.postgresqlCluster.azureCredentials }}
+    {{- with .Values.postgresqlCluster.objectStorage.azure.azureCredentials }}
     azureCredentials:
       {{- toYaml . | nindent 6 }}
     {{- end }}
     wal:
       compression: gzip
-  retentionPolicy: {{ .Values.postgresqlCluster.recovery.retentionPolicy | quote }}
 {{- end }}

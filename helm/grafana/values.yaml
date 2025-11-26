@@ -27,24 +27,33 @@ postgresqlCluster:
     registry: gsoci.azurecr.io
     repository: giantswarm/postgresql-cnpg
     tag: 17.7
-  #-- For IRSA access
-  serviceAccount:
-    annotations: {}
-  #-- For customers with their own object storage
-  customAccessKeys:
-    use: false
-    endpointURL: ""
-    region: null
-    accessKeyId: ""
-    secretAccessKey: ""
-  #-- For Azure object storage access
-  #   storageAccount:
-  #     name: storageAccountName
-  #     key: accountName
-  #   storageKey:
-  #     name: storageKeyName
-  #     key: accountKey
-  azureCredentials: {}
+  objectStorage:
+    type: s3
+    s3:
+      #-- For IRSA access
+      serviceAccount:
+        annotations: {}
+      #-- For customers with their own S3 bucket
+      customAccessKeys:
+        use: false
+        endpointURL: ""
+        region: null
+        accessKeyId: ""
+        secretAccessKey: ""
+    azure:
+      #-- For Azure object storage access
+      #   storageAccount:
+      #     name: storageAccountName
+      #     key: accountName
+      #   storageKey:
+      #     name: storageKeyName
+      #     key: accountKey
+      azureCredentials: {}
+    #-- Bucket CR config
+    bucket:
+      create: false
+      name: "giantswarm-installationName-grafana-postgresql"
+      installation: "installationName"
   backup:
     enabled: false
     useIRSA: false
@@ -53,11 +62,6 @@ postgresqlCluster:
     destinationPath: ""
     schedule: "0 0 * * * *" # every hour
     retentionPolicy: 30d
-    #-- Bucket CR config
-    bucket:
-      create: false
-      name: "giantswarm-installationName-grafana-postgresql"
-      installation: "installationName"
   recovery:
     enabled: false
     useIRSA: false
@@ -66,7 +70,6 @@ postgresqlCluster:
     destinationPath: ""
     #-- If one wants to recover a backup from a specific point in time
     recoveryBackupTime: "" # e.g. "2024-01-01T12:00:00Z"
-    retentionPolicy: 30d
 
 grafana:
   rbac:

@@ -1012,26 +1012,9 @@
         "postgresqlCluster": {
             "type": "object",
             "properties": {
-                "azureCredentials": {
-                    "type": "object"
-                },
                 "backup": {
                     "type": "object",
                     "properties": {
-                        "bucket": {
-                            "type": "object",
-                            "properties": {
-                                "create": {
-                                    "type": "boolean"
-                                },
-                                "installation": {
-                                    "type": "string"
-                                },
-                                "name": {
-                                    "type": "string"
-                                }
-                            }
-                        },
                         "destinationPath": {
                             "type": "string"
                         },
@@ -1045,26 +1028,6 @@
                             "type": "string"
                         },
                         "useIRSA": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "customAccessKeys": {
-                    "type": "object",
-                    "properties": {
-                        "accessKeyId": {
-                            "type": "string"
-                        },
-                        "endpointURL": {
-                            "type": "string"
-                        },
-                        "region": {
-                            "type": ["string", "null"]
-                        },
-                        "secretAccessKey": {
-                            "type": "string"
-                        },
-                        "use": {
                             "type": "boolean"
                         }
                     }
@@ -1092,6 +1055,69 @@
                 "name": {
                     "type": "string"
                 },
+                "objectStorage": {
+                    "type": "object",
+                    "properties": {
+                        "azure": {
+                            "type": "object",
+                            "properties": {
+                                "azureCredentials": {
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "bucket": {
+                            "type": "object",
+                            "properties": {
+                                "create": {
+                                    "type": "boolean"
+                                },
+                                "installation": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "s3": {
+                            "type": "object",
+                            "properties": {
+                                "customAccessKeys": {
+                                    "type": "object",
+                                    "properties": {
+                                        "accessKeyId": {
+                                            "type": "string"
+                                        },
+                                        "endpointURL": {
+                                            "type": "string"
+                                        },
+                                        "region": {
+                                            "type": ["string", "null"]
+                                        },
+                                        "secretAccessKey": {
+                                            "type": "string"
+                                        },
+                                        "use": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "serviceAccount": {
+                                    "type": "object",
+                                    "properties": {
+                                        "annotations": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "type": {
+                            "type": "string"
+                        }
+                    }
+                },
                 "recovery": {
                     "type": "object",
                     "properties": {
@@ -1104,19 +1130,8 @@
                         "recoveryBackupTime": {
                             "type": "string"
                         },
-                        "retentionPolicy": {
-                            "type": "string"
-                        },
                         "useIRSA": {
                             "type": "boolean"
-                        }
-                    }
-                },
-                "serviceAccount": {
-                    "type": "object",
-                    "properties": {
-                        "annotations": {
-                            "type": "object"
                         }
                     }
                 },

@@ -43,7 +43,7 @@ spec:
     isWALArchiver: true
     parameters:
       barmanObjectName: {{ .Values.postgresqlCluster.name }}-objectstore-backup
-  {{- if .Values.postgresqlCluster.backup.useIRSA }}
+  {{- if and (.Values.postgresqlCluster.backup.useIRSA) (.Values.postgresqlCluster.serviceAccount.annotations) }}
   serviceAccountTemplate:
     metadata:
       {{- with .Values.postgresqlCluster.serviceAccount.annotations }}
