@@ -18,7 +18,7 @@ pgClusterRecoveryTest:
 
 #-- Grafana postgresql database, using CNPG
 postgresqlCluster:
-  enabled: true
+  enabled: false
   name: grafana-postgresql
   instances: 2
   storage:
@@ -47,7 +47,7 @@ postgresqlCluster:
   azureCredentials: {}
   backup:
     enabled: false
-    useIRSA: true
+    useIRSA: false
     #-- Path to the object storage where the backups will be stored
     # ⚠️ Needs to be different from the recovery.destinationPath
     destinationPath: ""
@@ -60,7 +60,7 @@ postgresqlCluster:
       installation: "installationName"
   recovery:
     enabled: false
-    useIRSA: true
+    useIRSA: false
     #-- Path to the object storage from which to recover the backup
     # ⚠️ Needs to be different from the backup.destinationPath
     destinationPath: ""
