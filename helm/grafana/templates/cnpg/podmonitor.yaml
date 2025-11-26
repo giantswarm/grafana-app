@@ -3,7 +3,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
   labels:
-    {{- include "grafana-app.labels" . | nindent 4 }}
+    {{- include "grafana.labels" . | nindent 4 }}
     observability.giantswarm.io/tenant: giantswarm
   # We need the extra suffix to ensure it is not deleted by cloudnative-pg (until https://github.com/cloudnative-pg/cloudnative-pg/pull/4438)
   name: {{ .Values.postgresqlCluster.name }}-extra
@@ -11,7 +11,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      {{- include "grafana-app.postgresql.labels" . | nindent 6 }}
+      {{- include "grafana.postgresql.labels" . | nindent 6 }}
   podMetricsEndpoints:
   - port: metrics
 {{- end }}

@@ -3,7 +3,7 @@ apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   labels:
-    {{- include "grafana-app.labels" . | nindent 4 }}
+    {{- include "grafana.labels" . | nindent 4 }}
     observability.giantswarm.io/tenant: giantswarm
   name: {{ .Values.postgresqlCluster.name }}
   namespace: {{ .Release.Namespace }}

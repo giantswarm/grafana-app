@@ -6,7 +6,7 @@ metadata:
     meta.helm.sh/release-name: grafana
     meta.helm.sh/release-namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "grafana-app.labels" . | nindent 4 }}
+    {{- include "grafana.labels" . | nindent 4 }}
   name: {{ .Values.postgresqlCluster.objectStorage.bucket.name }}
   namespace: {{ .Release.Namespace }}
 spec:
