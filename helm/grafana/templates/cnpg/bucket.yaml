@@ -7,21 +7,21 @@ metadata:
     meta.helm.sh/release-namespace: {{ .Release.Namespace }}
   labels:
     {{- include "grafana-app.labels" . | nindent 4 }}
-  name: {{ .Values.postgresqlCluster.bucket.name }}
+  name: {{ .Values.postgresqlCluster.backup.bucket.name }}
   namespace: {{ .Release.Namespace }}
 spec:
-  name: {{ .Values.postgresqlCluster.bucket.name }}
+  name: {{ .Values.postgresqlCluster.backup.bucket.name }}
   expirationPolicy:
     days: 45
   accessRole:
-    roleName: {{ .Values.postgresqlCluster.bucket.name }}
+    roleName: {{ .Values.postgresqlCluster.backup.bucket.name }}
     serviceAccountName: {{ .Values.postgresqlCluster.name }}
     serviceAccountNamespace: {{ .Release.Namespace }}
   tags:
   - key: app
     value: grafana
   - key: installation
-    value: {{ .Values.postgresqlCluster.bucket.installation }}
+    value: {{ .Values.postgresqlCluster.backup.bucket.installation }}
   - key: name
-    value: {{ .Values.postgresqlCluster.bucket.name }}
+    value: {{ .Values.postgresqlCluster.backup.bucket.name }}
 {{- end }}
