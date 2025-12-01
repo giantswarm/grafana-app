@@ -31,11 +31,11 @@ postgresqlCluster:
     registry: gsoci.azurecr.io
     repository: giantswarm/postgresql-cnpg
     tag: 17.7
+  #-- Mainly used for IRSA access
+  serviceAccount:
+    annotations: {}
   objectStorage:
     s3:
-      #-- For IRSA access
-      serviceAccount:
-        annotations: {}
       #-- For customers with their own S3 bucket
       endpointURL: ""
       region: null

@@ -1102,14 +1102,6 @@
                                 },
                                 "region": {
                                     "type": ["string", "null"]
-                                },
-                                "serviceAccount": {
-                                    "type": "object",
-                                    "properties": {
-                                        "annotations": {
-                                            "type": "object"
-                                        }
-                                    }
                                 }
                             }
                         }
@@ -1132,6 +1124,14 @@
                         },
                         "useIRSA": {
                             "type": "boolean"
+                        }
+                    }
+                },
+                "serviceAccount": {
+                    "type": "object",
+                    "properties": {
+                        "annotations": {
+                            "type": "object"
                         }
                     }
                 },
