@@ -17,7 +17,7 @@
                     "type": "array"
                 },
                 "imageRegistry": {
-                    "type": ["string", "null"]
+                    "type": "null"
                 }
             }
         },
@@ -676,10 +676,10 @@
                             "type": "boolean"
                         },
                         "name": {
-                            "type": ["string", "null"]
+                            "type": "null"
                         },
                         "nameTest": {
-                            "type": ["string", "null"]
+                            "type": "null"
                         }
                     }
                 },
@@ -722,7 +722,7 @@
                                     "type": "boolean"
                                 },
                                 "defaultFolderName": {
-                                    "type": ["string", "null"]
+                                    "type": "null"
                                 },
                                 "enabled": {
                                     "type": "boolean"
@@ -737,7 +737,7 @@
                                     "type": "string"
                                 },
                                 "folderAnnotation": {
-                                    "type": ["string", "null"]
+                                    "type": "null"
                                 },
                                 "label": {
                                     "type": "string"
@@ -775,10 +775,10 @@
                                     "type": "string"
                                 },
                                 "script": {
-                                    "type": ["string", "null"]
+                                    "type": "null"
                                 },
                                 "searchNamespace": {
-                                    "type": ["string", "null"]
+                                    "type": "null"
                                 },
                                 "sizeLimit": {
                                     "type": "object"
@@ -810,7 +810,7 @@
                                     "type": "string"
                                 },
                                 "searchNamespace": {
-                                    "type": ["string", "null"]
+                                    "type": "null"
                                 },
                                 "sizeLimit": {
                                     "type": "object"
@@ -865,7 +865,7 @@
                                     "type": "string"
                                 },
                                 "searchNamespace": {
-                                    "type": ["string", "null"]
+                                    "type": "null"
                                 },
                                 "sizeLimit": {
                                     "type": "object"
@@ -894,7 +894,7 @@
                                     "type": "string"
                                 },
                                 "searchNamespace": {
-                                    "type": ["string", "null"]
+                                    "type": "null"
                                 },
                                 "sizeLimit": {
                                     "type": "object"
@@ -1061,7 +1061,7 @@
                         "azure": {
                             "type": "object",
                             "properties": {
-                                "azureCredentials": {
+                                "credentials": {
                                     "type": "object"
                                 }
                             }
@@ -1089,12 +1089,6 @@
                                         "accessKeyId": {
                                             "type": "string"
                                         },
-                                        "endpointURL": {
-                                            "type": "string"
-                                        },
-                                        "region": {
-                                            "type": ["string", "null"]
-                                        },
                                         "secretAccessKey": {
                                             "type": "string"
                                         },
@@ -1102,6 +1096,12 @@
                                             "type": "boolean"
                                         }
                                     }
+                                },
+                                "endpointURL": {
+                                    "type": "string"
+                                },
+                                "region": {
+                                    "type": "null"
                                 },
                                 "serviceAccount": {
                                     "type": "object",

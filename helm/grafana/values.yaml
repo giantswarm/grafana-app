@@ -37,10 +37,10 @@ postgresqlCluster:
       serviceAccount:
         annotations: {}
       #-- For customers with their own S3 bucket
+      endpointURL: ""
+      region: null
       customAccessKeys:
         use: false
-        endpointURL: ""
-        region: null
         accessKeyId: ""
         secretAccessKey: ""
     azure:
@@ -51,7 +51,7 @@ postgresqlCluster:
       #   storageKey:
       #     name: storageKeyName
       #     key: accountKey
-      azureCredentials: {}
+      credentials: {}
     #-- Bucket CR config
     bucket:
       create: false
