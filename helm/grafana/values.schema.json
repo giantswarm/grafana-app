@@ -1012,6 +1012,17 @@
         "postgresqlCluster": {
             "type": "object",
             "properties": {
+                "allowedPorts": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "port": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                },
                 "backup": {
                     "type": "object",
                     "properties": {
@@ -1106,9 +1117,6 @@
                             }
                         }
                     }
-                },
-                "port": {
-                    "type": "integer"
                 },
                 "recovery": {
                     "type": "object",
