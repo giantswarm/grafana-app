@@ -45,6 +45,8 @@ postgresqlCluster:
   serviceAccount:
     annotations: {}
   objectStorage:
+    #-- Can only be "s3" or "azure"
+    type: "s3"
     s3:
       #-- For customers with their own S3 bucket
       endpointURL: ""
@@ -67,7 +69,6 @@ postgresqlCluster:
       installation: "installationName"
   backup:
     enabled: false
-    useIRSA: false
     #-- Path to the object storage where the backups will be stored
     # ⚠️ Needs to be different from the recovery.destinationPath
     destinationPath: ""
@@ -75,7 +76,6 @@ postgresqlCluster:
     retentionPolicy: 30d
   recovery:
     enabled: false
-    useIRSA: false
     #-- Path to the object storage from which to recover the backup
     # ⚠️ Needs to be different from the backup.destinationPath
     destinationPath: ""

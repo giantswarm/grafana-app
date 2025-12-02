@@ -1037,9 +1037,6 @@
                         },
                         "schedule": {
                             "type": "string"
-                        },
-                        "useIRSA": {
-                            "type": "boolean"
                         }
                     }
                 },
@@ -1107,6 +1104,9 @@
                                     "type": "string"
                                 }
                             }
+                        },
+                        "type": {
+                            "type": "string"
                         }
                     }
                 },
@@ -1135,9 +1135,6 @@
                         },
                         "recoveryBackupTime": {
                             "type": "string"
-                        },
-                        "useIRSA": {
-                            "type": "boolean"
                         }
                     }
                 },

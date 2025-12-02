@@ -11,11 +11,7 @@ metadata:
 spec:
   configuration:
     destinationPath: {{ .Values.postgresqlCluster.backup.destinationPath | quote }}
-    {{- if .Values.postgresqlCluster.backup.useIRSA }}
-    s3Credentials:
-      inheritFromIAMRole: true
-    {{- end }}
-    {{- if and (.Values.postgresqlCluster.objectStorage.s3.secretAccessKey) (.Values.postgresqlCluster.objectStorage.s3.accessKeyId) }}
+    {{- if and (eq .Values.postgresqlCluster.objectStorage.type "s3") (and (.Values.postgresqlCluster.objectStorage.s3.secretAccessKey) (.Values.postgresqlCluster.objectStorage.s3.accessKeyId)) }}
     endpointURL: {{ .Values.postgresqlCluster.objectStorage.s3.endpointURL }}
     s3Credentials:
       region: {{ .Values.postgresqlCluster.objectStorage.s3.region }}
@@ -25,10 +21,16 @@ spec:
       secretAccessKey:
         name: {{ .Values.postgresqlCluster.name }}-access-keys
         key: SECRET_ACCESS_KEY
-    {{- end }}
+    {{- else if eq .Values.postgresqlCluster.objectStorage.type "s3" }}
+    s3Credentials:
+      inheritFromIAMRole: true
+    {{- else if eq .Values.postgresqlCluster.objectStorage.type "azure" }}
     {{- with .Values.postgresqlCluster.objectStorage.azure.credentials }}
     azureCredentials:
       {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- else }}
+      {{- fail "Unsupported object storage type. Supported types are 's3' and 'azure'." }}
     {{- end }}
     wal:
       compression: gzip
@@ -47,11 +49,7 @@ metadata:
 spec:
   configuration:
     destinationPath: {{ .Values.postgresqlCluster.recovery.destinationPath | quote }}
-    {{- if .Values.postgresqlCluster.backup.useIRSA }}
-    s3Credentials:
-      inheritFromIAMRole: true
-    {{- end }}
-    {{- if and (.Values.postgresqlCluster.objectStorage.s3.secretAccessKey) (.Values.postgresqlCluster.objectStorage.s3.accessKeyId) }}
+    {{- if and (eq .Values.postgresqlCluster.objectStorage.type "s3") (and (.Values.postgresqlCluster.objectStorage.s3.secretAccessKey) (.Values.postgresqlCluster.objectStorage.s3.accessKeyId)) }}
     endpointURL: {{ .Values.postgresqlCluster.objectStorage.s3.endpointURL }}
     s3Credentials:
       region: {{ .Values.postgresqlCluster.objectStorage.s3.region }}
@@ -61,10 +59,16 @@ spec:
       secretAccessKey:
         name: {{ .Values.postgresqlCluster.name }}-access-keys
         key: SECRET_ACCESS_KEY
-    {{- end }}
+    {{- else if eq .Values.postgresqlCluster.objectStorage.type "s3" }}
+    s3Credentials:
+      inheritFromIAMRole: true
+    {{- else if eq .Values.postgresqlCluster.objectStorage.type "azure" }}
     {{- with .Values.postgresqlCluster.objectStorage.azure.credentials }}
     azureCredentials:
       {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- else }}
+      {{- fail "Unsupported object storage type. Supported types are 's3' and 'azure'." }}
     {{- end }}
     wal:
       compression: gzip
