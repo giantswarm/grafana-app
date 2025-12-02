@@ -1,0 +1,32 @@
+{{- if and .Values.postgresql.enabled .Values.postgresql.ciliumNetworkPolicy.enabled }}
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: {{ .Values.postgresql.clusterName }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  egress:
+  - toEndpoints:
+    - matchLabels:
+        cnpg.io/cluster: {{ .Values.postgresql.clusterName }}
+    toPorts:
+    - ports:
+      - port: "5432"
+  - toEntities:
+    - world
+    - kube-apiserver
+  endpointSelector:
+    matchLabels:
+      cnpg.io/cluster: {{ .Values.postgresql.clusterName }}
+  ingress:
+  - fromEndpoints:
+    {{- range .Values.postgresql.ciliumNetworkPolicy.ingressAllowLabels }}
+    - matchLabels:
+        app.kubernetes.io/instance: {{ . }}
+    {{- end }}
+    - matchLabels:
+        cnpg.io/cluster: {{ .Values.postgresql.clusterName }}
+    toPorts:
+    - ports:
+      - port: "5432"
+{{- end }}

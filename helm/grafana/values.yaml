@@ -1,7 +1,3 @@
-global:
-  imageRegistry: null
-  imagePullSecrets: []
-
 ciliumNetworkPolicy:
   enabled: true
 
@@ -1048,14 +1044,74 @@ grafana:
   # Enable backward compatibility of kubernetes where version below 1.13 doesn't have the enableServiceLinks option
   enableKubeBackwardCompatibility: false
   useStatefulSet: false
-  # Create a dynamic manifests via values:
   extraObjects: []
-    # - apiVersion: "kubernetes-client.io/v1"
-    #   kind: ExternalSecret
-    #   metadata:
-    #     name: grafana-secrets
-    #   spec:
-    #     backendType: gcpSecretsManager
-    #     data:
-    #       - key: grafana-admin-password
-    #         name: adminPassword
+
+global:
+  codename: "" 
+  customer: ""
+  baseDomain: ""
+  imageRegistry: ""
+  imagePullSecrets: []
+  provider:
+    kind: "" 
+    account: "1234567890"
+
+postgresql:
+  enabled: false
+  clusterName: ""
+  instances: 2
+  storageSize: "2Gi"
+  imageName: ""
+
+  backup:
+    name: ""
+    retention: "30d"
+
+  recovery:
+    name: ""
+    targetTime: "2025-01-01 16:30:00+02"
+
+  scheduledBackup:
+    enabled: false
+    schedule: "0 * * * *"
+    backupOwnerReference: "self"
+
+  ciliumNetworkPolicy:
+    enabled: false
+    ingressAllowLabels:
+      - ""
+
+storageBucket:
+  enabled: false
+  bucketName: ""  
+  bucketRetentionDays: 45
+
+podMonitor:
+  enabled: false
+  labels:
+    observability.giantswarm.io/tenant: ""
+oidc:
+  giantswarm:
+    write_all_group: "admins"
+    write_all_groups:
+      - "giantswarm-admins"
+  customer:
+    grafana:
+      sharedOrg:
+        editor_groups:
+          - "customer-editors"
+        viewer_groups:
+          - "customer-viewers"
+          
+organizations:
+  shared:
+    enabled: false
+    name: "shared-org"
+    displayName: "Shared Org"
+    tenants: [ "giantswarm" ]
+  giantswarm:
+    enabled: false
+
+grafanaProxy: 
+  enabled: false
+  serviceName: ""
