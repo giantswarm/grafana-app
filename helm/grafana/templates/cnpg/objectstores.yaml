@@ -15,7 +15,7 @@ spec:
     s3Credentials:
       inheritFromIAMRole: true
     {{- end }}
-    {{- if .Values.postgresqlCluster.objectStorage.s3.customAccessKeys.use }}
+    {{- if and (.Values.postgresqlCluster.objectStorage.s3.secretAccessKey) (.Values.postgresqlCluster.objectStorage.s3.accessKeyId) }}
     endpointURL: {{ .Values.postgresqlCluster.objectStorage.s3.endpointURL }}
     s3Credentials:
       region: {{ .Values.postgresqlCluster.objectStorage.s3.region }}
@@ -51,7 +51,7 @@ spec:
     s3Credentials:
       inheritFromIAMRole: true
     {{- end }}
-    {{- if .Values.postgresqlCluster.objectStorage.s3.customAccessKeys.use }}
+    {{- if and (.Values.postgresqlCluster.objectStorage.s3.secretAccessKey) (.Values.postgresqlCluster.objectStorage.s3.accessKeyId) }}
     endpointURL: {{ .Values.postgresqlCluster.objectStorage.s3.endpointURL }}
     s3Credentials:
       region: {{ .Values.postgresqlCluster.objectStorage.s3.region }}

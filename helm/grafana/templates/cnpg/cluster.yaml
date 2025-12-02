@@ -11,13 +11,10 @@ spec:
   instances: {{ .Values.postgresqlCluster.instances }}
   imageName: {{ .Values.postgresqlCluster.image.registry }}/{{ .Values.postgresqlCluster.image.repository }}:{{ .Values.postgresqlCluster.image.tag }}
   postgresql:
+    {{- with .Values.postgresqlCluster.parameters }}
     parameters:
-      # Maximum size of the WAL
-      max_wal_size: '512MB'
-      # Specifies the minimum size of past WAL files kept in the pg_wal directory
-      wal_keep_size: '128MB'
-      # Specify the maximum size of WAL files that replication slot
-      max_slot_wal_keep_size: '128MB'
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
   storage:
     size: {{ .Values.postgresqlCluster.storage.size }}
   {{- if .Values.postgresqlCluster.recovery.enabled }}

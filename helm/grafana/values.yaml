@@ -21,6 +21,14 @@ postgresqlCluster:
   enabled: false
   name: grafana-postgresql
   instances: 2
+  #-- PostgreSQL configuration parameters
+  parameters:
+    # Maximum size of the WAL
+    max_wal_size: '512MB'
+    # Specifies the minimum size of past WAL files kept in the pg_wal directory
+    wal_keep_size: '128MB'
+    # Specify the maximum size of WAL files that replication slot
+    max_slot_wal_keep_size: '128MB'
   storage:
     size: 2Gi
   #-- Used for the cilium network policy
@@ -41,10 +49,8 @@ postgresqlCluster:
       #-- For customers with their own S3 bucket
       endpointURL: ""
       region: null
-      customAccessKeys:
-        use: false
-        accessKeyId: ""
-        secretAccessKey: ""
+      accessKeyId: ""
+      secretAccessKey: ""
     azure:
       #-- For Azure object storage access
       #   storageAccount:

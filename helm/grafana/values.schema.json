@@ -1094,27 +1094,33 @@
                         "s3": {
                             "type": "object",
                             "properties": {
-                                "customAccessKeys": {
-                                    "type": "object",
-                                    "properties": {
-                                        "accessKeyId": {
-                                            "type": "string"
-                                        },
-                                        "secretAccessKey": {
-                                            "type": "string"
-                                        },
-                                        "use": {
-                                            "type": "boolean"
-                                        }
-                                    }
+                                "accessKeyId": {
+                                    "type": "string"
                                 },
                                 "endpointURL": {
                                     "type": "string"
                                 },
                                 "region": {
                                     "type": ["string", "null"]
+                                },
+                                "secretAccessKey": {
+                                    "type": "string"
                                 }
                             }
+                        }
+                    }
+                },
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "max_slot_wal_keep_size": {
+                            "type": "string"
+                        },
+                        "max_wal_size": {
+                            "type": "string"
+                        },
+                        "wal_keep_size": {
+                            "type": "string"
                         }
                     }
                 },
