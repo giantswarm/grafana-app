@@ -33,11 +33,13 @@ spec:
         barmanObjectName: {{ .Values.postgresqlCluster.name }}-objectstore-recovery
         serverName: {{ .Values.postgresqlCluster.name }}
   {{- end }}
+  {{- if .Values.postgresqlCluster.backuo.enabled }}
   plugins:
   - name: barman-cloud.cloudnative-pg.io
     isWALArchiver: true
     parameters:
       barmanObjectName: {{ .Values.postgresqlCluster.name }}-objectstore-backup
+  {{- end }}
   {{- if and (.Values.postgresqlCluster.backup.useIRSA) (.Values.postgresqlCluster.serviceAccount.annotations) }}
   serviceAccountTemplate:
     metadata:
