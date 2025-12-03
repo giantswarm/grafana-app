@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Set `postgresqlCluster.enabled` to `false` to fix the ATS ci job.
+
 ## [2.28.1] - 2025-12-03
 
 ### Fixed
