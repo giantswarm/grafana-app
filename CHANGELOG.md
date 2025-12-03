@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.28.0] - 2025-12-03
+
 ### Added
 
 - Add `postgresql` resources templates to allow the usage of a persistent db for grafana.
@@ -447,7 +449,8 @@ Added:
 - images retagged for Giant Swarm registries
 - simple functionality test to get login web page
 
-[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.27.3...HEAD
+[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.28.0...HEAD
+[2.28.0]: https://github.com/giantswarm/grafana-app/compare/v2.27.3...v2.28.0
 [2.27.3]: https://github.com/giantswarm/grafana-app/compare/v2.27.2...v2.27.3
 [2.27.2]: https://github.com/giantswarm/grafana-app/compare/v2.27.1...v2.27.2
 [2.27.1]: https://github.com/giantswarm/grafana-app/compare/v2.27.0...v2.27.1
