@@ -18,7 +18,7 @@ pgClusterRecoveryTest:
 
 #-- Grafana postgresql database, using CNPG
 postgresqlCluster:
-  enabled: false
+  enabled: true
   name: grafana-postgresql
   instances: 2
   #-- PostgreSQL configuration parameters

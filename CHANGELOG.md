@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix `grafana-postrgesql` CNP.
+
 ## [2.28.0] - 2025-12-03
 
 ### Added
