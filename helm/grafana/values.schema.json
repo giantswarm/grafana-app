@@ -1008,6 +1008,153 @@
                     }
                 }
             }
+        },
+        "postgresqlCluster": {
+            "type": "object",
+            "properties": {
+                "allowedPorts": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "port": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                },
+                "backup": {
+                    "type": "object",
+                    "properties": {
+                        "destinationPath": {
+                            "type": "string"
+                        },
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "retentionPolicy": {
+                            "type": "string"
+                        },
+                        "schedule": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "enabled": {
+                    "type": "boolean"
+                },
+                "image": {
+                    "type": "object",
+                    "properties": {
+                        "registry": {
+                            "type": "string"
+                        },
+                        "repository": {
+                            "type": "string"
+                        },
+                        "tag": {
+                            "type": "number"
+                        }
+                    }
+                },
+                "instances": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "objectStorage": {
+                    "type": "object",
+                    "properties": {
+                        "azure": {
+                            "type": "object",
+                            "properties": {
+                                "credentials": {
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "bucket": {
+                            "type": "object",
+                            "properties": {
+                                "create": {
+                                    "type": "boolean"
+                                },
+                                "installation": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "s3": {
+                            "type": "object",
+                            "properties": {
+                                "accessKeyId": {
+                                    "type": "string"
+                                },
+                                "endpointURL": {
+                                    "type": "string"
+                                },
+                                "region": {
+                                    "type": ["string", "null"]
+                                },
+                                "secretAccessKey": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "type": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "max_slot_wal_keep_size": {
+                            "type": "string"
+                        },
+                        "max_wal_size": {
+                            "type": "string"
+                        },
+                        "wal_keep_size": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "recovery": {
+                    "type": "object",
+                    "properties": {
+                        "destinationPath": {
+                            "type": "string"
+                        },
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "recoveryBackupTime": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "serviceAccount": {
+                    "type": "object",
+                    "properties": {
+                        "annotations": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "storage": {
+                    "type": "object",
+                    "properties": {
+                        "size": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
         }
     }
 }

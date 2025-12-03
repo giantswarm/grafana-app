@@ -4,8 +4,10 @@ Common labels
 {{- define "grafana.labels" -}}
 helm.sh/chart: {{ include "grafana.chart" . }}
 {{ include "grafana.selectorLabels" . }}
-{{- if or .Chart.AppVersion .Values.image.tag }}
-app.kubernetes.io/version: {{ .Values.image.tag | default .Chart.AppVersion | quote }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- else if and .Values.grafana (and .Values.grafana.image .Values.grafana.image.tag) }}
+app.kubernetes.io/version: {{ .Values.grafana.image.tag | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- if .Values.extraLabels }}
@@ -15,11 +17,33 @@ application.giantswarm.io/team: {{ index .Chart.Annotations "application.giantsw
 {{- end -}}
 
 {{/*
+Create chart name and version as used by the chart label.
+*/}}
+{{- define "grafana.chart" -}}
+{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
+{{- end -}}
+
+{{/*
 Selector labels
 */}}
 {{- define "labels.selector" -}}
 app.kubernetes.io/name: {{ .Chart.Name | quote }}
 app.kubernetes.io/instance: {{ .Chart.Name | quote }}
+{{- end -}}
+
+{{/*
+Grafana-app selector labels
+*/}}
+{{- define "grafana.selectorLabels" -}}
+app.kubernetes.io/name: {{ .Chart.Name | quote }}
+app.kubernetes.io/instance: {{ .Chart.Name | quote }}
+{{- end -}}
+
+{{/*
+Grafana-postgresql labels
+*/}}
+{{- define "grafana.postgresql.labels" -}}
+cnpg.io/cluster: {{ .Values.postgresqlCluster.name }}
 {{- end -}}
 
 {{/*

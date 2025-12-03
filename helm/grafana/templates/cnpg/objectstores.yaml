@@ -1,0 +1,77 @@
+{{- if .Values.postgresqlCluster.enabled }}
+{{- if .Values.postgresqlCluster.backup.enabled }}
+---
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  labels:
+    {{- include "grafana.labels" . | nindent 4 }}
+    observability.giantswarm.io/tenant: giantswarm
+  name: {{ .Values.postgresqlCluster.name }}-objectstore-backup
+  namespace: {{ .Release.Namespace }}
+spec:
+  configuration:
+    destinationPath: {{ .Values.postgresqlCluster.backup.destinationPath | quote }}
+    {{- if and (eq .Values.postgresqlCluster.objectStorage.type "s3") (and (.Values.postgresqlCluster.objectStorage.s3.secretAccessKey) (.Values.postgresqlCluster.objectStorage.s3.accessKeyId)) }}
+    endpointURL: {{ .Values.postgresqlCluster.objectStorage.s3.endpointURL }}
+    s3Credentials:
+      region: {{ .Values.postgresqlCluster.objectStorage.s3.region }}
+      accessKeyId:
+        name: {{ .Values.postgresqlCluster.name }}-access-keys
+        key: ACCESS_KEY_ID
+      secretAccessKey:
+        name: {{ .Values.postgresqlCluster.name }}-access-keys
+        key: SECRET_ACCESS_KEY
+    {{- else if eq .Values.postgresqlCluster.objectStorage.type "s3" }}
+    s3Credentials:
+      inheritFromIAMRole: true
+    {{- else if eq .Values.postgresqlCluster.objectStorage.type "azure" }}
+    {{- with .Values.postgresqlCluster.objectStorage.azure.credentials }}
+    azureCredentials:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- else }}
+      {{- fail "Unsupported object storage type. Supported types are 's3' and 'azure'." }}
+    {{- end }}
+    wal:
+      compression: gzip
+  retentionPolicy: {{ .Values.postgresqlCluster.backup.retentionPolicy | quote }}
+{{- end }}
+{{- if .Values.postgresqlCluster.recovery.enabled }}
+---
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  labels:
+    {{- include "grafana.labels" . | nindent 4 }}
+    observability.giantswarm.io/tenant: giantswarm
+  name: {{ .Values.postgresqlCluster.name }}-objectstore-recovery
+  namespace: {{ .Release.Namespace }}
+spec:
+  configuration:
+    destinationPath: {{ .Values.postgresqlCluster.recovery.destinationPath | quote }}
+    {{- if and (eq .Values.postgresqlCluster.objectStorage.type "s3") (and (.Values.postgresqlCluster.objectStorage.s3.secretAccessKey) (.Values.postgresqlCluster.objectStorage.s3.accessKeyId)) }}
+    endpointURL: {{ .Values.postgresqlCluster.objectStorage.s3.endpointURL }}
+    s3Credentials:
+      region: {{ .Values.postgresqlCluster.objectStorage.s3.region }}
+      accessKeyId:
+        name: {{ .Values.postgresqlCluster.name }}-access-keys
+        key: ACCESS_KEY_ID
+      secretAccessKey:
+        name: {{ .Values.postgresqlCluster.name }}-access-keys
+        key: SECRET_ACCESS_KEY
+    {{- else if eq .Values.postgresqlCluster.objectStorage.type "s3" }}
+    s3Credentials:
+      inheritFromIAMRole: true
+    {{- else if eq .Values.postgresqlCluster.objectStorage.type "azure" }}
+    {{- with .Values.postgresqlCluster.objectStorage.azure.credentials }}
+    azureCredentials:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- else }}
+      {{- fail "Unsupported object storage type. Supported types are 's3' and 'azure'." }}
+    {{- end }}
+    wal:
+      compression: gzip
+{{- end }}
+{{- end }}

@@ -16,6 +16,10 @@ Changes compared to upstream:
 Please refer [this file](helm/grafana/Chart.yaml) for available config options and more info.
 Please note, that by default only the main grafana pod has requests and limits set for resources.
 
+## Statefulness
+
+Our grafana app can be stateful by using a postgresql cluster managed by the cloudnative-pg operator. For more information on how this works, see the following [page](https://intranet.giantswarm.io/docs/support-and-ops/processes/manage-postgresql-databases/).
+
 ## Credit
 
 - <https://github.com/grafana/helm-charts>

@@ -1,0 +1,27 @@
+{{- if and (.Values.postgresqlCluster.enabled) (and (.Values.postgresqlCluster.backup.enabled) (.Values.postgresqlCluster.objectStorage.bucket.create)) }}
+apiVersion: objectstorage.giantswarm.io/v1alpha1
+kind: Bucket
+metadata:
+  annotations:
+    meta.helm.sh/release-name: grafana
+    meta.helm.sh/release-namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "grafana.labels" . | nindent 4 }}
+  name: {{ .Values.postgresqlCluster.objectStorage.bucket.name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  name: {{ .Values.postgresqlCluster.objectStorage.bucket.name }}
+  expirationPolicy:
+    days: 45
+  accessRole:
+    roleName: {{ .Values.postgresqlCluster.objectStorage.bucket.name }}
+    serviceAccountName: {{ .Values.postgresqlCluster.name }}
+    serviceAccountNamespace: {{ .Release.Namespace }}
+  tags:
+  - key: app
+    value: grafana
+  - key: installation
+    value: {{ .Values.postgresqlCluster.objectStorage.bucket.installation }}
+  - key: name
+    value: {{ .Values.postgresqlCluster.objectStorage.bucket.name }}
+{{- end }}

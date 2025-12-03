@@ -16,6 +16,72 @@ pgClusterRecoveryTest:
     name: grafana-postgresql-recovery-test
     namespace: monitoring
 
+#-- Grafana postgresql database, using CNPG
+postgresqlCluster:
+  enabled: false
+  name: grafana-postgresql
+  instances: 2
+  #-- PostgreSQL configuration parameters
+  parameters:
+    # Maximum size of the WAL
+    max_wal_size: '512MB'
+    # Specifies the minimum size of past WAL files kept in the pg_wal directory
+    wal_keep_size: '128MB'
+    # Specify the maximum size of WAL files that replication slot
+    max_slot_wal_keep_size: '128MB'
+  storage:
+    size: 2Gi
+  #-- Used for the cilium network policy
+  allowedPorts:
+    - port: 5432
+    - port: 8000
+  image:
+    # used by renovate
+    # registry: gsoci.azurecr.io
+    registry: gsoci.azurecr.io
+    repository: giantswarm/postgresql-cnpg
+    tag: 17.7
+  #-- Mainly used for IRSA access
+  serviceAccount:
+    annotations: {}
+  objectStorage:
+    #-- Can only be "s3" or "azure"
+    type: "s3"
+    s3:
+      #-- For customers with their own S3 bucket
+      endpointURL: ""
+      region: null
+      accessKeyId: ""
+      secretAccessKey: ""
+    azure:
+      #-- For Azure object storage access
+      #   storageAccount:
+      #     name: storageAccountName
+      #     key: accountName
+      #   storageKey:
+      #     name: storageKeyName
+      #     key: accountKey
+      credentials: {}
+    #-- Bucket CR config
+    bucket:
+      create: false
+      name: "giantswarm-installationName-grafana-postgresql"
+      installation: "installationName"
+  backup:
+    enabled: false
+    #-- Path to the object storage where the backups will be stored
+    # ⚠️ Needs to be different from the recovery.destinationPath
+    destinationPath: ""
+    schedule: "0 0 * * * *" # every hour
+    retentionPolicy: 30d
+  recovery:
+    enabled: false
+    #-- Path to the object storage from which to recover the backup
+    # ⚠️ Needs to be different from the backup.destinationPath
+    destinationPath: ""
+    #-- If one wants to recover a backup from a specific point in time
+    recoveryBackupTime: "" # e.g. "2024-01-01T12:00:00Z"
+
 grafana:
   rbac:
     create: true

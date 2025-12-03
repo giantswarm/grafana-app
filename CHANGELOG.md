@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add `postgresql` resources templates to allow the usage of a persistent db for grafana.
+
 ## [2.27.3] - 2025-11-20
 
 ### Changed
