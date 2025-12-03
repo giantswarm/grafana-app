@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.28.1] - 2025-12-03
+
 ### Fixed
 
 - Fix `grafana-postrgesql` CNP.
@@ -453,7 +455,8 @@ Added:
 - images retagged for Giant Swarm registries
 - simple functionality test to get login web page
 
-[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.28.0...HEAD
+[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.28.1...HEAD
+[2.28.1]: https://github.com/giantswarm/grafana-app/compare/v2.28.0...v2.28.1
 [2.28.0]: https://github.com/giantswarm/grafana-app/compare/v2.27.3...v2.28.0
 [2.27.3]: https://github.com/giantswarm/grafana-app/compare/v2.27.2...v2.27.3
 [2.27.2]: https://github.com/giantswarm/grafana-app/compare/v2.27.1...v2.27.2
