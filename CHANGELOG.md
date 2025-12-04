@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Set `postgresqlCluster.enabled` to `false` to fix the ATS ci job.
+- Only render plugin field of postgresql cluster if backup is enabled in the values.
 
 ## [2.28.1] - 2025-12-03
 
