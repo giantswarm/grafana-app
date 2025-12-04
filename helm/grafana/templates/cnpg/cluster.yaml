@@ -35,6 +35,7 @@ spec:
   {{- end }}
   plugins:
   - name: barman-cloud.cloudnative-pg.io
+    enabled: {{ .Values.postgresqlCluster.backup.enabled }}
     isWALArchiver: true
     parameters:
       barmanObjectName: {{ .Values.postgresqlCluster.name }}-objectstore-backup
