@@ -1,0 +1,269 @@
+global:
+  connectivity:
+    baseDomain: gaws2.gigantic.io
+  imageRegistry: gsoci.azurecr.io
+  managementCluster: graveler
+grafana:
+  env:
+    GF_LIVE_ALLOWED_ORIGINS: https://grafana-*.teleport.giantswarm.io
+    GF_PLUGINS_PREINSTALL: marcusolsson-treemap-panel, marcusolsson-json-datasource
+  envFromSecrets:
+  - name: grafana-postgresql-app
+  envValueFrom:
+    GF_DATABASE_PASSWORD:
+      secretKeyRef:
+        key: password
+        name: grafana-postgresql-app
+  extraContainers: |
+    - name: proxy
+      # used by renovate
+      # registry: gsoci.azurecr.io/giantswarm/nginx-unprivileged
+      image: gsoci.azurecr.io/giantswarm/nginx-unprivileged:1.29-alpine
+      ports:
+      - containerPort: 8080
+      resources:
+        limits:
+          cpu: 100m
+          memory: 128Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+          - ALL
+        seccompProfile:
+          type: RuntimeDefault
+      volumeMounts:
+      - mountPath: /etc/nginx/conf.d
+        name: nginx-conf
+  extraExposePorts:
+  - name: proxy
+    port: 80
+    targetPort: 8080
+  extraObjects:
+  - apiVersion: v1
+    data:
+      nginx.conf: |
+        # See https://www.nginx.com/blog/websocket-nginx
+        map $http_upgrade $connection_upgrade {
+          default          upgrade;
+
+          # See https://nginx.org/en/docs/http/ngx_http_upstream_module.html#keepalive
+          ''               '';
+        }
+
+        server {
+          listen 8080 default_server;
+          listen [::]:8080 default_server;
+
+          server_name "grafana.graveler.gaws2.gigantic.io";
+
+          location / {
+              rewrite ^/(.*)$ /$1?targetOrgId=$arg_orgid break;
+
+              # Allow websocket connections
+              proxy_set_header                        Upgrade           $http_upgrade;
+              proxy_set_header                        Connection        $connection_upgrade;
+
+              # Custom headers to proxied server
+              proxy_connect_timeout                   5s;
+              proxy_buffering                         off;
+              proxy_http_version                      1.1;
+
+              proxy_pass http://localhost:3000;
+          }
+        }
+    kind: ConfigMap
+    metadata:
+      name: grafana-nginx-config
+      namespace: monitoring
+  - apiVersion: observability.giantswarm.io/v1alpha1
+    kind: GrafanaOrganization
+    metadata:
+      name: shared-org
+    spec:
+      displayName: Shared Org
+      rbac:
+        admins:
+        - giantswarm-ad:giantswarm-admins
+        - giantswarm-github:giantswarm:giantswarm-admins
+        viewers:
+        - '*'
+      tenants:
+      - giantswarm
+  - apiVersion: observability.giantswarm.io/v1alpha1
+    kind: GrafanaOrganization
+    metadata:
+      name: giantswarm
+    spec:
+      displayName: Giant Swarm
+      rbac:
+        admins:
+        - giantswarm-ad:giantswarm-admins
+        - giantswarm-github:giantswarm:giantswarm-admins
+      tenants:
+      - giantswarm
+  extraVolumes:
+  - configMap:
+      name: grafana-nginx-config
+    name: nginx-conf
+  grafana.ini:
+    analytics:
+      check_for_updates: false
+      feedback_links_enabled: false
+      reporting_enabled: false
+    auth:
+      disable_login_form: true
+    auth.basic:
+      enabled: true
+    auth.generic_oauth:
+      allow_sign_up: true
+      api_url: https://dex.graveler.gaws2.gigantic.io/userinfo
+      auth_url: https://dex.graveler.gaws2.gigantic.io/auth
+      auto_login: true
+      client_id: 2qRgNb5qQBk3QqWxI1WLgB5zTQ1M4eB+
+      enabled: true
+      name: grafana-dex
+      org_attribute_path: groups
+      role_attribute_path: to_string('None')
+      role_attribute_strict: true
+      scopes: openid profile email groups offline_access
+      token_url: https://dex.graveler.gaws2.gigantic.io/token
+      use_refresh_token: true
+    auth.jwt:
+      auto_sign_up: true
+      enabled: true
+      header_name: Teleport-Jwt-Assertion
+      jwk_set_url: https://teleport.giantswarm.io/.well-known/jwks.json
+      org_attribute_path: groups
+      org_mapping: '"*:Shared Org:Admin" "*:Giant Swarm:Admin"'
+      role_attribute_path: to_string('None')
+      role_attribute_strict: true
+      username_claim: sub
+    database:
+      host: grafana-postgresql-rw:5432
+      name: app
+      type: postgres
+      user: app
+    public_dashboards:
+      enabled: false
+    security:
+      cookie_secure: true
+      disable_gravatar: true
+    server:
+      protocol: http
+      root_url: https://grafana.graveler.gaws2.gigantic.io
+    unified_alerting:
+      disabled_orgs: 1
+    users:
+      allow_org_create: false
+      allow_sign_up: false
+      viewers_can_edit: true
+  image:
+    repository: giantswarm/grafana
+  ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-giantswarm
+    enabled: true
+    hosts:
+    - grafana.graveler.gaws2.gigantic.io
+    ingressClassName: nginx
+    tls:
+    - hosts:
+      - grafana.graveler.gaws2.gigantic.io
+      secretName: grafana-tls
+  lifecycleHooks:
+    postStart:
+      exec:
+        command:
+        - bash
+        - -c
+        - |
+          #!/bin/bash
+          sleep 30
+          curl -X POST -s "http://localhost:3000/api/orgs/1" -H "Content-Type: application/json" -d '{"name":"Shared Org"}' --user "${GF_SECURITY_ADMIN_USER}:${GF_SECURITY_ADMIN_PASSWORD}"
+  route:
+    main:
+      additionalRules:
+      - filters:
+        - extensionRef:
+            group: gateway.envoyproxy.io
+            kind: HTTPRouteFilter
+            name: grafana-httproute-access-denied
+          type: ExtensionRef
+        matches:
+        - path:
+            type: PathPrefix
+            value: /swagger
+        - path:
+            type: PathPrefix
+            value: /api/health
+        - path:
+            type: PathPrefix
+            value: /metrics
+      annotations: {}
+      enabled: false
+      filters: []
+      hostnames:
+      - grafana.graveler.gaws2.gigantic.io
+      labels: {}
+      matches:
+      - path:
+          type: PathPrefix
+          value: /
+      parentRefs:
+      - name: giantswarm-default
+        namespace: envoy-gateway-system
+  service:
+    port: 3000
+  serviceMonitor:
+    enabled: true
+pgClusterRecoveryTest:
+  cronjob:
+    schedule: 0 10 * * *
+    testTimeout: 1800
+    waitTimeout: 1800s
+  enabled: true
+  global:
+    customer: giantswarm
+    provider: capa
+  pgCluster:
+    backupCluster:
+      destinationPath: s3://giantswarm-graveler-grafana-postgresql/grafana-postgresql-1/
+      name: grafana-postgresql
+    instances: 2
+    serviceAccount:
+      annotations:
+        eks.amazonaws.com/role-arn: arn:aws:iam::758407694730:role/giantswarm-graveler-grafana-postgresql
+    storageSize: 2Gi
+postgresqlCluster:
+  backup:
+    destinationPath: s3://giantswarm-graveler-grafana-postgresql/grafana-postgresql-1/
+    enabled: true
+    schedule: 0 0 * * * *
+    useIRSA: true
+  enabled: true
+  image:
+    registry: gsoci.azurecr.io
+    repository: giantswarm/postgresql-cnpg
+    tag: 17.7
+  instances: 2
+  name: grafana-postgresql
+  objectStorage:
+    bucket:
+      create: true
+      installation: graveler
+      name: giantswarm-graveler-grafana-postgresql
+  recovery:
+    destinationPath: s3://giantswarm-graveler-grafana-postgresql/grafana-postgresql/
+    enabled: true
+    recoveryBackupTime: 2025-12-01 11:00:00.00000+02
+    useIRSA: true
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::758407694730:role/giantswarm-graveler-grafana-postgresql
+  storage:
+    size: 2Gi
+
