@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- upgrade giantswarm/postgresql-cnpg image tag: 17.7 => 18.1
+
 ## [2.28.3] - 2025-12-08
 
 ### Fixed
