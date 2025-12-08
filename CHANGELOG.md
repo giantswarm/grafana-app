@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.28.3] - 2025-12-08
+
 ### Fixed
 
 - Set `postgresqlCluster.enabled` to `false` to fix the ATS ci job.
@@ -465,7 +467,8 @@ Added:
 - images retagged for Giant Swarm registries
 - simple functionality test to get login web page
 
-[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.28.2...HEAD
+[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.28.3...HEAD
+[2.28.3]: https://github.com/giantswarm/grafana-app/compare/v2.28.2...v2.28.3
 [2.28.2]: https://github.com/giantswarm/grafana-app/compare/v2.28.1...v2.28.2
 [2.28.1]: https://github.com/giantswarm/grafana-app/compare/v2.28.0...v2.28.1
 [2.28.0]: https://github.com/giantswarm/grafana-app/compare/v2.27.3...v2.28.0
