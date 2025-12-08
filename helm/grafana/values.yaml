@@ -40,7 +40,7 @@ postgresqlCluster:
     # registry: gsoci.azurecr.io
     registry: gsoci.azurecr.io
     repository: giantswarm/postgresql-cnpg
-    tag: 17.7
+    tag: 18.1
   #-- Mainly used for IRSA access
   serviceAccount:
     annotations: {}
