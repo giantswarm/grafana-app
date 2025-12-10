@@ -16,6 +16,8 @@ pgClusterRecoveryTest:
     name: grafana-postgresql-recovery-test
     namespace: monitoring
     image:
+      # used by renovate
+      # registry: gsoci.azurecr.io
       name: giantswarm/postgresql-cnpg
       tag: 18.1
 
