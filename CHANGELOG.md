@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- upgrade `pgClusterRecoveryTest` image tag: 17.5 => 18.1
+
 ## [2.28.4] - 2025-12-08
 
 ### Changed
