@@ -1,6 +1,6 @@
-{{- if and .Values.postgresqlCluster.enabled .Values.postgresqlCluster.backup.enabled .Values.postgresqlCluster.backup.crossplane.enabled (include "grafana.crossplane.isAWS" .) .Values.postgresqlCluster.backup.crossplane.aws.enabled }}
-{{- $bucketName := .Values.postgresqlCluster.backup.crossplane.aws.bucket.name }}
-{{- $isChinaRegion := hasPrefix "cn-" .Values.postgresqlCluster.backup.crossplane.region }}
+{{- if and .Values.postgresqlCluster.enabled .Values.postgresqlCluster.backup.enabled .Values.postgresqlCluster.crossplane.enabled (include "grafana.crossplane.isAWS" .) .Values.postgresqlCluster.crossplane.aws.enabled }}
+{{- $bucketName := .Values.postgresqlCluster.crossplane.aws.bucket.name }}
+{{- $isChinaRegion := hasPrefix "cn-" .Values.postgresqlCluster.crossplane.region }}
 ---
 apiVersion: s3.aws.upbound.io/v1beta1
 kind: BucketPolicy
@@ -14,7 +14,7 @@ metadata:
     crossplane.io/external-name: {{ $bucketName }}
 spec:
   managementPolicies:
-    {{- if .Values.postgresqlCluster.backup.crossplane.observeOnly }}
+    {{- if .Values.postgresqlCluster.crossplane.observeOnly }}
     - Observe
     {{- else }}
     - "*"
@@ -43,7 +43,7 @@ spec:
           }
         ]
       }
-    region: {{ .Values.postgresqlCluster.backup.crossplane.region }}
+    region: {{ .Values.postgresqlCluster.crossplane.region }}
   providerConfigRef:
-    name: {{ .Values.postgresqlCluster.backup.crossplane.providerConfigRef }}
+    name: {{ .Values.postgresqlCluster.crossplane.providerConfigRef }}
 {{- end }}

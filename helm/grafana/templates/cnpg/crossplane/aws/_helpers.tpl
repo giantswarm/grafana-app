@@ -3,8 +3,8 @@ Get AWS Account ID from AWSCluster identity
 Supports both AWSClusterRoleIdentity and AWSClusterControllerIdentity
 */}}
 {{- define "grafana.crossplane.aws.accountId" -}}
-{{- $clusterName := .Values.postgresqlCluster.backup.crossplane.clusterName -}}
-{{- $clusterNamespace := .Values.postgresqlCluster.backup.crossplane.clusterNamespace -}}
+{{- $clusterName := .Values.postgresqlCluster.crossplane.clusterName -}}
+{{- $clusterNamespace := .Values.postgresqlCluster.crossplane.clusterNamespace -}}
 {{- $accountId := "" -}}
 {{- $awsCluster := lookup "infrastructure.cluster.x-k8s.io/v1beta2" "AWSCluster" $clusterNamespace $clusterName -}}
 {{- if $awsCluster -}}
@@ -37,8 +37,8 @@ Get OIDC Provider URL from cluster
 First tries annotation aws.giantswarm.io/irsa-trust-domains, then falls back to identity
 */}}
 {{- define "grafana.crossplane.aws.oidcProvider" -}}
-{{- $clusterName := .Values.postgresqlCluster.backup.crossplane.clusterName -}}
-{{- $clusterNamespace := .Values.postgresqlCluster.backup.crossplane.clusterNamespace -}}
+{{- $clusterName := .Values.postgresqlCluster.crossplane.clusterName -}}
+{{- $clusterNamespace := .Values.postgresqlCluster.crossplane.clusterNamespace -}}
 {{- $oidcProvider := "" -}}
 {{- $awsCluster := lookup "infrastructure.cluster.x-k8s.io/v1beta2" "AWSCluster" $clusterNamespace $clusterName -}}
 {{- if $awsCluster -}}
