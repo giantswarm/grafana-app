@@ -1,6 +1,6 @@
-{{- if and .Values.postgresqlCluster.enabled .Values.postgresqlCluster.backup.enabled .Values.postgresqlCluster.backup.crossplane.enabled (include "grafana.crossplane.isAWS" .) .Values.postgresqlCluster.backup.crossplane.aws.enabled }}
+{{- if and .Values.postgresqlCluster.enabled .Values.postgresqlCluster.backup.enabled .Values.postgresqlCluster.crossplane.enabled (include "grafana.crossplane.isAWS" .) .Values.postgresqlCluster.crossplane.aws.enabled }}
 {{- $tags := include "grafana.crossplane.tags" . | fromYaml }}
-{{- $bucketName := .Values.postgresqlCluster.backup.crossplane.aws.bucket.name }}
+{{- $bucketName := .Values.postgresqlCluster.crossplane.aws.bucket.name }}
 ---
 apiVersion: s3.aws.upbound.io/v1beta2
 kind: Bucket
@@ -14,7 +14,7 @@ metadata:
     crossplane.io/external-name: {{ $bucketName }}
 spec:
   managementPolicies:
-    {{- if .Values.postgresqlCluster.backup.crossplane.observeOnly }}
+    {{- if .Values.postgresqlCluster.crossplane.observeOnly }}
     - Observe
     {{- else }}
     - "*"
@@ -22,7 +22,7 @@ spec:
   forProvider:
     forceDestroy: false
     objectLockEnabled: false
-    region: {{ .Values.postgresqlCluster.backup.crossplane.region }}
+    region: {{ .Values.postgresqlCluster.crossplane.region }}
     {{- if $tags }}
     tags:
       {{- range $key, $value := $tags }}
@@ -30,5 +30,5 @@ spec:
       {{- end }}
     {{- end }}
   providerConfigRef:
-    name: {{ .Values.postgresqlCluster.backup.crossplane.providerConfigRef }}
+    name: {{ .Values.postgresqlCluster.crossplane.providerConfigRef }}
 {{- end }}

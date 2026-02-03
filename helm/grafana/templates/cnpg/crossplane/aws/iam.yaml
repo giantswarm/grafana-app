@@ -1,9 +1,9 @@
-{{- if and .Values.postgresqlCluster.enabled .Values.postgresqlCluster.backup.enabled .Values.postgresqlCluster.backup.crossplane.enabled (include "grafana.crossplane.isAWS" .) .Values.postgresqlCluster.backup.crossplane.aws.enabled .Values.postgresqlCluster.backup.crossplane.aws.iam.enabled }}
-{{- $bucketName := .Values.postgresqlCluster.backup.crossplane.aws.bucket.name }}
+{{- if and .Values.postgresqlCluster.enabled .Values.postgresqlCluster.backup.enabled .Values.postgresqlCluster.crossplane.enabled (include "grafana.crossplane.isAWS" .) .Values.postgresqlCluster.crossplane.aws.enabled .Values.postgresqlCluster.crossplane.aws.iam.enabled }}
+{{- $bucketName := .Values.postgresqlCluster.crossplane.aws.bucket.name }}
 {{- $namespace := .Release.Namespace }}
 {{- $tags := include "grafana.crossplane.tags" . | fromYaml }}
 {{- $oidcProvider := include "grafana.crossplane.aws.oidcProvider" . }}
-{{- $isChinaRegion := hasPrefix "cn-" .Values.postgresqlCluster.backup.crossplane.region }}
+{{- $isChinaRegion := hasPrefix "cn-" .Values.postgresqlCluster.crossplane.region }}
 {{- $serviceAccountName := .Values.postgresqlCluster.name }}
 ---
 apiVersion: iam.aws.upbound.io/v1beta1
@@ -18,7 +18,7 @@ metadata:
     crossplane.io/external-name: {{ $bucketName }}
 spec:
   managementPolicies:
-    {{- if .Values.postgresqlCluster.backup.crossplane.observeOnly }}
+    {{- if .Values.postgresqlCluster.crossplane.observeOnly }}
     - Observe
     {{- else }}
     - "*"
@@ -106,5 +106,5 @@ spec:
       {{- end }}
     {{- end }}
   providerConfigRef:
-    name: {{ .Values.postgresqlCluster.backup.crossplane.providerConfigRef }}
+    name: {{ .Values.postgresqlCluster.crossplane.providerConfigRef }}
 {{- end }}

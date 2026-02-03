@@ -79,40 +79,6 @@ postgresqlCluster:
     destinationPath: ""
     schedule: "0 0 * * * *" # every hour
     retentionPolicy: 30d
-    #-- Crossplane configuration for automated infrastructure provisioning
-    crossplane:
-      #-- Enable Crossplane resources
-      enabled: false
-      #-- Crossplane provider (e.g., aws, azure)
-      provider: aws
-      #-- Crossplane ProviderConfig name
-      providerConfigRef: "default"
-      #-- Cloud region for resources
-      region: ""
-      #-- Cluster name (used for cluster discovery)
-      clusterName: ""
-      #-- Cluster namespace (used for cluster discovery)
-      clusterNamespace: "org-giantswarm"
-      #-- Enable observe-only mode for safe migration
-      observeOnly: false
-      #-- Additional tags to apply to all storage resources
-      # Tags from cluster CR will be merged automatically
-      tags: []
-      # - key: team
-      #   value: atlas
-      aws:
-        #-- Enable AWS Crossplane resources
-        enabled: false
-        #-- Bucket configuration for Grafana PostgreSQL backups
-        bucket:
-          #-- Bucket name for Grafana PostgreSQL backups
-          name: ""
-          #-- Lifecycle expiration in days
-          lifecycleDays: 45
-        #-- IAM Role configuration for IRSA
-        iam:
-          #-- Enable IAM role creation via Crossplane
-          enabled: true
   recovery:
     enabled: false
     #-- Path to the object storage from which to recover the backup
@@ -120,6 +86,40 @@ postgresqlCluster:
     destinationPath: ""
     #-- If one wants to recover a backup from a specific point in time
     recoveryBackupTime: "" # e.g. "2024-01-01T12:00:00Z"
+  #-- Crossplane configuration for automated infrastructure provisioning
+  crossplane:
+    #-- Enable Crossplane resources
+    enabled: false
+    #-- Crossplane provider (e.g., aws, azure)
+    provider: aws
+    #-- Crossplane ProviderConfig name
+    providerConfigRef: "default"
+    #-- Cloud region for resources
+    region: ""
+    #-- Cluster name (used for cluster discovery)
+    clusterName: ""
+    #-- Cluster namespace (used for cluster discovery)
+    clusterNamespace: "org-giantswarm"
+    #-- Enable observe-only mode for safe migration
+    observeOnly: false
+    #-- Additional tags to apply to all storage resources
+    # Tags from cluster CR will be merged automatically
+    tags: []
+    # - key: team
+    #   value: atlas
+    aws:
+      #-- Enable AWS Crossplane resources
+      enabled: false
+      #-- Bucket configuration for Grafana PostgreSQL backups
+      bucket:
+        #-- Bucket name for Grafana PostgreSQL backups
+        name: ""
+        #-- Lifecycle expiration in days
+        lifecycleDays: 45
+      #-- IAM Role configuration for IRSA
+      iam:
+        #-- Enable IAM role creation via Crossplane
+        enabled: true
 
 grafana:
   rbac:
