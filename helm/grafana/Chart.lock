@@ -1,9 +1,9 @@
 dependencies:
 - name: grafana
   repository: https://grafana.github.io/helm-charts
-  version: 10.3.1
+  version: 10.5.15
 - name: pg-cluster-recovery-test
   repository: https://giantswarm.github.io/giantswarm-catalog
   version: 0.3.0
-digest: sha256:0f2da7046af9848afee3d18ffed12b956b7091f2a2e38556eaef49c3f53670ec
-generated: "2025-12-11T19:50:11.25276442Z"
+digest: sha256:bb98671a67dd52231c2b8b87a316f8c29a4e13325614000063e5413f0ab0e3d1
+generated: "2026-02-03T12:53:08.045364102Z"
