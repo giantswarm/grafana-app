@@ -1,0 +1,34 @@
+{{- if and .Values.postgresqlCluster.enabled .Values.postgresqlCluster.backup.enabled .Values.postgresqlCluster.crossplane.enabled (include "grafana.crossplane.isAWS" .) .Values.postgresqlCluster.crossplane.aws.enabled }}
+{{- $tags := include "grafana.crossplane.tags" . | fromYaml }}
+{{- $bucketName := .Values.postgresqlCluster.crossplane.aws.bucket.name }}
+---
+apiVersion: s3.aws.upbound.io/v1beta2
+kind: Bucket
+metadata:
+  name: {{ $bucketName }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "grafana.labels" . | nindent 4 }}
+    app.kubernetes.io/component: storage
+  annotations:
+    crossplane.io/external-name: {{ $bucketName }}
+spec:
+  managementPolicies:
+    {{- if .Values.postgresqlCluster.crossplane.observeOnly }}
+    - Observe
+    {{- else }}
+    - "*"
+    {{- end }}
+  forProvider:
+    forceDestroy: false
+    objectLockEnabled: false
+    region: {{ .Values.postgresqlCluster.crossplane.region }}
+    {{- if $tags }}
+    tags:
+      {{- range $key, $value := $tags }}
+      {{ $key }}: {{ $value | quote }}
+      {{- end }}
+    {{- end }}
+  providerConfigRef:
+    name: {{ .Values.postgresqlCluster.crossplane.providerConfigRef }}
+{{- end }}

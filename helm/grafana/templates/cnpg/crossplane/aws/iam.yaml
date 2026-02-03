@@ -1,0 +1,110 @@
+{{- if and .Values.postgresqlCluster.enabled .Values.postgresqlCluster.backup.enabled .Values.postgresqlCluster.crossplane.enabled (include "grafana.crossplane.isAWS" .) .Values.postgresqlCluster.crossplane.aws.enabled .Values.postgresqlCluster.crossplane.aws.iam.enabled }}
+{{- $bucketName := .Values.postgresqlCluster.crossplane.aws.bucket.name }}
+{{- $namespace := .Release.Namespace }}
+{{- $tags := include "grafana.crossplane.tags" . | fromYaml }}
+{{- $oidcProvider := include "grafana.crossplane.aws.oidcProvider" . }}
+{{- $isChinaRegion := hasPrefix "cn-" .Values.postgresqlCluster.crossplane.region }}
+{{- $serviceAccountName := .Values.postgresqlCluster.name }}
+---
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: Role
+metadata:
+  name: {{ $bucketName }}
+  namespace: {{ $namespace }}
+  labels:
+    {{- include "grafana.labels" . | nindent 4 }}
+    app.kubernetes.io/component: iam
+  annotations:
+    crossplane.io/external-name: {{ $bucketName }}
+spec:
+  managementPolicies:
+    {{- if .Values.postgresqlCluster.crossplane.observeOnly }}
+    - Observe
+    {{- else }}
+    - "*"
+    {{- end }}
+  forProvider:
+    assumeRolePolicy: |
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Principal": {
+              "Federated": "arn:aws{{- if $isChinaRegion }}-cn{{- end }}:iam::{{ include "grafana.crossplane.aws.accountId" . }}:oidc-provider/{{ $oidcProvider }}"
+            },
+            "Action": "sts:AssumeRoleWithWebIdentity",
+            "Condition": {
+              "StringEquals": {
+                "{{ $oidcProvider }}:sub": "system:serviceaccount:{{ $namespace }}:{{ $serviceAccountName }}",
+                "{{ $oidcProvider }}:aud": "sts.amazonaws.com{{- if $isChinaRegion }}.cn{{- end }}"
+              }
+            }
+          },
+          {
+            "Effect": "Allow",
+            "Principal": {
+              "Federated": "arn:aws{{- if $isChinaRegion }}-cn{{- end }}:iam::{{ include "grafana.crossplane.aws.accountId" . }}:oidc-provider/{{ $oidcProvider }}"
+            },
+            "Action": "sts:AssumeRoleWithWebIdentity",
+            "Condition": {
+              "StringEquals": {
+                "{{ $oidcProvider }}:sub": "system:serviceaccount:{{ $namespace }}:grafana-postgresql-recovery-test",
+                "{{ $oidcProvider }}:aud": "sts.amazonaws.com{{- if $isChinaRegion }}.cn{{- end }}"
+              }
+            }
+          },
+          {
+            "Effect": "Allow",
+            "Principal": {
+              "Federated": "arn:aws{{- if $isChinaRegion }}-cn{{- end }}:iam::{{ include "grafana.crossplane.aws.accountId" . }}:oidc-provider/{{ $oidcProvider }}"
+            },
+            "Action": "sts:AssumeRoleWithWebIdentity",
+            "Condition": {
+              "StringEquals": {
+                "{{ $oidcProvider }}:sub": "system:serviceaccount:{{ $namespace }}:plugin-barman-cloud",
+                "{{ $oidcProvider }}:aud": "sts.amazonaws.com{{- if $isChinaRegion }}.cn{{- end }}"
+              }
+            }
+          }
+        ]
+      }
+    inlinePolicy:
+      - name: {{ $bucketName }}
+        policy: |
+          {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "s3:ListBucket",
+                  "s3:PutObject",
+                  "s3:GetObject",
+                  "s3:DeleteObject"
+                ],
+                "Resource": [
+                  "arn:aws{{- if $isChinaRegion }}-cn{{- end }}:s3:::{{ $bucketName }}",
+                  "arn:aws{{- if $isChinaRegion }}-cn{{- end }}:s3:::{{ $bucketName }}/*"
+                ]
+              },
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "s3:GetAccessPoint",
+                  "s3:GetAccountPublicAccessBlock",
+                  "s3:ListAccessPoints"
+                ],
+                "Resource": "*"
+              }
+            ]
+          }
+    {{- if $tags }}
+    tags:
+      {{- range $key, $value := $tags }}
+      {{ $key }}: {{ $value | quote }}
+      {{- end }}
+    {{- end }}
+  providerConfigRef:
+    name: {{ .Values.postgresqlCluster.crossplane.providerConfigRef }}
+{{- end }}

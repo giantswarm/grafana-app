@@ -1,0 +1,49 @@
+{{- if and .Values.postgresqlCluster.enabled .Values.postgresqlCluster.backup.enabled .Values.postgresqlCluster.crossplane.enabled (include "grafana.crossplane.isAWS" .) .Values.postgresqlCluster.crossplane.aws.enabled }}
+{{- $bucketName := .Values.postgresqlCluster.crossplane.aws.bucket.name }}
+{{- $isChinaRegion := hasPrefix "cn-" .Values.postgresqlCluster.crossplane.region }}
+---
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: BucketPolicy
+metadata:
+  name: {{ $bucketName }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "grafana.labels" . | nindent 4 }}
+    app.kubernetes.io/component: storage
+  annotations:
+    crossplane.io/external-name: {{ $bucketName }}
+spec:
+  managementPolicies:
+    {{- if .Values.postgresqlCluster.crossplane.observeOnly }}
+    - Observe
+    {{- else }}
+    - "*"
+    {{- end }}
+  forProvider:
+    bucketRef:
+      name: {{ $bucketName }}
+    policy: |
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Sid": "EnforceSSLOnly",
+            "Effect": "Deny",
+            "Principal": "*",
+            "Action": ["s3:*"],
+            "Resource": [
+              "arn:aws{{- if $isChinaRegion }}-cn{{- end }}:s3:::{{ $bucketName }}",
+              "arn:aws{{- if $isChinaRegion }}-cn{{- end }}:s3:::{{ $bucketName }}/*"
+            ],
+            "Condition": {
+              "Bool": {
+                "aws:SecureTransport": "false"
+              }
+            }
+          }
+        ]
+      }
+    region: {{ .Values.postgresqlCluster.crossplane.region }}
+  providerConfigRef:
+    name: {{ .Values.postgresqlCluster.crossplane.providerConfigRef }}
+{{- end }}
