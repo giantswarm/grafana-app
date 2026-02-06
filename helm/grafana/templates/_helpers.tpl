@@ -27,8 +27,8 @@ Create chart name and version as used by the chart label.
 Selector labels
 */}}
 {{- define "labels.selector" -}}
-app.kubernetes.io/name: {{ .Chart.Name | quote }}
 app.kubernetes.io/instance: {{ .Chart.Name | quote }}
+app.kubernetes.io/name: {{ .Chart.Name | quote }}
 {{- end -}}
 
 {{/*
