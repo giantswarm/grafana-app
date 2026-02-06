@@ -19,3 +19,5 @@ checks:
   - "no-node-affinity"
   - "non-existent-service-account"
   - "restart-policy"
+  ignorePaths:
+  - helm/grafana/charts/**
