@@ -120,6 +120,15 @@ postgresqlCluster:
       iam:
         #-- Enable IAM role creation via Crossplane
         enabled: true
+    azure:
+      #-- Enable Azure Crossplane resources
+      enabled: false
+      #-- Container configuration for Grafana PostgreSQL backups
+      container:
+        #-- Container name (storage account name will be auto-generated)
+        name: ""
+        #-- Number of days to retain backups before expiration
+        lifecycleDays: 45
 
 grafana:
   rbac:
