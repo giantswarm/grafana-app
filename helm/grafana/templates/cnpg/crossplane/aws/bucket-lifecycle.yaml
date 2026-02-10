@@ -1,6 +1,8 @@
 {{- if and .Values.postgresqlCluster.enabled .Values.postgresqlCluster.backup.enabled .Values.postgresqlCluster.crossplane.enabled (include "grafana.crossplane.isAWS" .) .Values.postgresqlCluster.crossplane.aws.enabled }}
 {{- $bucketName := .Values.postgresqlCluster.crossplane.aws.bucket.name }}
 ---
+# Configures lifecycle policies for the PostgreSQL backup S3 bucket
+# to automatically expire old backups after a configured number of days
 apiVersion: s3.aws.upbound.io/v1beta1
 kind: BucketLifecycleConfiguration
 metadata:

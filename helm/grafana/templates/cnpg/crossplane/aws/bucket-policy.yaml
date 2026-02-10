@@ -2,6 +2,8 @@
 {{- $bucketName := .Values.postgresqlCluster.crossplane.aws.bucket.name }}
 {{- $isChinaRegion := hasPrefix "cn-" .Values.postgresqlCluster.crossplane.region }}
 ---
+# Defines the S3 bucket policy for the PostgreSQL backup bucket
+# to enforce secure transport (TLS/SSL) for all access
 apiVersion: s3.aws.upbound.io/v1beta1
 kind: BucketPolicy
 metadata:

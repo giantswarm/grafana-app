@@ -2,6 +2,8 @@
 {{- $tags := include "grafana.crossplane.tags" . | fromYaml }}
 {{- $bucketName := .Values.postgresqlCluster.crossplane.aws.bucket.name }}
 ---
+# Creates the S3 bucket for storing PostgreSQL backups
+# managed by CloudNativePG with barman-cloud
 apiVersion: s3.aws.upbound.io/v1beta2
 kind: Bucket
 metadata:

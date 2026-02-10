@@ -1,6 +1,8 @@
 {{- if and .Values.postgresqlCluster.enabled .Values.postgresqlCluster.backup.enabled .Values.postgresqlCluster.crossplane.enabled (include "grafana.crossplane.isAWS" .) .Values.postgresqlCluster.crossplane.aws.enabled }}
 {{- $bucketName := .Values.postgresqlCluster.crossplane.aws.bucket.name }}
 ---
+# Blocks all public access to the PostgreSQL backup S3 bucket
+# as access is restricted to authorized services via VPC endpoints
 apiVersion: s3.aws.upbound.io/v1beta1
 kind: BucketPublicAccessBlock
 metadata:
