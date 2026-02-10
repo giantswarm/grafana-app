@@ -25,6 +25,7 @@ spec:
     blockPublicAcls: true
     blockPublicPolicy: true
     ignorePublicAcls: true
+    # Prevent public access to the bucket as we use VPC endpoints
     restrictPublicBuckets: true
   providerConfigRef:
     name: {{ .Values.postgresqlCluster.crossplane.providerConfigRef }}
