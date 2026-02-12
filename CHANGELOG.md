@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add Crossplane AWS support for automated S3 bucket provisioning for CNPG backups.
+- Add Crossplane Azure (CAPZ) support for automated Azure Storage Account and Blob Container provisioning for CNPG backups.
+
 ## [2.29.1] - 2026-02-09
 
 ### Changed

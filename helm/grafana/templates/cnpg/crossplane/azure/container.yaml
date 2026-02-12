@@ -1,0 +1,34 @@
+{{- if and (include "grafana.crossplane.enabled" .) (include "grafana.crossplane.isAzure" .) -}}
+{{- $clusterName := .Values.postgresqlCluster.crossplane.clusterName -}}
+{{- $containerName := .Values.postgresqlCluster.crossplane.azure.container.name | default "grafana-backups" -}}
+{{- $storageAccountName := include "grafana.crossplane.azure.storageAccountName" (dict "containerName" $containerName) -}}
+---
+apiVersion: storage.azure.upbound.io/v1beta1
+kind: Container
+metadata:
+  name: {{ $containerName }}
+  labels:
+    {{- include "grafana.labels" . | nindent 4 }}
+    app.kubernetes.io/component: storage
+  annotations:
+    {{- if .Values.postgresqlCluster.crossplane.observeOnly }}
+    crossplane.io/external-name: {{ $containerName }}
+    {{- end }}
+spec:
+  {{- if .Values.postgresqlCluster.crossplane.observeOnly }}
+  managementPolicies: ["Observe"]
+  {{- end }}
+  forProvider:
+    storageAccountNameSelector:
+      matchLabels:
+        {{- include "grafana.labels" . | nindent 8 }}
+        app.kubernetes.io/component: storage
+    containerAccessType: {{ .Values.postgresqlCluster.crossplane.azure.containerAccessType | default "private" }}
+    metadata:
+      managed-by: crossplane
+      app: grafana-postgresql
+  {{- if not .Values.postgresqlCluster.crossplane.observeOnly }}
+  providerConfigRef:
+    name: {{ .Values.postgresqlCluster.crossplane.providerConfigName | default "default" }}
+  {{- end }}
+{{- end }}

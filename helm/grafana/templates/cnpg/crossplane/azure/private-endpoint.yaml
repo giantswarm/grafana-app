@@ -1,0 +1,131 @@
+{{- if and (include "grafana.crossplane.enabled" .) (include "grafana.crossplane.isAzure" .) (include "grafana.crossplane.azure.isPrivateCluster" . | eq "true") -}}
+{{- $tags := include "grafana.crossplane.tags" . | fromYaml }}
+{{- $clusterName := .Values.postgresqlCluster.crossplane.clusterName -}}
+{{- $resourceGroup := include "grafana.crossplane.azure.resourceGroup" . -}}
+{{- $location := include "grafana.crossplane.azure.location" . -}}
+{{- $containerName := .Values.postgresqlCluster.crossplane.azure.container.name | default "grafana-backups" -}}
+{{- $storageAccountName := include "grafana.crossplane.azure.storageAccountName" (dict "containerName" $containerName) -}}
+{{- $vnetName := include "grafana.crossplane.azure.vnetName" . -}}
+{{- $vnetResourceGroup := include "grafana.crossplane.azure.vnetResourceGroup" . -}}
+{{- $subscriptionId := include "grafana.crossplane.azure.subscriptionId" . -}}
+{{- $vnetId := printf "/subscriptions/%s/resourceGroups/%s/providers/Microsoft.Network/virtualNetworks/%s" $subscriptionId $vnetResourceGroup $vnetName -}}
+{{- $subnetName := .Values.postgresqlCluster.crossplane.azure.privateEndpoint.subnetName | default "control-plane-subnet" -}}
+---
+apiVersion: network.azure.upbound.io/v1beta1
+kind: PrivateEndpoint
+metadata:
+  name: {{ $containerName }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "grafana.labels" . | nindent 4 }}
+    app.kubernetes.io/component: storage
+  annotations:
+    crossplane.io/external-name: {{ $containerName }}
+spec:
+  managementPolicies:
+    {{- if .Values.postgresqlCluster.crossplane.observeOnly }}
+    - Observe
+    {{- else }}
+    - "*"
+    {{- end }}
+  forProvider:
+    location: {{ $location }}
+    resourceGroupName: {{ $resourceGroup }}
+    subnetIdSelector:
+      matchLabels:
+        {{- if .Values.postgresqlCluster.crossplane.azure.privateEndpoint.subnetSelector }}
+        {{- toYaml .Values.postgresqlCluster.crossplane.azure.privateEndpoint.subnetSelector | nindent 8 }}
+        {{- else }}
+        name: {{ $subnetName }}
+        {{- end }}
+    privateDnsZoneGroup:
+      - name: default
+        privateDnsZoneIdsRefs:
+          - name: privatelink-blob-core-windows-net
+    privateServiceConnection:
+      - name: {{ $storageAccountName }}-psc
+        isManualConnection: false
+        privateConnectionResourceIdSelector:
+          matchLabels:
+            {{- include "grafana.labels" . | nindent 12 }}
+            app.kubernetes.io/component: storage
+        subresourceNames:
+          - blob
+    {{- if $tags }}
+    tags:
+      {{- range $key, $value := $tags }}
+      {{ $key }}: {{ $value | quote }}
+      {{- end }}
+    {{- end }}
+  providerConfigRef:
+    name: {{ .Values.postgresqlCluster.crossplane.providerConfigName | default "default" }}
+---
+apiVersion: network.azure.upbound.io/v1beta1
+kind: PrivateDNSZone
+metadata:
+  name: privatelink-blob-core-windows-net
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "grafana.labels" . | nindent 4 }}
+    app.kubernetes.io/component: storage
+  annotations:
+    crossplane.io/external-name: privatelink.blob.core.windows.net
+spec:
+  managementPolicies:
+    {{- if .Values.postgresqlCluster.crossplane.observeOnly }}
+    - Observe
+    {{- else }}
+    - "*"
+    {{- end }}
+  forProvider:
+    resourceGroupName: {{ $resourceGroup }}
+    {{- if $tags }}
+    tags:
+      {{- range $key, $value := $tags }}
+      {{ $key }}: {{ $value | quote }}
+      {{- end }}
+    {{- end }}
+  providerConfigRef:
+    name: {{ .Values.postgresqlCluster.crossplane.providerConfigName | default "default" }}
+---
+apiVersion: network.azure.upbound.io/v1beta1
+kind: PrivateDNSZoneVirtualNetworkLink
+metadata:
+  name: {{ $storageAccountName }}-pdzvnl
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "grafana.labels" . | nindent 4 }}
+    app.kubernetes.io/component: storage
+  annotations:
+    crossplane.io/external-name: {{ $storageAccountName }}-pdzvnl
+spec:
+  managementPolicies:
+    {{- if .Values.postgresqlCluster.crossplane.observeOnly }}
+    - Observe
+    {{- else }}
+    - "*"
+    {{- end }}
+  forProvider:
+    privateDnsZoneNameSelector:
+      matchLabels:
+        {{- include "grafana.labels" . | nindent 8 }}
+        app.kubernetes.io/component: storage
+    resourceGroupName: {{ $resourceGroup }}
+    {{- if $vnetId }}
+    virtualNetworkId: {{ $vnetId }}
+    {{- else }}
+    virtualNetworkIdSelector:
+      matchLabels:
+        azure.giantswarm.io/cluster-name: {{ $clusterName }}
+        azure.giantswarm.io/vnet-name: {{ $vnetName }}
+    {{- end }}
+    registrationEnabled: false
+    {{- if $tags }}
+    tags:
+      {{- range $key, $value := $tags }}
+      {{ $key }}: {{ $value | quote }}
+      {{- end }}
+    {{- end }}
+  providerConfigRef:
+    name: {{ .Values.postgresqlCluster.crossplane.providerConfigName | default "default" }}
+{{- end }}
