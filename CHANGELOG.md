@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.30.0] - 2026-02-12
+
 ### Changed
 
 - Change team annotation in `Chart.yaml` to OpenContainers format (`io.giantswarm.application.team`).
@@ -497,7 +499,8 @@ Added:
 - images retagged for Giant Swarm registries
 - simple functionality test to get login web page
 
-[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.29.1...HEAD
+[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.30.0...HEAD
+[2.30.0]: https://github.com/giantswarm/grafana-app/compare/v2.29.1...v2.30.0
 [2.29.1]: https://github.com/giantswarm/grafana-app/compare/v2.29.0...v2.29.1
 [2.29.0]: https://github.com/giantswarm/grafana-app/compare/v2.28.5...v2.29.0
 [2.28.5]: https://github.com/giantswarm/grafana-app/compare/v2.28.4...v2.28.5
