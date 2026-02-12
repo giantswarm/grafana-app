@@ -13,7 +13,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- if .Values.extraLabels }}
 {{ toYaml .Values.extraLabels }}
 {{- end }}
-application.giantswarm.io/team: {{ index .Chart.Annotations "application.giantswarm.io/team" | default "atlas" | quote }}
+application.giantswarm.io/team: {{ index .Chart.Annotations "io.giantswarm.application.team" | default "atlas" | quote }}
 {{- end -}}
 
 {{/*

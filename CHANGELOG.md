@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Change team annotation in `Chart.yaml` to OpenContainers format (`io.giantswarm.application.team`).
+
 ## [2.29.1] - 2026-02-09
 
 ### Changed
