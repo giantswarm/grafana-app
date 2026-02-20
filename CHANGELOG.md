@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- migrated upstream helm chart to grafana-community
+
 ## [2.30.0] - 2026-02-12
 
 ### Changed
