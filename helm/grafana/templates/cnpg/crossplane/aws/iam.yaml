@@ -6,6 +6,8 @@
 {{- $isChinaRegion := hasPrefix "cn-" .Values.postgresqlCluster.crossplane.region }}
 {{- $serviceAccountName := .Values.postgresqlCluster.name }}
 ---
+# Creates an IAM role for PostgreSQL service accounts to access the backup S3 bucket
+# using IRSA (IAM Roles for Service Accounts) with OIDC authentication
 apiVersion: iam.aws.upbound.io/v1beta1
 kind: Role
 metadata:

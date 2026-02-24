@@ -1,19 +1,19 @@
 apiVersion: v2
 name: grafana
-version: 2.29.1
+version: 2.31.0
 appVersion: 12.3.1
 kubeVersion: "^1.8.0-0"
 description: The leading tool for querying and visualizing time series and metrics.
 home: https://github.com/giantswarm/grafana-app
 icon: https://s.giantswarm.io/app-icons/grafana/1/light.svg
 sources:
-  - https://github.com/grafana/helm-charts/tree/main/charts/grafana
+  - https://github.com/grafana-community/helm-charts/tree/main/charts/grafana
 dependencies:
   - name: grafana
     version: 10.5.15
-    repository: https://grafana.github.io/helm-charts
+    repository: https://grafana-community.github.io/helm-charts
   - name: pg-cluster-recovery-test
-    version: 0.3.0
+    version: 0.3.1
     repository: https://giantswarm.github.io/giantswarm-catalog
     alias: pgClusterRecoveryTest
     condition: pgClusterRecoveryTest.enabled
@@ -22,5 +22,4 @@ maintainers:
     email: team-atlas@giantswarm.io
 type: application
 annotations:
-  application.giantswarm.io/team: atlas
-  config.giantswarm.io/version: 1.x.x
+  io.giantswarm.application.team: atlas
