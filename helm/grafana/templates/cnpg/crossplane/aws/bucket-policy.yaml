@@ -39,7 +39,6 @@ spec:
             ],
             "Condition": {
               "Bool": {
-                # Enforce TLS access to the bucket
                 "aws:SecureTransport": "false"
               }
             }
