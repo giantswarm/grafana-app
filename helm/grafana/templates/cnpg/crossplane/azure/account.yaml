@@ -1,48 +1,43 @@
-{{- if and (include "grafana.crossplane.enabled" .) (include "grafana.crossplane.isAzure" .) -}}
-{{- $clusterName := .Values.postgresqlCluster.crossplane.clusterName -}}
-{{- $resourceGroup := include "grafana.crossplane.azure.resourceGroup" . -}}
-{{- $location := include "grafana.crossplane.azure.location" . -}}
-{{- $subscriptionId := include "grafana.crossplane.azure.subscriptionId" . -}}
+{{- if and (include "grafana.crossplane.enabled" .) (include "grafana.crossplane.isAzure" .) .Values.postgresqlCluster.crossplane.azure.enabled -}}
+{{- $tags := include "grafana.crossplane.tags" . | fromYaml -}}
 {{- $containerName := .Values.postgresqlCluster.crossplane.azure.container.name | default "grafana-backups" -}}
 {{- $storageAccountName := include "grafana.crossplane.azure.storageAccountName" (dict "containerName" $containerName) -}}
-{{- $isPrivate := include "grafana.crossplane.azure.isPrivateCluster" . | eq "true" -}}
+{{- $isPrivate := .Values.postgresqlCluster.crossplane.private | default false -}}
 ---
 apiVersion: storage.azure.upbound.io/v1beta2
 kind: Account
 metadata:
-  name: {{ $storageAccountName }}
-  labels:
-    {{- include "grafana.labels" . | nindent 4 }}
-    app.kubernetes.io/component: storage
   annotations:
-    {{- if .Values.postgresqlCluster.crossplane.observeOnly }}
     crossplane.io/external-name: {{ $storageAccountName }}
-    {{- end }}
+  labels:
+    {{- include "grafana.crossplane.labels" (dict "ctx" . "component" "storage") | nindent 4 }}
+  name: {{ $storageAccountName }}
 spec:
-  {{- if .Values.postgresqlCluster.crossplane.observeOnly }}
-  managementPolicies: ["Observe"]
-  {{- end }}
   forProvider:
-    resourceGroupName: {{ $resourceGroup }}
-    location: {{ $location }}
     accountKind: StorageV2
-    accountTier: Standard
     accountReplicationType: {{ .Values.postgresqlCluster.crossplane.azure.replicationType | default "LRS" }}
+    accountTier: Standard
     allowBlobPublicAccess: false
     enableHttpsTrafficOnly: true
+    location: {{ .Values.postgresqlCluster.crossplane.region }}
     minTlsVersion: TLS1_2
     publicNetworkAccessEnabled: {{ not $isPrivate }}
-    {{- if .Values.postgresqlCluster.crossplane.azure.networkRules }}
-    networkRules: 
-      {{- toYaml .Values.postgresqlCluster.crossplane.azure.networkRules | nindent 6 }}
-    {{- end }}
+    resourceGroupName: {{ .Values.postgresqlCluster.crossplane.azure.resourceGroup }}
+    {{- if $tags }}
     tags:
-      {{- include "grafana.crossplane.tags" . | nindent 6 }}
-  {{- if not .Values.postgresqlCluster.crossplane.observeOnly }}
+      {{- range $key, $value := $tags }}
+      {{ $key }}: {{ $value | quote }}
+      {{- end }}
+    {{- end }}
+  managementPolicies:
+    {{- if .Values.postgresqlCluster.crossplane.observeOnly }}
+    - Observe
+    {{- else }}
+    - "*"
+    {{- end }}
   providerConfigRef:
-    name: {{ .Values.postgresqlCluster.crossplane.providerConfigName | default "default" }}
-  {{- end }}
+    name: {{ .Values.postgresqlCluster.crossplane.providerConfigRef }}
   writeConnectionSecretToRef:
-    name: {{ $storageAccountName }}-connection
+    name: {{ $containerName }}
     namespace: {{ .Release.Namespace }}
 {{- end }}

@@ -1064,6 +1064,9 @@
                         "observeOnly": {
                             "type": "boolean"
                         },
+                        "private": {
+                            "type": "boolean"
+                        },
                         "tags": {
                             "type": "array",
                             "items": {
@@ -1111,6 +1114,9 @@
                             "properties": {
                                 "enabled": {
                                     "type": "boolean"
+                                },
+                                "resourceGroup": {
+                                    "type": "string"
                                 },
                                 "container": {
                                     "type": "object",
