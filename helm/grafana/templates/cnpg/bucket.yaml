@@ -1,3 +1,5 @@
+# TODO remove once we have migrated onprem clusters to use crossplane for bucket management
+
 {{- if and (.Values.postgresqlCluster.enabled) (and (.Values.postgresqlCluster.backup.enabled) (.Values.postgresqlCluster.objectStorage.bucket.create)) }}
 apiVersion: objectstorage.giantswarm.io/v1alpha1
 kind: Bucket

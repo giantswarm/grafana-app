@@ -59,15 +59,23 @@ postgresqlCluster:
       accessKeyId: ""
       secretAccessKey: ""
     azure:
-      #-- For Azure object storage access
-      #   storageAccount:
-      #     name: storageAccountName
-      #     key: accountName
-      #   storageKey:
-      #     name: storageKeyName
-      #     key: accountKey
+      #-- Azure object storage credentials. Two paths are supported:
+      #
+      #   Crossplane (CAPZ): set crossplane.azure.enabled: true. Credentials are
+      #   auto-configured from the Crossplane-generated connection secret
+      #   (key: attribute.primary_blob_connection_string). No manual input needed.
+      #
+      #   Manual (non-Crossplane): provide explicit secret references, e.g.:
+      #   credentials:
+      #     storageAccount:
+      #       name: <secret-name>
+      #       key: <key-holding-account-name>
+      #     storageKey:
+      #       name: <secret-name>
+      #       key: <key-holding-account-key>
       credentials: {}
     #-- Bucket CR config
+    # TODO remove once we have migrated onprem clusters to use crossplane for bucket management
     bucket:
       create: false
       name: "giantswarm-installationName-grafana-postgresql"

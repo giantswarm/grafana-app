@@ -1,0 +1,17 @@
+{{- if and .Values.postgresqlCluster.enabled .Values.postgresqlCluster.recovery.enabled }}
+---
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  labels:
+    {{- include "grafana.labels" . | nindent 4 }}
+    observability.giantswarm.io/tenant: giantswarm
+  name: {{ .Values.postgresqlCluster.name }}-objectstore-recovery
+  namespace: {{ .Release.Namespace }}
+spec:
+  configuration:
+    destinationPath: {{ .Values.postgresqlCluster.recovery.destinationPath | quote }}
+    {{- include "grafana.cnpg.objectStoreCredentials" . | nindent 4 }}
+    wal:
+      compression: gzip
+{{- end }}

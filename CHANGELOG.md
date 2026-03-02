@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Improve CNPG templates.
+
 ## [2.33.0] - 2026-03-02
 
 ### Changed
