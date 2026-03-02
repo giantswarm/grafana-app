@@ -1,4 +1,4 @@
-{{- if and .Values.postgresqlCluster.enabled .Values.postgresqlCluster.backup.enabled .Values.postgresqlCluster.crossplane.enabled (include "grafana.crossplane.isAWS" .) .Values.postgresqlCluster.crossplane.aws.enabled .Values.postgresqlCluster.crossplane.aws.iam.enabled }}
+{{- if and (include "grafana.crossplane.enabled" .) (include "grafana.crossplane.isAWS" .) .Values.postgresqlCluster.crossplane.aws.enabled }}
 {{- $bucketName := .Values.postgresqlCluster.crossplane.aws.bucket.name }}
 {{- $namespace := .Release.Namespace }}
 {{- $tags := include "grafana.crossplane.tags" . | fromYaml }}

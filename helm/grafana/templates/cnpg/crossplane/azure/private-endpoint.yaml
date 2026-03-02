@@ -1,0 +1,49 @@
+{{- if and (include "grafana.crossplane.enabled" .) (include "grafana.crossplane.isAzure" .) .Values.postgresqlCluster.crossplane.azure.enabled -}}
+{{- $tags := include "grafana.crossplane.tags" . | fromYaml -}}
+{{- $clusterName := .Values.postgresqlCluster.crossplane.clusterName -}}
+{{- $resourceGroup := .Values.postgresqlCluster.crossplane.azure.resourceGroup -}}
+{{- $containerName := .Values.postgresqlCluster.crossplane.azure.container.name | default "grafana-backups" -}}
+{{- $storageAccountName := include "grafana.crossplane.azure.storageAccountName" (dict "containerName" $containerName) -}}
+{{- $subscriptionId := include "grafana.crossplane.azure.subscriptionId" . -}}
+{{- $subnetId := printf "/subscriptions/%s/resourceGroups/%s/providers/Microsoft.Network/virtualNetworks/%s-vnet/subnets/node-subnet" $subscriptionId $resourceGroup $resourceGroup -}}
+{{- $storageAccountId := printf "/subscriptions/%s/resourceGroups/%s/providers/Microsoft.Storage/storageAccounts/%s" $subscriptionId $resourceGroup $storageAccountName -}}
+---
+apiVersion: network.azure.upbound.io/v1beta1
+kind: PrivateEndpoint
+metadata:
+  annotations:
+    crossplane.io/external-name: {{ $containerName }}
+  labels:
+    {{- include "grafana.crossplane.labels" (dict "ctx" . "component" "storage") | nindent 4 }}
+  name: {{ $containerName }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  managementPolicies:
+    {{- if .Values.postgresqlCluster.crossplane.observeOnly }}
+    - Observe
+    {{- else }}
+    - "*"
+    {{- end }}
+  forProvider:
+    location: {{ .Values.postgresqlCluster.crossplane.region }}
+    privateDnsZoneGroup:
+      - name: default
+        privateDnsZoneIdsRefs:
+          - name: {{ $clusterName }}-privatelink.blob.core.windows.net
+    privateServiceConnection:
+      - isManualConnection: false
+        name: {{ $containerName }}
+        privateConnectionResourceId: {{ $storageAccountId }}
+        subresourceNames:
+          - blob
+    resourceGroupName: {{ $resourceGroup }}
+    subnetId: {{ $subnetId }}
+    {{- if $tags }}
+    tags:
+      {{- range $key, $value := $tags }}
+      {{ $key }}: {{ $value | quote }}
+      {{- end }}
+    {{- end }}
+  providerConfigRef:
+    name: {{ .Values.postgresqlCluster.crossplane.providerConfigRef }}
+{{- end }}

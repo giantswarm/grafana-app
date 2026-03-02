@@ -1,0 +1,30 @@
+{{- if and (include "grafana.crossplane.enabled" .) (include "grafana.crossplane.isAzure" .) .Values.postgresqlCluster.crossplane.azure.enabled -}}
+{{- $containerName := .Values.postgresqlCluster.crossplane.azure.container.name -}}
+{{- $storageAccountName := include "grafana.crossplane.azure.storageAccountName" (dict "containerName" $containerName) -}}
+---
+apiVersion: storage.azure.upbound.io/v1beta1
+kind: Container
+metadata:
+  annotations:
+    crossplane.io/external-name: {{ $containerName }}
+  labels:
+    {{- include "grafana.crossplane.labels" (dict "ctx" . "component" "storage") | nindent 4 }}
+  name: {{ $containerName }}
+spec:
+  forProvider:
+    containerAccessType: {{ .Values.postgresqlCluster.crossplane.azure.containerAccessType | default "private" }}
+    metadata:
+      app: grafana-postgresql
+      managed-by: crossplane
+    storageAccountNameSelector:
+      matchLabels:
+        {{- include "grafana.crossplane.labels" (dict "ctx" . "component" "storage") | nindent 8 }}
+  managementPolicies:
+    {{- if .Values.postgresqlCluster.crossplane.observeOnly }}
+    - Observe
+    {{- else }}
+    - "*"
+    {{- end }}
+  providerConfigRef:
+    name: {{ .Values.postgresqlCluster.crossplane.providerConfigRef }}
+{{- end }}

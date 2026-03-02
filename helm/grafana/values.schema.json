@@ -1064,6 +1064,9 @@
                         "observeOnly": {
                             "type": "boolean"
                         },
+                        "private": {
+                            "type": "boolean"
+                        },
                         "tags": {
                             "type": "array",
                             "items": {
@@ -1101,6 +1104,28 @@
                                     "properties": {
                                         "enabled": {
                                             "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "azure": {
+                            "type": "object",
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "resourceGroup": {
+                                    "type": "string"
+                                },
+                                "container": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "lifecycleDays": {
+                                            "type": "integer"
                                         }
                                     }
                                 }

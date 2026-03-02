@@ -1,0 +1,43 @@
+{{- if and (include "grafana.crossplane.enabled" .) (include "grafana.crossplane.isAzure" .) .Values.postgresqlCluster.crossplane.azure.enabled -}}
+{{- $tags := include "grafana.crossplane.tags" . | fromYaml -}}
+{{- $containerName := .Values.postgresqlCluster.crossplane.azure.container.name | default "grafana-backups" -}}
+{{- $storageAccountName := include "grafana.crossplane.azure.storageAccountName" (dict "containerName" $containerName) -}}
+{{- $isPrivate := .Values.postgresqlCluster.crossplane.private | default false -}}
+---
+apiVersion: storage.azure.upbound.io/v1beta2
+kind: Account
+metadata:
+  annotations:
+    crossplane.io/external-name: {{ $storageAccountName }}
+  labels:
+    {{- include "grafana.crossplane.labels" (dict "ctx" . "component" "storage") | nindent 4 }}
+  name: {{ $storageAccountName }}
+spec:
+  forProvider:
+    accountKind: StorageV2
+    accountReplicationType: {{ .Values.postgresqlCluster.crossplane.azure.replicationType | default "LRS" }}
+    accountTier: Standard
+    allowBlobPublicAccess: false
+    enableHttpsTrafficOnly: true
+    location: {{ .Values.postgresqlCluster.crossplane.region }}
+    minTlsVersion: TLS1_2
+    publicNetworkAccessEnabled: {{ not $isPrivate }}
+    resourceGroupName: {{ .Values.postgresqlCluster.crossplane.azure.resourceGroup }}
+    {{- if $tags }}
+    tags:
+      {{- range $key, $value := $tags }}
+      {{ $key }}: {{ $value | quote }}
+      {{- end }}
+    {{- end }}
+  managementPolicies:
+    {{- if .Values.postgresqlCluster.crossplane.observeOnly }}
+    - Observe
+    {{- else }}
+    - "*"
+    {{- end }}
+  providerConfigRef:
+    name: {{ .Values.postgresqlCluster.crossplane.providerConfigRef }}
+  writeConnectionSecretToRef:
+    name: {{ $containerName }}
+    namespace: {{ .Release.Namespace }}
+{{- end }}

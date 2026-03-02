@@ -102,6 +102,8 @@ postgresqlCluster:
     clusterNamespace: "org-giantswarm"
     #-- Enable observe-only mode for safe migration
     observeOnly: false
+    #-- Private cluster: disables public network access and creates a private endpoint for blob storage
+    private: false
     #-- Additional tags to apply to all storage resources
     # Tags from cluster CR will be merged automatically
     tags: []
@@ -120,6 +122,17 @@ postgresqlCluster:
       iam:
         #-- Enable IAM role creation via Crossplane
         enabled: true
+    azure:
+      #-- Enable Azure Crossplane resources
+      enabled: false
+      #-- Azure Resource Group where storage resources will be created
+      resourceGroup: ""
+      #-- Container configuration for Grafana PostgreSQL backups
+      container:
+        #-- Container name (storage account name will be auto-generated)
+        name: ""
+        #-- Number of days to retain backups before expiration
+        lifecycleDays: 45
 
 grafana:
   rbac:

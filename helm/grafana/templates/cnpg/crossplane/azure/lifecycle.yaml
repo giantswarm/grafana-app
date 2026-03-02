@@ -1,0 +1,36 @@
+{{- if and (include "grafana.crossplane.enabled" .) (include "grafana.crossplane.isAzure" .) .Values.postgresqlCluster.crossplane.azure.enabled -}}
+{{- if .Values.postgresqlCluster.crossplane.azure.container.lifecycleDays -}}
+{{- $containerName := .Values.postgresqlCluster.crossplane.azure.container.name | default "grafana-backups" -}}
+{{- $storageAccountName := include "grafana.crossplane.azure.storageAccountName" (dict "containerName" $containerName) -}}
+---
+apiVersion: storage.azure.upbound.io/v1beta1
+kind: ManagementPolicy
+metadata:
+  annotations:
+    {{- if .Values.postgresqlCluster.crossplane.observeOnly }}
+    crossplane.io/external-name: {{ $storageAccountName }}
+    {{- end }}
+  labels:
+    {{- include "grafana.crossplane.labels" (dict "ctx" . "component" "storage") | nindent 4 }}
+  name: {{ $storageAccountName }}
+spec:
+  {{- if .Values.postgresqlCluster.crossplane.observeOnly }}
+  managementPolicies: ["Observe"]
+  {{- end }}
+  forProvider:
+    rule:
+      - actions:
+          - baseBlob:
+            - deleteBlobAfterDaysSinceModificationGreaterThan: {{ .Values.postgresqlCluster.crossplane.azure.container.lifecycleDays }}
+        enabled: true
+        filters:
+          - blobTypes:
+            - blockBlob
+        name: DeleteOldBlobs
+    storageAccountIdSelector:
+      matchLabels:
+        {{- include "grafana.crossplane.labels" (dict "ctx" . "component" "storage") | nindent 8 }}
+  providerConfigRef:
+    name: {{ .Values.postgresqlCluster.crossplane.providerConfigRef }}
+{{- end }}
+{{- end }}

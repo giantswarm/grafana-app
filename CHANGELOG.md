@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add Crossplane Azure (CAPZ) support for automated Azure Storage Account and Blob Container provisioning for CNPG backups.
+
 ## [2.31.0] - 2026-02-24
 
 ### Added
