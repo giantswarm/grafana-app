@@ -28,7 +28,8 @@ Credential paths:
     Source: azureCredentials passthrough from objectStorage.azure.credentials
 */}}
 {{- define "grafana.cnpg.objectStoreCredentials" -}}
-{{- if and (eq .Values.postgresqlCluster.objectStorage.type "s3") .Values.postgresqlCluster.objectStorage.s3.accessKeyId .Values.postgresqlCluster.objectStorage.s3.secretAccessKey }}
+{{- if eq .Values.postgresqlCluster.objectStorage.type "s3" }}
+{{- if and .Values.postgresqlCluster.objectStorage.s3.accessKeyId .Values.postgresqlCluster.objectStorage.s3.secretAccessKey }}
 endpointURL: {{ .Values.postgresqlCluster.objectStorage.s3.endpointURL }}
 s3Credentials:
   region: {{ .Values.postgresqlCluster.objectStorage.s3.region }}
@@ -38,9 +39,10 @@ s3Credentials:
   secretAccessKey:
     name: {{ .Values.postgresqlCluster.name }}-access-keys
     key: SECRET_ACCESS_KEY
-{{- else if eq .Values.postgresqlCluster.objectStorage.type "s3" }}
+{{- else }}
 s3Credentials:
   inheritFromIAMRole: true
+{{- end }}
 {{- else if eq .Values.postgresqlCluster.objectStorage.type "azure" }}
 {{- if .Values.postgresqlCluster.crossplane.azure.enabled }}
 azureCredentials:
