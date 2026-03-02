@@ -1,4 +1,4 @@
-{{- if and (include "grafana.crossplane.enabled" .) (include "grafana.crossplane.isAzure" .) .Values.postgresqlCluster.crossplane.azure.enabled -}}
+{{- if and (include "grafana.crossplane.enabled" .) (include "grafana.crossplane.isAzure" .) .Values.postgresqlCluster.crossplane.azure.enabled .Values.postgresqlCluster.crossplane.private -}}
 {{- $tags := include "grafana.crossplane.tags" . | fromYaml -}}
 {{- $clusterName := .Values.postgresqlCluster.crossplane.clusterName -}}
 {{- $resourceGroup := .Values.postgresqlCluster.crossplane.azure.resourceGroup -}}
