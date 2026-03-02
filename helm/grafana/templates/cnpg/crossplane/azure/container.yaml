@@ -1,5 +1,5 @@
 {{- if and (include "grafana.crossplane.enabled" .) (include "grafana.crossplane.isAzure" .) .Values.postgresqlCluster.crossplane.azure.enabled -}}
-{{- $containerName := .Values.postgresqlCluster.crossplane.azure.container.name | default "grafana-backups" -}}
+{{- $containerName := .Values.postgresqlCluster.crossplane.azure.container.name -}}
 {{- $storageAccountName := include "grafana.crossplane.azure.storageAccountName" (dict "containerName" $containerName) -}}
 ---
 apiVersion: storage.azure.upbound.io/v1beta1

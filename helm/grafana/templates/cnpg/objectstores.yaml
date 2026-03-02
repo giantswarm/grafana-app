@@ -26,9 +26,16 @@ spec:
     s3Credentials:
       inheritFromIAMRole: true
     {{- else if eq .Values.postgresqlCluster.objectStorage.type "azure" }}
+    {{- if .Values.postgresqlCluster.crossplane.azure.enabled }}
+    azureCredentials:
+      connectionString:
+        name: {{ .Values.postgresqlCluster.crossplane.azure.container.name }}
+        key: attribute.primary_blob_connection_string
+    {{- else }}
     {{- with .Values.postgresqlCluster.objectStorage.azure.credentials }}
     azureCredentials:
       {{- toYaml . | nindent 6 }}
+    {{- end }}
     {{- end }}
     {{- else }}
       {{- fail "Unsupported object storage type. Supported types are 's3' and 'azure'." }}
@@ -64,9 +71,16 @@ spec:
     s3Credentials:
       inheritFromIAMRole: true
     {{- else if eq .Values.postgresqlCluster.objectStorage.type "azure" }}
+    {{- if .Values.postgresqlCluster.crossplane.azure.enabled }}
+    azureCredentials:
+      connectionString:
+        name: {{ .Values.postgresqlCluster.crossplane.azure.container.name }}
+        key: attribute.primary_blob_connection_string
+    {{- else }}
     {{- with .Values.postgresqlCluster.objectStorage.azure.credentials }}
     azureCredentials:
       {{- toYaml . | nindent 6 }}
+    {{- end }}
     {{- end }}
     {{- else }}
       {{- fail "Unsupported object storage type. Supported types are 's3' and 'azure'." }}
