@@ -1049,6 +1049,9 @@
                         "provider": {
                             "type": "string"
                         },
+                        "clusterProvider": {
+                            "type": "string"
+                        },
                         "region": {
                             "type": "string"
                         },
@@ -1116,6 +1119,9 @@
                                     "type": "boolean"
                                 },
                                 "resourceGroup": {
+                                    "type": "string"
+                                },
+                                "subscriptionId": {
                                     "type": "string"
                                 },
                                 "container": {

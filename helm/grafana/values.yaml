@@ -98,8 +98,11 @@ postgresqlCluster:
   crossplane:
     #-- Enable Crossplane resources
     enabled: false
-    #-- Crossplane provider (e.g., aws, azure)
+    #-- Cloud provider type for storage: 'aws' for S3, 'azure' for Azure Storage
     provider: aws
+    #-- Cluster provider type (optional, defaults to provider value): 'aws', 'azure', 'vsphere', 'cloud-director'
+    # Use this when cluster provider differs from storage provider (e.g., vsphere cluster with azure storage)
+    clusterProvider: ""
     #-- Crossplane ProviderConfig name
     providerConfigRef: "default"
     #-- Cloud region for resources
@@ -135,6 +138,8 @@ postgresqlCluster:
       enabled: false
       #-- Azure Resource Group where storage resources will be created
       resourceGroup: ""
+      #-- Azure Subscription ID (optional, will be looked up from AzureCluster CR if not provided)
+      subscriptionId: ""
       #-- Container configuration for Grafana PostgreSQL backups
       container:
         #-- Container name (storage account name will be auto-generated)

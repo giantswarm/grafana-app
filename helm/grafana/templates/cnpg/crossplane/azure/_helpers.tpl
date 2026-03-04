@@ -13,15 +13,17 @@ Azure storage account names must be:
 {{- end -}}
 
 {{/*
-Get Azure Subscription ID from AzureCluster
+Get Azure Subscription ID from values or AzureCluster CR
 */}}
 {{- define "grafana.crossplane.azure.subscriptionId" -}}
-{{- $clusterName := .Values.postgresqlCluster.crossplane.clusterName -}}
-{{- $clusterNamespace := .Values.postgresqlCluster.crossplane.clusterNamespace -}}
-{{- $subscriptionId := "" -}}
-{{- $azureCluster := lookup "infrastructure.cluster.x-k8s.io/v1beta1" "AzureCluster" $clusterNamespace $clusterName -}}
-{{- if $azureCluster -}}
-  {{- $subscriptionId = $azureCluster.spec.subscriptionID -}}
+{{- $subscriptionId := .Values.postgresqlCluster.crossplane.azure.subscriptionId | default "" -}}
+{{- if not $subscriptionId -}}
+  {{- $clusterName := .Values.postgresqlCluster.crossplane.clusterName -}}
+  {{- $clusterNamespace := .Values.postgresqlCluster.crossplane.clusterNamespace -}}
+  {{- $azureCluster := lookup "infrastructure.cluster.x-k8s.io/v1beta1" "AzureCluster" $clusterNamespace $clusterName -}}
+  {{- if $azureCluster -}}
+    {{- $subscriptionId = $azureCluster.spec.subscriptionID -}}
+  {{- end -}}
 {{- end -}}
 {{- $subscriptionId -}}
 {{- end -}}
