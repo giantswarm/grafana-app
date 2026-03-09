@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.34.0] - 2026-03-09
+
 - upgrade grafana chart: 11.2.2 => 11.2.3
 - Add support for extracting tags from VsphereCluster and VCDCluster CRs in Crossplane
 - Add `clusterProvider` field to support scenarios where cluster provider differs from storage provider (e.g., vsphere cluster with azure storage)
@@ -543,7 +545,8 @@ Added:
 - images retagged for Giant Swarm registries
 - simple functionality test to get login web page
 
-[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.33.1...HEAD
+[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.34.0...HEAD
+[2.34.0]: https://github.com/giantswarm/grafana-app/compare/v2.33.1...v2.34.0
 [2.33.1]: https://github.com/giantswarm/grafana-app/compare/v2.33.0...v2.33.1
 [2.33.0]: https://github.com/giantswarm/grafana-app/compare/v2.32.1...v2.33.0
 [2.32.1]: https://github.com/giantswarm/grafana-app/compare/v2.32.0...v2.32.1
