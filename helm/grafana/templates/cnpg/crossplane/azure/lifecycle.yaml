@@ -21,11 +21,11 @@ spec:
     rule:
       - actions:
           - baseBlob:
-            - deleteBlobAfterDaysSinceModificationGreaterThan: {{ .Values.postgresqlCluster.crossplane.azure.container.lifecycleDays }}
+              deleteBlobAfterDaysSinceModificationGreaterThan: {{ .Values.postgresqlCluster.crossplane.azure.container.lifecycleDays }}
         enabled: true
         filters:
           - blobTypes:
-            - blockBlob
+              - blockBlob
         name: DeleteOldBlobs
     storageAccountIdSelector:
       matchLabels:
