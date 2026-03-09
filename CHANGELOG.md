@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.34.0] - 2026-03-09
 
+### Changed
+
 - upgrade grafana chart: 11.2.2 => 11.2.3
 - Add support for extracting tags from VsphereCluster and VCDCluster CRs in Crossplane
 - Add `clusterProvider` field to support scenarios where cluster provider differs from storage provider (e.g., vsphere cluster with azure storage)
