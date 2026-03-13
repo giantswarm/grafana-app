@@ -19,14 +19,14 @@ spec:
   {{- end }}
   forProvider:
     rule:
-      - actions:
-          - baseBlob:
-            - deleteBlobAfterDaysSinceModificationGreaterThan: {{ .Values.postgresqlCluster.crossplane.azure.container.lifecycleDays }}
+      - name: DeleteOldBlobs
         enabled: true
         filters:
-          - blobTypes:
-            - blockBlob
-        name: DeleteOldBlobs
+          blobTypes:
+          - blockBlob
+        actions:
+          baseBlob:
+            deleteAfterDaysSinceModificationGreaterThan: {{ .Values.postgresqlCluster.crossplane.azure.container.lifecycleDays }}
     storageAccountIdSelector:
       matchLabels:
         {{- include "grafana.crossplane.labels" (dict "ctx" . "component" "storage") | nindent 8 }}
