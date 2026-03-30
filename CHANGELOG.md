@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Upgrade grafana chart: 11.3.3 => 11.3.6
+- upgrade pg-cluster-recovery-test subchart: v0.3.0 => v0.4.0
+
 ## [2.35.2] - 2026-03-30
 
 ### Fixed
