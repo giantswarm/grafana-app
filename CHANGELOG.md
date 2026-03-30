@@ -9,7 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.35.2] - 2026-03-30
 
-<<<<<<< HEAD
+### Fixed
+
+- Fix Grafana Management Lifecycle Policy.
+
 ## [2.35.1] - 2026-03-17
 
 ### Changed
@@ -19,8 +22,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.35.0] - 2026-03-16
 
-=======
->>>>>>> 2628a63 (Fix Azure storage management policy lifecycle rule YAML structure)
 ### Fixed
 
 - Fix Azure storage management policy rule YAML structure for lifecycle policy.
