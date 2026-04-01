@@ -4,6 +4,6 @@ dependencies:
   version: 11.3.6
 - name: pg-cluster-recovery-test
   repository: https://giantswarm.github.io/giantswarm-catalog
-  version: 0.4.0
-digest: sha256:174806e82509cec5d97bd1db16e0716329f9e67fd515c5640297a1e504b9777e
-generated: "2026-03-30T10:25:33.453999371Z"
+  version: 0.4.1
+digest: sha256:0b87ebd8f0d73387c66b6bdad2ee98e747d270cee2dcdd1dd39f6cf61d3119cb
+generated: "2026-04-01T21:07:21.857152916Z"
