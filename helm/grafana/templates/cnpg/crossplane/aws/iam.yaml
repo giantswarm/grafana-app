@@ -50,8 +50,8 @@ spec:
             },
             "Action": "sts:AssumeRoleWithWebIdentity",
             "Condition": {
-              "StringEquals": {
-                "{{ $oidcProvider }}:sub": "system:serviceaccount:{{ $namespace }}:grafana-postgresql-recovery-test",
+              "StringLike": {
+                "{{ $oidcProvider }}:sub": "system:serviceaccount:{{ $namespace }}:grafana-postgresql-recovery-test-*",
                 "{{ $oidcProvider }}:aud": "sts.amazonaws.com{{- if $isChinaRegion }}.cn{{- end }}"
               }
             }
