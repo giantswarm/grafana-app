@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.36.2] - 2026-04-03
+
 ### Fixed
 
 - Update recovery-test AWS IAM to support unique names
@@ -583,7 +585,8 @@ Added:
 - images retagged for Giant Swarm registries
 - simple functionality test to get login web page
 
-[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.36.1...HEAD
+[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.36.2...HEAD
+[2.36.2]: https://github.com/giantswarm/grafana-app/compare/v2.36.1...v2.36.2
 [2.36.1]: https://github.com/giantswarm/grafana-app/compare/v2.36.0...v2.36.1
 [2.36.0]: https://github.com/giantswarm/grafana-app/compare/v2.35.2...v2.36.0
 [2.35.2]: https://github.com/giantswarm/grafana-app/compare/v2.35.1...v2.35.2
