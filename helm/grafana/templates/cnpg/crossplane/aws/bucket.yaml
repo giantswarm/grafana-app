@@ -19,7 +19,10 @@ spec:
     {{- if .Values.postgresqlCluster.crossplane.observeOnly }}
     - Observe
     {{- else }}
-    - "*"
+    - "Create"
+    - "Update"
+    - "LateInitialize"
+    - "Observe"
     {{- end }}
   forProvider:
     forceDestroy: false

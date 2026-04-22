@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade grafana chart: 11.3.6 => 11.3.7
 - Upgrade pg-cluster-recovery-test subchart: v0.4.1 => v0.5.0
 
+### Fixed
+
+- Make sure crossplane cannot delete Crossplane azure storage accounts/containers and s3 buckets.
+
 ## [2.36.2] - 2026-04-03
 
 ### Fixed
