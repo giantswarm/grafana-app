@@ -506,7 +506,7 @@ grafana:
     image:
       registry: gsoci.azurecr.io
       repository: giantswarm/busybox
-      tag: "1.37.0"
+      tag: "1.38.0"
       sha: ""
       pullPolicy: IfNotPresent
 
