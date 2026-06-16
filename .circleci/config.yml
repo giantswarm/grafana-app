@@ -29,6 +29,7 @@ workflows:
           chart: "grafana"
           persist_chart_archive: true
           ct_config: ".circleci/ct-config.yaml"
+          override_app_version: false
           # Trigger job on git tag.
           filters:
             tags:
@@ -44,6 +45,7 @@ workflows:
           app_catalog_test: "control-plane-test-catalog"
           chart: "grafana"
           ct_config: ".circleci/ct-config.yaml"
+          override_app_version: false
           # Trigger job on git tag.
           filters:
             tags:
@@ -60,4 +62,3 @@ workflows:
                 - main
           requires:
             - "app-catalog"
-
