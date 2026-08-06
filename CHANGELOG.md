@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix ABS config to not override AppVersion in Chart.yaml
 - Upgrade grafana chart: 12.3.0 => 12.10.3
 - Upgrade grafana (appVersion): 13.0.1 => 13.1.2
+- Upgrade postgresql-cnpg: 18.3 => 18.4 — the rolling DB upgrade can cause ~5min of Grafana downtime.
 
 ### Removed
 
