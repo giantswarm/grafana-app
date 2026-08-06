@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Fix ABS config to not override AppVersion in Chart.yaml
+- Upgrade grafana chart: 12.3.0 => 12.10.3
+- Upgrade grafana (appVersion): 13.0.1 => 13.1.2
+
+### Removed
+
+- The upstream chart no longer creates a `Role`/`RoleBinding` when `grafana.rbac.namespaced` is `false` (our default). Those objects were empty, sidecar permissions come from the `ClusterRole`.
 
 ## [2.38.0] - 2026-05-05
 
