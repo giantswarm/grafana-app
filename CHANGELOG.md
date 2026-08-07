@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.39.0] - 2026-08-07
+
 ### Changed
 
 - Fix ABS config to not override AppVersion in Chart.yaml
@@ -614,7 +616,8 @@ Added:
 - images retagged for Giant Swarm registries
 - simple functionality test to get login web page
 
-[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.38.0...HEAD
+[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.39.0...HEAD
+[2.39.0]: https://github.com/giantswarm/grafana-app/compare/v2.38.0...v2.39.0
 [2.38.0]: https://github.com/giantswarm/grafana-app/compare/v2.37.0...v2.38.0
 [2.37.0]: https://github.com/giantswarm/grafana-app/compare/v2.36.2...v2.37.0
 [2.36.2]: https://github.com/giantswarm/grafana-app/compare/v2.36.1...v2.36.2
