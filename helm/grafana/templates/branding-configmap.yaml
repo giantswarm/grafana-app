@@ -1,0 +1,26 @@
+{{/*
+Giant Swarm branding assets (see the `branding/` directory).
+
+The upstream Grafana image resolves its logo and favicons from files on disk, so
+`grafana.extraConfigmapMounts` in values.yaml mounts the keys of this ConfigMap
+over them. Note that `subPath` mounts are not updated in place by kubelet, so a
+pod restart is needed after changing an asset.
+*/}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  # Kept a literal so it matches the `configMap:` references in values.yaml.
+  name: grafana-branding
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "grafana.labels" . | nindent 4 }}
+{{- with (.Files.Glob "branding/*.svg") }}
+data:
+  {{- .AsConfig | nindent 2 }}
+{{- end }}
+{{- with (.Files.Glob "branding/*.png") }}
+binaryData:
+  {{- range $path, $_ := . }}
+  {{ base $path }}: {{ $.Files.Get $path | b64enc }}
+  {{- end }}
+{{- end }}
