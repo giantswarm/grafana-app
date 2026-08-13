@@ -5,22 +5,26 @@ The upstream Grafana image resolves its logo and favicons from files on disk, so
 `grafana.extraConfigmapMounts` in values.yaml mounts the keys of this ConfigMap
 over them. Note that `subPath` mounts are not updated in place by kubelet, so a
 pod restart is needed after changing an asset.
+
+Keys are in alphabetical order throughout, including the ones this renders from
+the asset file names, because kube-linter's `sorted-keys` check requires it.
+Round tripping the labels through fromYaml sorts them for the same reason.
 */}}
 apiVersion: v1
-kind: ConfigMap
-metadata:
-  # Kept a literal so it matches the `configMap:` references in values.yaml.
-  name: grafana-branding
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- include "grafana.labels" . | nindent 4 }}
-{{- with (.Files.Glob "branding/*.svg") }}
-data:
-  {{- .AsConfig | nindent 2 }}
-{{- end }}
 {{- with (.Files.Glob "branding/*.png") }}
 binaryData:
   {{- range $path, $_ := . }}
   {{ base $path }}: {{ $.Files.Get $path | b64enc }}
   {{- end }}
 {{- end }}
+{{- with (.Files.Glob "branding/*.svg") }}
+data:
+  {{- .AsConfig | nindent 2 }}
+{{- end }}
+kind: ConfigMap
+metadata:
+  labels:
+    {{- include "grafana.labels" . | fromYaml | toYaml | nindent 4 }}
+  # Kept a literal so it matches the `configMap:` references in values.yaml.
+  name: grafana-branding
+  namespace: {{ .Release.Namespace }}
