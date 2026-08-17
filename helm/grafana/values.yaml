@@ -260,7 +260,37 @@ grafana:
 
   # Extra configmaps to mount in grafana pods
   # Values are templated.
-  extraConfigmapMounts: []
+  #
+  # The `grafana-branding` mounts replace Grafana's logo and favicon with Giant
+  # Swarm's, from the ConfigMap rendered by `templates/branding-configmap.yaml`.
+  # Set this to `[]` to get Grafana's own branding back. If you add mounts of
+  # your own, keep these entries - Helm replaces lists instead of merging them.
+  #
+  # The logo file name carries a webpack content hash, so it has to be verified
+  # after a Grafana upgrade. It is a hash of Grafana's own logo file, so it only
+  # changes when upstream changes that logo (it was stable from 12.4.1 to 13.1.2):
+  #
+  #     docker run --rm --entrypoint ls grafana/grafana:<appVersion> \
+  #       /usr/share/grafana/public/build/static/img/grafana_icon.*.svg
+  #
+  # If it ever drifts, the mount lands on a file nobody reads and Grafana shows
+  # its own logo again - no other harm.
+  extraConfigmapMounts:
+    - name: giantswarm-branding-icon
+      mountPath: /usr/share/grafana/public/build/static/img/grafana_icon.1e0deb6b.svg
+      subPath: grafana_icon.svg
+      configMap: grafana-branding
+      readOnly: true
+    - name: giantswarm-branding-favicon
+      mountPath: /usr/share/grafana/public/build/img/fav32.png
+      subPath: fav32.png
+      configMap: grafana-branding
+      readOnly: true
+    - name: giantswarm-branding-apple-touch-icon
+      mountPath: /usr/share/grafana/public/build/img/apple-touch-icon.png
+      subPath: apple-touch-icon.png
+      configMap: grafana-branding
+      readOnly: true
     # - name: certs-configmap
     #   mountPath: /etc/grafana/ssl/
     #   subPath: certificates.crt # (optional)
@@ -292,7 +322,12 @@ grafana:
     resources: {}
 
   ## Pod Annotations
-  # podAnnotations: {}
+  podAnnotations:
+    # Rolls the deployment when a branding asset changes, because the assets are
+    # mounted with `subPath` and kubelet does not update those in place.
+    # Generated - run `make branding-update` after changing `branding/`, CI
+    # fails on drift.
+    checksum/giantswarm-branding: "5c5751eec6a5c7ecdb88721616e491e8b4697f577ca00d72944a36bf791241f2"
 
   ## Pod Labels
   # podLabels: {}
