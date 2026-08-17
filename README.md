@@ -36,17 +36,29 @@ The logo and favicon are the Giant Swarm logo mark from
 [giantswarm/brand](https://github.com/giantswarm/brand), cropped to a square viewBox because
 Grafana's logo slots are square.
 
-Notes:
+Two things about this cannot be expressed in the chart itself, so
+[hack/branding.sh](hack/branding.sh) keeps them honest. The `verify-branding` CircleCI job runs it
+on every push and gates the catalog pushes:
 
-- **The logo path contains a webpack content hash and has to be checked after a Grafana upgrade.**
-  It hashes Grafana's own logo file, so it only changes when upstream changes that logo. Get the
-  current name with
-  `docker run --rm --entrypoint ls grafana/grafana:<appVersion> /usr/share/grafana/public/build/static/img/grafana_icon.*.svg`.
-  If it drifts, the mount lands on an unused file and Grafana shows its own logo again.
-- `subPath` mounts are not updated in place by kubelet, so the Grafana pod has to be restarted after
-  changing an asset.
-- To go back to Grafana's own branding, set `grafana.extraConfigmapMounts` to `[]`.
-- Only assets can be changed this way, and the app keeps calling itself `Grafana` - the product name
+- **The logo path contains a webpack content hash**, so a Grafana upgrade can move the file we mount
+  over. The hash is of Grafana's own logo file, so it only changes when upstream changes that logo,
+  but when it does the mount silently lands on a file nobody reads and Grafana shows its own logo
+  again. The script compares the path against the image the chart deploys.
+- **`subPath` mounts are not updated in place by kubelet**, so the Grafana pod has to restart to pick
+  up a changed asset. The `checksum/giantswarm-branding` pod annotation in `values.yaml` makes that
+  automatic. Helm cannot compute it - the pod template comes from the upstream subchart, which does
+  not template `podAnnotations` and could not read this chart's files anyway - so the script
+  generates it.
+
+After changing anything in `branding/`, or when the check fails after a Grafana bump:
+
+```
+make branding-update
+```
+
+To go back to Grafana's own branding, set `grafana.extraConfigmapMounts` to `[]`.
+
+Note that only assets can be changed this way, and the app keeps calling itself `Grafana` - the product name
   in the nav bar, the browser tab title and the `Welcome to Grafana` heading are JavaScript
   constants compiled into hashed bundles, and renaming them would mean rewriting the DOM in the
   browser. The login page background is bundled the same way. Changing any of it is Enterprise

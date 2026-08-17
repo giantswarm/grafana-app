@@ -10,11 +10,29 @@ jobs:
       - run: cd helm/grafana && helm dep up
       - run: helm template helm/grafana
 
+  # Grafana serves its logo from a webpack asset whose file name carries a
+  # content hash, so a Grafana upgrade can silently move the file our branding
+  # mounts over. Catch that here instead of on a customer installation.
+  verify-branding:
+    docker:
+      - image: cimg/base:current
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: make branding-verify
+
 workflows:
   package-and-push-chart-on-tag:
     jobs:
       - template-chart:
           name: "template-chart"
+          # Trigger job on git tag.
+          filters:
+            tags:
+              only: /^v.*/
+
+      - verify-branding:
+          name: "verify-branding"
           # Trigger job on git tag.
           filters:
             tags:
@@ -35,6 +53,7 @@ workflows:
               only: /^v.*/
           requires:
             - "template-chart"
+            - "verify-branding"
 
       - architect/push-to-app-catalog:
           context: "architect"
@@ -50,6 +69,7 @@ workflows:
               only: /^v.*/
           requires:
             - "template-chart"
+            - "verify-branding"
 
       - architect/run-tests-with-ats:
           name: run-chart-tests-with-ats

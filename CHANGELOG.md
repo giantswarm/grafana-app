@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Brand Grafana with the Giant Swarm logo mark and favicon, by mounting the assets in
   `helm/grafana/branding` over the ones the Grafana image ships. Set
   `grafana.extraConfigmapMounts` to `[]` to get Grafana's own branding back.
+- Add `make branding-verify` (run by the `verify-branding` CI job) and `make branding-update`, which
+  keep the hashed logo path in sync with the Grafana image and generate the pod annotation that
+  rolls the deployment when a branding asset changes.
 
 ## [2.39.0] - 2026-08-07
 

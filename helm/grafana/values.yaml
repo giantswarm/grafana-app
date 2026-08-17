@@ -322,7 +322,12 @@ grafana:
     resources: {}
 
   ## Pod Annotations
-  # podAnnotations: {}
+  podAnnotations:
+    # Rolls the deployment when a branding asset changes, because the assets are
+    # mounted with `subPath` and kubelet does not update those in place.
+    # Generated - run `make branding-update` after changing `branding/`, CI
+    # fails on drift.
+    checksum/giantswarm-branding: "5c5751eec6a5c7ecdb88721616e491e8b4697f577ca00d72944a36bf791241f2"
 
   ## Pod Labels
   # podLabels: {}
