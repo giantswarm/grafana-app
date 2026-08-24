@@ -1,0 +1,9 @@
+# Read by Flux's source-controller when it repacks this chart from the OCI
+# registry, before helm-controller renders it.
+#
+# Its default ignore patterns include `*.png`, so the favicons in `branding/`
+# were dropped from the chart. This resulted in the Grafana subPath mount
+# failing, and the Grafana pod crashlooping.
+#
+# These patterns are applied after the defaults, so this re-includes them.
+!*.png
