@@ -16,6 +16,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   keep the hashed logo path in sync with the Grafana image and generate the pod annotation that
   rolls the deployment when a branding asset changes.
 
+### Changed
+
+- Upgrade grafana chart: 12.10.3 => 12.11.2
+- Upgrade grafana (appVersion): 13.1.2 => 13.2.0
+
 ## [2.39.0] - 2026-08-07
 
 ### Changed
