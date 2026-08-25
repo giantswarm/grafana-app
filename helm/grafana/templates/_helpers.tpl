@@ -18,9 +18,14 @@ application.giantswarm.io/team: {{ index .Chart.Annotations "io.giantswarm.appli
 
 {{/*
 Create chart name and version as used by the chart label.
+
+CI stamps a dev version built from the branch name, which can push this past the
+63 character label limit. Truncating there can leave a trailing character that is
+not allowed at the end of a label value, so trim those - the API server rejects
+the object otherwise.
 */}}
 {{- define "grafana.chart" -}}
-{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
+{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" | trimSuffix "." }}
 {{- end -}}
 
 {{/*
