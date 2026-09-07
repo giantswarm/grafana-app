@@ -312,7 +312,7 @@ grafana:
   downloadDashboardsImage:
     registry: gsoci.azurecr.io
     repository: giantswarm/curl
-    tag: 8.21.0
+    tag: 8.22.0
     sha: ""
     pullPolicy: IfNotPresent
 
