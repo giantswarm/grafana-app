@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added the Grafana image renderer, enabled by default.
+
 ### Fixed
 
 - Trim trailing `.` from the `helm.sh/chart` label, to fix build.
