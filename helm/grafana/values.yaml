@@ -1083,35 +1083,107 @@ grafana:
   ##
   revisionHistoryLimit: 10
 
-  ## Add a seperate remote image renderer deployment/service
+  ## Add a separate remote image renderer deployment/service
   imageRenderer:
+    deploymentStrategy: {}
+    ## The maximum time in seconds for the image renderer Deployment to make progress before it is
+    ## considered to be failed.
+    ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#progress-deadline-seconds
+    progressDeadlineSeconds: null
     # Enable the image-renderer deployment & service
-    enabled: false
+    enabled: true
     replicas: 1
+    autoscaling:
+      enabled: false
+      minReplicas: 1
+      maxReplicas: 5
+      targetCPU: "60"
+      targetMemory: ""
+      behavior: {}
+    # The url of remote image renderer if it is not in the same namespace with the grafana instance
+    serverURL: ""
+    # The callback url of grafana instances if it is not in the same namespace with the remote image renderer
+    renderingCallbackURL: ""
+    # Token used for authentication between Grafana and the remote image renderer.
+    token: ""
+    # Use an existing secret for the image renderer token. Must contain a key named "token".
+    existingSecret: ""
     image:
+      # -- The Docker registry
+      # used by renovate
+      # registry: gsoci.azurecr.io
       registry: gsoci.azurecr.io
       # image-renderer Image repository
       repository: giantswarm/grafana-image-renderer
       # image-renderer Image tag
-      tag: latest
+      tag: v5.12.4
       # image-renderer Image sha (optional)
       sha: ""
+      # image-renderer Image pull secrets (optional)
+      pullSecrets: []
       # image-renderer ImagePullPolicy
-      pullPolicy: Always
+      pullPolicy: IfNotPresent
+    dnsPolicy: ~
+    dnsConfig: {}
+      # nameservers:
+      #   - 8.8.8.8
+      # options:
+      # - name: ndots
+      #   value: "2"
+      # - name: edns0
     # extra environment variables
     env:
       HTTP_HOST: "0.0.0.0"
+      # Fixes "Error: Failed to launch the browser process!\nchrome_crashpad_handler: --database is required"
+      XDG_CONFIG_HOME: /tmp/.chromium
+      XDG_CACHE_HOME: /tmp/.chromium
       # RENDERING_ARGS: --no-sandbox,--disable-gpu,--window-size=1280x758
       # RENDERING_MODE: clustered
       # IGNORE_HTTPS_ERRORS: true
+
+    ## "valueFrom" environment variable references that will be added to deployment pods. Name is templated.
+    ## ref: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/#envvarsource-v1-core
+    ## Renders in container spec as:
+    ##   env:
+    ##     ...
+    ##     - name: <key>
+    ##       valueFrom:
+    ##         <value rendered as YAML>
+    envValueFrom: {}
+      #  ENV_NAME:
+      #    configMapKeyRef:
+      #      name: configmap-name
+      #      key: value_key
+
     # image-renderer deployment serviceAccount
     serviceAccountName: ""
+    automountServiceAccountToken: false
+    # image-renderer deployment hostUsers
+    hostUsers: ~
     # image-renderer deployment securityContext
-    securityContext: {}
+    securityContext:
+      runAsNonRoot: true
+      runAsUser: 65532
+      runAsGroup: 65532
+      fsGroup: 65532
+      seccompProfile:
+        type: RuntimeDefault
+    # image-renderer deployment container securityContext
+    containerSecurityContext:
+      seccompProfile:
+        type: RuntimeDefault
+      capabilities:
+        drop: ['ALL']
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+    ## image-renderer pod annotation
+    podAnnotations: {}
     # image-renderer deployment Host Aliases
     hostAliases: []
     # image-renderer deployment priority class
     priorityClassName: ''
+    # Path to the healthcheck endpoint. On Image Renderer v5.0.0 or newer, this is '/healthz'. Older versions use '/'.
+    healthcheckPath: '/healthz'
     service:
       # Enable the image-renderer service
       enabled: true
@@ -1122,6 +1194,24 @@ grafana:
       targetPort: 8081
       # Adds the appProtocol field to the image-renderer service. This allows to work with istio protocol selection. Ex: "http" or "tcp"
       appProtocol: ""
+    serviceMonitor:
+      ## If true, a ServiceMonitor CRD is created for a prometheus operator
+      ## https://github.com/coreos/prometheus-operator
+      ##
+      enabled: false
+      path: /metrics
+      #  namespace: monitoring  (defaults to use the namespace this chart is deployed to)
+      labels: {}
+      # Set these to override the Prometheus global scrape interval/timeout.
+      # interval: 1m
+      # scrapeTimeout: 30s
+      scheme: http
+      tlsConfig: {}
+      relabelings: []
+      # See: https://doc.crds.dev/github.com/prometheus-operator/kube-prometheus/monitoring.coreos.com/ServiceMonitor/v1@v0.11.0#spec-targetLabels
+      targetLabels: []
+        # - targetLabel1
+        # - targetLabel2
     # If https is enabled in Grafana, this needs to be set as 'https' to correctly configure the callback used in Grafana
     grafanaProtocol: http
     # In case a sub_path is used this needs to be added to the image renderer callback
@@ -1135,13 +1225,16 @@ grafana:
       limitIngress: true
       # Enable a NetworkPolicy to limit outbound traffic to only the created grafana pods
       limitEgress: false
-    resources: {}
-  #   limits:
-  #     cpu: 100m
-  #     memory: 100Mi
-  #   requests:
-  #     cpu: 50m
-  #     memory: 50Mi
+      # Allow additional services to access image-renderer (eg. Prometheus operator when ServiceMonitor is enabled)
+      extraIngressSelectors: []
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+        ephemeral-storage: 64Mi
+      limits:
+        memory: 1Gi
+        ephemeral-storage: 512Mi
     ## Node labels for pod assignment
     ## ref: https://kubernetes.io/docs/user-guide/node-selection/
     #
@@ -1156,6 +1249,23 @@ grafana:
     ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
     ##
     affinity: {}
+
+    ## Use an alternate scheduler, e.g. "stork".
+    ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
+    ##
+    # schedulerName: "default-scheduler"
+
+    # Extra configmaps to mount in image-renderer pods
+    extraConfigmapMounts: []
+
+    # Extra secrets to mount in image-renderer pods
+    extraSecretMounts: []
+
+    # Extra volumes to mount in image-renderer pods
+    extraVolumeMounts: []
+
+    # Extra volumes for image-renderer pods
+    extraVolumes: []
 
   networkPolicy:
     ## @param networkPolicy.enabled Enable creation of NetworkPolicy resources. Only Ingress traffic is filtered for now.
