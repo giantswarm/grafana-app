@@ -19,3 +19,50 @@ spec:
     - fromEntities:
       - cluster
 {{- end -}}
+{{- if and .Values.ciliumNetworkPolicy.enabled .Values.grafana.imageRenderer.enabled }}
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  labels:
+    {{- include "labels.selector" . | nindent 4 }}
+  name: {{ .Chart.Name }}-image-renderer
+  namespace: {{ .Release.Namespace }}
+spec:
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            {{- include "labels.selector" . | nindent 12 }}
+      toPorts:
+        - ports:
+            - port: "3000"
+              protocol: TCP
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+            k8s:k8s-app: coredns
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+            k8s:k8s-app: k8s-dns-node-cache
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+            - port: "1053"
+              protocol: UDP
+            - port: "53"
+              protocol: TCP
+            - port: "1053"
+              protocol: TCP
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: grafana-image-renderer
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            {{- include "labels.selector" . | nindent 12 }}
+      toPorts:
+        - ports:
+            - port: "8081"
+              protocol: TCP
+{{- end }}
