@@ -540,20 +540,100 @@ This example uses a CSI driver e.g. retrieving secrets using [Azure Key Vault Pr
         name: akv-creds
 ```
 
-## Image Renderer Plug-In
+## Image rendering
 
-This chart supports enabling [remote image rendering](https://github.com/grafana/grafana-image-renderer/blob/master/README.md#run-in-docker)
+The chart deploys the [Grafana image renderer](https://github.com/grafana/grafana-image-renderer) by default.
+It powers:
+
+* Panel and dashboard PNG export, via Share → Link → Generate image.
+* Images in alert notifications.
+
+The chart configures Grafana to use the renderer.
+It generates the shared renderer token into a Secret. Set `grafana.imageRenderer.token` or `grafana.imageRenderer.existingSecret` to provide your own.
+
+To disable the renderer:
 
 ```yaml
-imageRenderer:
-  enabled: true
+grafana:
+  imageRenderer:
+    enabled: false
 ```
 
-### Image Renderer NetworkPolicy
+### Callback URL
 
-By default the image-renderer pods will have a network policy which only allows ingress traffic from the created grafana instance
+The renderer calls back into Grafana to load the page it renders.
+Set `grafanaProtocol` to `https` when Grafana serves TLS itself.
+Set `grafanaSubPath` when Grafana runs under a sub-path (`serve_from_sub_path`).
 
-### High Availability for unified alerting
+```yaml
+grafana:
+  imageRenderer:
+    grafanaProtocol: https
+    grafanaSubPath: /grafana
+```
+
+### Scaling
+
+The renderer runs one replica. Set `grafana.imageRenderer.replicas` for a fixed count, or enable autoscaling:
+
+```yaml
+grafana:
+  imageRenderer:
+    autoscaling:
+      enabled: true
+      minReplicas: 1
+      maxReplicas: 5
+      targetCPU: "60"
+```
+
+### Network policies
+
+A NetworkPolicy lets only Grafana pods reach the renderer on port 8081.
+With `ciliumNetworkPolicy.enabled`, the chart also creates the `grafana-image-renderer` CiliumNetworkPolicy.
+It allows ingress from Grafana pods only.
+
+`grafana.imageRenderer.serviceMonitor` is disabled. To enable it, allow the scraper through `grafana.imageRenderer.networkPolicy.extraIngressSelectors`:
+
+```yaml
+grafana:
+  imageRenderer:
+    serviceMonitor:
+      enabled: true
+    networkPolicy:
+      extraIngressSelectors:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: prometheus
+```
+
+Cilium policies are additive. Add a separate CiliumNetworkPolicy that allows the scraper on port 8081, for example via `grafana.extraObjects`:
+
+```yaml
+grafana:
+  extraObjects:
+    - apiVersion: cilium.io/v2
+      kind: CiliumNetworkPolicy
+      metadata:
+        name: grafana-image-renderer-metrics
+      spec:
+        endpointSelector:
+          matchLabels:
+            app.kubernetes.io/name: grafana-image-renderer
+        ingress:
+          - fromEndpoints:
+              - matchLabels:
+                  k8s:io.kubernetes.pod.namespace: monitoring
+                  app.kubernetes.io/name: prometheus
+            toPorts:
+              - ports:
+                  - port: "8081"
+                    protocol: TCP
+```
+
+## High Availability for unified alerting
 
 If you want to run Grafana in a high availability cluster you need to enable
 the headless service by setting `headlessService: true` in your `values.yaml`

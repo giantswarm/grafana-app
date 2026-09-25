@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Documented image rendering in the README.
+
 ### Fixed
 
 - Trim trailing `.` from the `helm.sh/chart` label, to fix build.
