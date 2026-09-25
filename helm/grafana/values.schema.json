@@ -258,6 +258,68 @@
                         "affinity": {
                             "type": "object"
                         },
+                        "automountServiceAccountToken": {
+                            "type": "boolean"
+                        },
+                        "autoscaling": {
+                            "type": "object",
+                            "properties": {
+                                "behavior": {
+                                    "type": "object"
+                                },
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "maxReplicas": {
+                                    "type": "integer"
+                                },
+                                "minReplicas": {
+                                    "type": "integer"
+                                },
+                                "targetCPU": {
+                                    "type": ["string", "integer"]
+                                },
+                                "targetMemory": {
+                                    "type": ["string", "integer"]
+                                }
+                            }
+                        },
+                        "containerSecurityContext": {
+                            "type": "object",
+                            "properties": {
+                                "allowPrivilegeEscalation": {
+                                    "type": "boolean"
+                                },
+                                "capabilities": {
+                                    "type": "object",
+                                    "properties": {
+                                        "drop": {
+                                            "type": "array"
+                                        }
+                                    }
+                                },
+                                "readOnlyRootFilesystem": {
+                                    "type": "boolean"
+                                },
+                                "seccompProfile": {
+                                    "type": "object",
+                                    "properties": {
+                                        "type": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "deploymentStrategy": {
+                            "type": "object"
+                        },
+                        "dnsConfig": {
+                            "type": "object"
+                        },
+                        "dnsPolicy": {
+                            "type": ["string", "null"]
+                        },
                         "enabled": {
                             "type": "boolean"
                         },
@@ -266,8 +328,32 @@
                             "properties": {
                                 "HTTP_HOST": {
                                     "type": "string"
+                                },
+                                "XDG_CACHE_HOME": {
+                                    "type": "string"
+                                },
+                                "XDG_CONFIG_HOME": {
+                                    "type": "string"
                                 }
                             }
+                        },
+                        "envValueFrom": {
+                            "type": "object"
+                        },
+                        "existingSecret": {
+                            "type": "string"
+                        },
+                        "extraConfigmapMounts": {
+                            "type": "array"
+                        },
+                        "extraSecretMounts": {
+                            "type": "array"
+                        },
+                        "extraVolumeMounts": {
+                            "type": "array"
+                        },
+                        "extraVolumes": {
+                            "type": "array"
                         },
                         "grafanaProtocol": {
                             "type": "string"
@@ -275,14 +361,23 @@
                         "grafanaSubPath": {
                             "type": "string"
                         },
+                        "healthcheckPath": {
+                            "type": "string"
+                        },
                         "hostAliases": {
                             "type": "array"
+                        },
+                        "hostUsers": {
+                            "type": ["boolean", "null"]
                         },
                         "image": {
                             "type": "object",
                             "properties": {
                                 "pullPolicy": {
                                     "type": "string"
+                                },
+                                "pullSecrets": {
+                                    "type": "array"
                                 },
                                 "registry": {
                                     "type": "string"
@@ -301,6 +396,9 @@
                         "networkPolicy": {
                             "type": "object",
                             "properties": {
+                                "extraIngressSelectors": {
+                                    "type": "array"
+                                },
                                 "limitEgress": {
                                     "type": "boolean"
                                 },
@@ -312,23 +410,68 @@
                         "nodeSelector": {
                             "type": "object"
                         },
+                        "podAnnotations": {
+                            "type": "object"
+                        },
                         "podPortName": {
                             "type": "string"
                         },
                         "priorityClassName": {
                             "type": "string"
                         },
+                        "progressDeadlineSeconds": {
+                            "type": ["integer", "null"]
+                        },
+                        "renderingCallbackURL": {
+                            "type": "string"
+                        },
                         "replicas": {
                             "type": "integer"
                         },
                         "resources": {
-                            "type": "object"
+                            "type": "object",
+                            "properties": {
+                                "limits": {
+                                    "type": "object"
+                                },
+                                "requests": {
+                                    "type": "object"
+                                }
+                            }
                         },
                         "revisionHistoryLimit": {
                             "type": "integer"
                         },
+                        "schedulerName": {
+                            "type": "string"
+                        },
                         "securityContext": {
-                            "type": "object"
+                            "type": "object",
+                            "properties": {
+                                "fsGroup": {
+                                    "type": "integer"
+                                },
+                                "runAsGroup": {
+                                    "type": "integer"
+                                },
+                                "runAsNonRoot": {
+                                    "type": "boolean"
+                                },
+                                "runAsUser": {
+                                    "type": "integer"
+                                },
+                                "seccompProfile": {
+                                    "type": "object",
+                                    "properties": {
+                                        "type": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "serverURL": {
+                            "type": "string"
                         },
                         "service": {
                             "type": "object",
@@ -351,6 +494,44 @@
                             }
                         },
                         "serviceAccountName": {
+                            "type": "string"
+                        },
+                        "serviceMonitor": {
+                            "type": "object",
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "interval": {
+                                    "type": "string"
+                                },
+                                "labels": {
+                                    "type": "object"
+                                },
+                                "namespace": {
+                                    "type": "string"
+                                },
+                                "path": {
+                                    "type": "string"
+                                },
+                                "relabelings": {
+                                    "type": "array"
+                                },
+                                "scheme": {
+                                    "type": "string"
+                                },
+                                "scrapeTimeout": {
+                                    "type": "string"
+                                },
+                                "targetLabels": {
+                                    "type": "array"
+                                },
+                                "tlsConfig": {
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "token": {
                             "type": "string"
                         },
                         "tolerations": {
