@@ -37,6 +37,13 @@ spec:
         - ports:
             - port: "3000"
               protocol: TCP
+    # Dashboards embed external content (images, feeds) that the renderer browser fetches.
+    - toEntities:
+        - world
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
     - toEndpoints:
         - matchLabels:
             k8s:io.kubernetes.pod.namespace: kube-system
