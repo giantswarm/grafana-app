@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added the Grafana image renderer configuration, disabled by default.
+- Added a CiliumNetworkPolicy for the image renderer.
 
 ### Fixed
 
