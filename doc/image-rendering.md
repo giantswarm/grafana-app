@@ -24,7 +24,7 @@ The chart overrides these upstream `grafana.imageRenderer` values:
 
 ## CiliumNetworkPolicy
 
-This policy lets image rendering work out of the box on clusters that enforce Cilium network policies.
+This policy lets the renderer render dashboards that reference external resources, such as images or feeds.
 
 With `ciliumNetworkPolicy.enabled` (the default), the chart creates the `grafana-image-renderer` CiliumNetworkPolicy:
 
