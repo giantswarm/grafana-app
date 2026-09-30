@@ -1104,12 +1104,6 @@ grafana:
     # extra environment variables
     env:
       HTTP_HOST: "0.0.0.0"
-      # Extra Chromium flags. They turn off background networking (Google update,
-      # safe-browsing and metrics calls), component updates, default apps,
-      # extensions, sync and the first-run setup. This work competes with Grafana's
-      # frontend boot on every render. On glean it cut dashboard renders from ~5.1s
-      # to ~4.4s and made render times steadier.
-      BROWSER_FLAG: "--disable-background-networking,--disable-component-update,--disable-default-apps,--disable-extensions,--disable-sync,--no-first-run"
       # RENDERING_ARGS: --no-sandbox,--disable-gpu,--window-size=1280x758
       # RENDERING_MODE: clustered
       # IGNORE_HTTPS_ERRORS: true
