@@ -1134,7 +1134,7 @@ grafana:
       # Enable a NetworkPolicy to limit inbound traffic to only the created grafana pods
       limitIngress: true
       # Enable a NetworkPolicy to limit outbound traffic to only the created grafana pods
-      limitEgress: false
+      limitEgress: true
     resources: {}
   #   limits:
   #     cpu: 100m
