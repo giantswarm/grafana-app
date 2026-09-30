@@ -1083,21 +1083,24 @@ grafana:
   ##
   revisionHistoryLimit: 10
 
-  ## Add a seperate remote image renderer deployment/service
+  ## Add a separate remote image renderer deployment/service
   imageRenderer:
     # Enable the image-renderer deployment & service
     enabled: false
     replicas: 1
     image:
+      # -- The Docker registry
+      # used by renovate
+      # registry: gsoci.azurecr.io
       registry: gsoci.azurecr.io
       # image-renderer Image repository
       repository: giantswarm/grafana-image-renderer
       # image-renderer Image tag
-      tag: latest
+      tag: v5.12.4
       # image-renderer Image sha (optional)
       sha: ""
       # image-renderer ImagePullPolicy
-      pullPolicy: Always
+      pullPolicy: IfNotPresent
     # extra environment variables
     env:
       HTTP_HOST: "0.0.0.0"
@@ -1107,7 +1110,13 @@ grafana:
     # image-renderer deployment serviceAccount
     serviceAccountName: ""
     # image-renderer deployment securityContext
-    securityContext: {}
+    securityContext:
+      runAsNonRoot: true
+      runAsUser: 65532
+      runAsGroup: 65532
+      fsGroup: 65532
+      seccompProfile:
+        type: RuntimeDefault
     # image-renderer deployment Host Aliases
     hostAliases: []
     # image-renderer deployment priority class
@@ -1135,13 +1144,14 @@ grafana:
       limitIngress: true
       # Enable a NetworkPolicy to limit outbound traffic to only the created grafana pods
       limitEgress: false
-    resources: {}
-  #   limits:
-  #     cpu: 100m
-  #     memory: 100Mi
-  #   requests:
-  #     cpu: 50m
-  #     memory: 50Mi
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+        ephemeral-storage: 64Mi
+      limits:
+        memory: 1Gi
+        ephemeral-storage: 512Mi
     ## Node labels for pod assignment
     ## ref: https://kubernetes.io/docs/user-guide/node-selection/
     #

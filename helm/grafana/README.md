@@ -542,21 +542,21 @@ This example uses a CSI driver e.g. retrieving secrets using [Azure Key Vault Pr
 
 ## Image rendering
 
-The chart deploys the [Grafana image renderer](https://github.com/grafana/grafana-image-renderer) by default.
+The chart can deploy the [Grafana image renderer](https://github.com/grafana/grafana-image-renderer). It is disabled by default.
 It powers:
 
 * Panel and dashboard PNG export, via Share → Link → Generate image.
 * Images in alert notifications.
 
-The chart configures Grafana to use the renderer.
+When enabled, the chart configures Grafana to use the renderer.
 It generates the shared renderer token into a Secret. Set `grafana.imageRenderer.token` or `grafana.imageRenderer.existingSecret` to provide your own.
 
-To disable the renderer:
+To enable the renderer:
 
 ```yaml
 grafana:
   imageRenderer:
-    enabled: false
+    enabled: true
 ```
 
 ### Callback URL
