@@ -231,7 +231,7 @@ This version requires Helm >= 3.1.0.
 | `imageRenderer.image.pullPolicy`           | image-renderer ImagePullPolicy                                                     | `IfNotPresent`                   |
 | `imageRenderer.env`                        | extra env-vars for image-renderer                                                  | `{}`                             |
 | `imageRenderer.serviceAccountName`         | image-renderer deployment serviceAccountName                                       | `""`                             |
-| `imageRenderer.securityContext`            | image-renderer deployment securityContext                                          | See [Chart defaults](../../doc/image-rendering.md#chart-defaults) |
+| `imageRenderer.securityContext`            | image-renderer deployment securityContext                                          | See `values.yaml` |
 | `imageRenderer.hostAliases`                | image-renderer deployment Host Aliases                                             | `[]`                             |
 | `imageRenderer.priorityClassName`          | image-renderer deployment priority class                                           | `''`                             |
 | `imageRenderer.service.enabled`            | Enable the image-renderer service                                                  | `true`                           |
@@ -244,7 +244,7 @@ This version requires Helm >= 3.1.0.
 | `imageRenderer.revisionHistoryLimit`       | number of image-renderer replica sets to keep                                      | `10`                             |
 | `imageRenderer.networkPolicy.limitIngress` | Enable a NetworkPolicy to limit inbound traffic from only the created grafana pods | `true`                           |
 | `imageRenderer.networkPolicy.limitEgress`  | Enable a NetworkPolicy to limit outbound traffic to only the created grafana pods  | `false`                          |
-| `imageRenderer.resources`                  | Set resource limits for image-renderer pdos                                        | See [Chart defaults](../../doc/image-rendering.md#chart-defaults) |
+| `imageRenderer.resources`                  | Set resource limits for image-renderer pdos                                        | See `values.yaml` |
 | `imageRenderer.nodeSelector`               | Node labels for pod assignment                | `{}`                                                    |
 | `imageRenderer.tolerations`                | Toleration labels for pod assignment          | `[]`                                                    |
 | `imageRenderer.affinity`                   | Affinity settings for pod assignment          | `{}`                                                    |
@@ -543,7 +543,19 @@ This example uses a CSI driver e.g. retrieving secrets using [Azure Key Vault Pr
 
 ## Image rendering
 
-See [Image rendering](../../doc/image-rendering.md).
+The chart can deploy the [Grafana image renderer](https://github.com/grafana/grafana-image-renderer). It is disabled by default.
+It powers:
+
+* Panel PNG export, via the panel menu → Share → Share link → Generate image.
+* Dashboard PNG export, via Export → Export as image.
+
+To enable the renderer:
+
+```yaml
+grafana:
+  imageRenderer:
+    enabled: true
+```
 
 ## High Availability for unified alerting
 

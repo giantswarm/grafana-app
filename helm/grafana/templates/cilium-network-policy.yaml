@@ -21,6 +21,8 @@ spec:
 {{- end -}}
 {{- if and .Values.ciliumNetworkPolicy.enabled .Values.grafana.imageRenderer.enabled }}
 ---
+# Lets the image renderer fetch external content that dashboards embed.
+# Without it, rendering fails for dashboards referencing external content.
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
@@ -30,6 +32,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   egress:
+    # Grafana callback URL.
     - toEndpoints:
         - matchLabels:
             {{- include "labels.selector" . | nindent 12 }}
@@ -44,6 +47,7 @@ spec:
         - ports:
             - port: "443"
               protocol: TCP
+    # DNS.
     - toEndpoints:
         - matchLabels:
             k8s:io.kubernetes.pod.namespace: kube-system
@@ -65,6 +69,7 @@ spec:
     matchLabels:
       app.kubernetes.io/name: grafana-image-renderer
   ingress:
+    # Grafana render requests.
     - fromEndpoints:
         - matchLabels:
             {{- include "labels.selector" . | nindent 12 }}
