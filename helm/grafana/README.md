@@ -224,13 +224,13 @@ This version requires Helm >= 3.1.0.
 | `serviceMonitor.relabelings`              | MetricRelabelConfigs to apply to samples before ingestion.  | `[]`                                      |
 | `revisionHistoryLimit`                    | Number of old ReplicaSets to retain           | `10`                                                    |
 | `imageRenderer.enabled`                    | Enable the image-renderer deployment & service                                     | `false`                          |
-| `imageRenderer.image.repository`           | image-renderer Image repository                                                    | `grafana/grafana-image-renderer` |
-| `imageRenderer.image.tag`                  | image-renderer Image tag                                                           | `latest`                         |
+| `imageRenderer.image.repository`           | image-renderer Image repository                                                    | `giantswarm/grafana-image-renderer` |
+| `imageRenderer.image.tag`                  | image-renderer Image tag                                                           | `v5.12.4`                        |
 | `imageRenderer.image.sha`                  | image-renderer Image sha (optional)                                                | `""`                             |
-| `imageRenderer.image.pullPolicy`           | image-renderer ImagePullPolicy                                                     | `Always`                         |
+| `imageRenderer.image.pullPolicy`           | image-renderer ImagePullPolicy                                                     | `IfNotPresent`                   |
 | `imageRenderer.env`                        | extra env-vars for image-renderer                                                  | `{}`                             |
 | `imageRenderer.serviceAccountName`         | image-renderer deployment serviceAccountName                                       | `""`                             |
-| `imageRenderer.securityContext`            | image-renderer deployment securityContext                                          | `{}`                             |
+| `imageRenderer.securityContext`            | image-renderer deployment securityContext                                          | See [Chart defaults](#chart-defaults) |
 | `imageRenderer.hostAliases`                | image-renderer deployment Host Aliases                                             | `[]`                             |
 | `imageRenderer.priorityClassName`          | image-renderer deployment priority class                                           | `''`                             |
 | `imageRenderer.service.enabled`            | Enable the image-renderer service                                                  | `true`                           |
@@ -243,7 +243,7 @@ This version requires Helm >= 3.1.0.
 | `imageRenderer.revisionHistoryLimit`       | number of image-renderer replica sets to keep                                      | `10`                             |
 | `imageRenderer.networkPolicy.limitIngress` | Enable a NetworkPolicy to limit inbound traffic from only the created grafana pods | `true`                           |
 | `imageRenderer.networkPolicy.limitEgress`  | Enable a NetworkPolicy to limit outbound traffic to only the created grafana pods  | `false`                          |
-| `imageRenderer.resources`                  | Set resource limits for image-renderer pdos                                        | `{}`                             |
+| `imageRenderer.resources`                  | Set resource limits for image-renderer pdos                                        | See [Chart defaults](#chart-defaults) |
 | `imageRenderer.nodeSelector`               | Node labels for pod assignment                | `{}`                                                    |
 | `imageRenderer.tolerations`                | Toleration labels for pod assignment          | `[]`                                                    |
 | `imageRenderer.affinity`                   | Affinity settings for pod assignment          | `{}`                                                    |
@@ -559,6 +559,14 @@ grafana:
     enabled: true
 ```
 
+### Chart defaults
+
+The chart overrides these upstream `grafana.imageRenderer` values:
+
+* `image`: `gsoci.azurecr.io/giantswarm/grafana-image-renderer:v5.12.4` with `pullPolicy: IfNotPresent`.
+* `securityContext`: `runAsNonRoot`, UID/GID/fsGroup `65532` and seccomp `RuntimeDefault`. It meets the Pod Security Standards restricted profile.
+* `resources`: requests `100m` CPU, `256Mi` memory and `64Mi` ephemeral-storage. Limits `1Gi` memory and `512Mi` ephemeral-storage.
+
 ### Callback URL
 
 The renderer calls back into Grafana to load the page it renders.
@@ -589,8 +597,12 @@ grafana:
 ### Network policies
 
 A NetworkPolicy lets only Grafana pods reach the renderer on port 8081.
-With `ciliumNetworkPolicy.enabled`, the chart also creates the `grafana-image-renderer` CiliumNetworkPolicy.
-It allows ingress from Grafana pods only.
+With `ciliumNetworkPolicy.enabled` (the default), the chart also creates the `grafana-image-renderer` CiliumNetworkPolicy:
+
+* Ingress: from Grafana pods on 8081/TCP.
+* Egress: to Grafana pods on 3000/TCP, for the callback URL.
+* Egress: to `world` on 443/TCP, for external content that dashboards embed.
+* Egress: to `coredns` and `k8s-dns-node-cache` in `kube-system` on 53 and 1053, UDP and TCP.
 
 `grafana.imageRenderer.serviceMonitor` is disabled. To enable it, allow the scraper through `grafana.imageRenderer.networkPolicy.extraIngressSelectors`:
 
