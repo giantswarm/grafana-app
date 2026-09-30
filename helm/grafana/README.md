@@ -224,6 +224,7 @@ This version requires Helm >= 3.1.0.
 | `serviceMonitor.relabelings`              | MetricRelabelConfigs to apply to samples before ingestion.  | `[]`                                      |
 | `revisionHistoryLimit`                    | Number of old ReplicaSets to retain           | `10`                                                    |
 | `imageRenderer.enabled`                    | Enable the image-renderer deployment & service                                     | `false`                          |
+| `imageRenderer.image.registry`             | image-renderer Image registry                                                      | `gsoci.azurecr.io`               |
 | `imageRenderer.image.repository`           | image-renderer Image repository                                                    | `giantswarm/grafana-image-renderer` |
 | `imageRenderer.image.tag`                  | image-renderer Image tag                                                           | `v5.12.4`                        |
 | `imageRenderer.image.sha`                  | image-renderer Image sha (optional)                                                | `""`                             |

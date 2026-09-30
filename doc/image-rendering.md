@@ -3,8 +3,8 @@
 The chart can deploy the [Grafana image renderer](https://github.com/grafana/grafana-image-renderer). It is disabled by default.
 It powers:
 
-* Panel and dashboard PNG export, via Share → Link → Generate image.
-* Images in alert notifications.
+* Panel PNG export, via the panel menu → Share → Share link → Generate image.
+* Dashboard PNG export, via Export → Export as image.
 
 To enable the renderer:
 
@@ -24,7 +24,8 @@ The chart overrides these upstream `grafana.imageRenderer` values:
 
 ## CiliumNetworkPolicy
 
-This policy lets the renderer render dashboards that reference external resources, such as images or feeds.
+The `grafana-image-renderer` CiliumNetworkPolicy lets the renderer fetch external resources, such as images or feeds.
+Otherwise the image rendering would fail for dashboards referencing external content.
 
 With `ciliumNetworkPolicy.enabled` (the default), the chart creates the `grafana-image-renderer` CiliumNetworkPolicy:
 
