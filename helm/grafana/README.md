@@ -224,13 +224,14 @@ This version requires Helm >= 3.1.0.
 | `serviceMonitor.relabelings`              | MetricRelabelConfigs to apply to samples before ingestion.  | `[]`                                      |
 | `revisionHistoryLimit`                    | Number of old ReplicaSets to retain           | `10`                                                    |
 | `imageRenderer.enabled`                    | Enable the image-renderer deployment & service                                     | `false`                          |
-| `imageRenderer.image.repository`           | image-renderer Image repository                                                    | `grafana/grafana-image-renderer` |
-| `imageRenderer.image.tag`                  | image-renderer Image tag                                                           | `latest`                         |
+| `imageRenderer.image.registry`             | image-renderer Image registry                                                      | `gsoci.azurecr.io`               |
+| `imageRenderer.image.repository`           | image-renderer Image repository                                                    | `giantswarm/grafana-image-renderer` |
+| `imageRenderer.image.tag`                  | image-renderer Image tag                                                           | `v5.12.4`                        |
 | `imageRenderer.image.sha`                  | image-renderer Image sha (optional)                                                | `""`                             |
-| `imageRenderer.image.pullPolicy`           | image-renderer ImagePullPolicy                                                     | `Always`                         |
+| `imageRenderer.image.pullPolicy`           | image-renderer ImagePullPolicy                                                     | `IfNotPresent`                   |
 | `imageRenderer.env`                        | extra env-vars for image-renderer                                                  | `{}`                             |
 | `imageRenderer.serviceAccountName`         | image-renderer deployment serviceAccountName                                       | `""`                             |
-| `imageRenderer.securityContext`            | image-renderer deployment securityContext                                          | `{}`                             |
+| `imageRenderer.securityContext`            | image-renderer deployment securityContext                                          | See `values.yaml` |
 | `imageRenderer.hostAliases`                | image-renderer deployment Host Aliases                                             | `[]`                             |
 | `imageRenderer.priorityClassName`          | image-renderer deployment priority class                                           | `''`                             |
 | `imageRenderer.service.enabled`            | Enable the image-renderer service                                                  | `true`                           |
@@ -243,7 +244,7 @@ This version requires Helm >= 3.1.0.
 | `imageRenderer.revisionHistoryLimit`       | number of image-renderer replica sets to keep                                      | `10`                             |
 | `imageRenderer.networkPolicy.limitIngress` | Enable a NetworkPolicy to limit inbound traffic from only the created grafana pods | `true`                           |
 | `imageRenderer.networkPolicy.limitEgress`  | Enable a NetworkPolicy to limit outbound traffic to only the created grafana pods  | `false`                          |
-| `imageRenderer.resources`                  | Set resource limits for image-renderer pdos                                        | `{}`                             |
+| `imageRenderer.resources`                  | Set resource limits for image-renderer pdos                                        | See `values.yaml` |
 | `imageRenderer.nodeSelector`               | Node labels for pod assignment                | `{}`                                                    |
 | `imageRenderer.tolerations`                | Toleration labels for pod assignment          | `[]`                                                    |
 | `imageRenderer.affinity`                   | Affinity settings for pod assignment          | `{}`                                                    |
@@ -540,20 +541,23 @@ This example uses a CSI driver e.g. retrieving secrets using [Azure Key Vault Pr
         name: akv-creds
 ```
 
-## Image Renderer Plug-In
+## Image rendering
 
-This chart supports enabling [remote image rendering](https://github.com/grafana/grafana-image-renderer/blob/master/README.md#run-in-docker)
+The chart can deploy the [Grafana image renderer](https://github.com/grafana/grafana-image-renderer). It is disabled by default.
+It powers:
+
+* Panel PNG export, via the panel menu → Share → Share link → Generate image.
+* Dashboard PNG export, via Export → Export as image.
+
+To enable the renderer:
 
 ```yaml
-imageRenderer:
-  enabled: true
+grafana:
+  imageRenderer:
+    enabled: true
 ```
 
-### Image Renderer NetworkPolicy
-
-By default the image-renderer pods will have a network policy which only allows ingress traffic from the created grafana instance
-
-### High Availability for unified alerting
+## High Availability for unified alerting
 
 If you want to run Grafana in a high availability cluster you need to enable
 the headless service by setting `headlessService: true` in your `values.yaml`
