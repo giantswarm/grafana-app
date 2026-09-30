@@ -1086,7 +1086,7 @@ grafana:
   ## Add a separate remote image renderer deployment/service
   imageRenderer:
     # Enable the image-renderer deployment & service
-    enabled: true
+    enabled: false
     replicas: 1
     image:
       # -- The Docker registry

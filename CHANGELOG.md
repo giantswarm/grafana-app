@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added the Grafana image renderer, enabled by default.
+- Added the Grafana image renderer configuration, disabled by default.
 
 ### Fixed
 
