@@ -24,6 +24,8 @@ The chart overrides these upstream `grafana.imageRenderer` values:
 
 ## CiliumNetworkPolicy
 
+The `grafana` CiliumNetworkPolicy selects only Grafana pods, so the renderer pod needs its own policy to pass traffic under the cluster default-deny policies.
+
 With `ciliumNetworkPolicy.enabled` (the default), the chart creates the `grafana-image-renderer` CiliumNetworkPolicy:
 
 * Ingress: from Grafana pods on 8081/TCP.
