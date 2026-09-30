@@ -25,7 +25,7 @@ not allowed at the end of a label value, so trim those - the API server rejects
 the object otherwise.
 */}}
 {{- define "grafana.chart" -}}
-{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" | trimSuffix "." }}
+{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimAll "-._" }}
 {{- end -}}
 
 {{/*
