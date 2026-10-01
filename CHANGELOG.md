@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.41.0] - 2026-09-30
+
 ### Added
 
 - Added the Grafana image renderer configuration, disabled by default.
@@ -16,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Updated `values.schema.json` for the `imageRenderer` values.
+- Upgrade grafana chart: 12.11.2 => 13.2.7
+- Upgrade postgresql-cnpg: 18.4 => 18.6
 
 ### Fixed
 
@@ -647,7 +651,8 @@ Added:
 - images retagged for Giant Swarm registries
 - simple functionality test to get login web page
 
-[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.40.0...HEAD
+[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.41.0...HEAD
+[2.41.0]: https://github.com/giantswarm/grafana-app/compare/v2.40.0...v2.41.0
 [2.40.0]: https://github.com/giantswarm/grafana-app/compare/v2.39.0...v2.40.0
 [2.39.0]: https://github.com/giantswarm/grafana-app/compare/v2.38.0...v2.39.0
 [2.38.0]: https://github.com/giantswarm/grafana-app/compare/v2.37.0...v2.38.0
