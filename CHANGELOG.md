@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Updated `values.schema.json` for the `imageRenderer` values.
+- Upgrade grafana chart: 12.11.2 => 13.2.7
+- Upgrade postgresql-cnpg: 18.4 => 18.6
 
 ### Fixed
 
