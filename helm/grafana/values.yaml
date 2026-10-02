@@ -1096,7 +1096,7 @@ grafana:
       # image-renderer Image repository
       repository: giantswarm/grafana-image-renderer
       # image-renderer Image tag
-      tag: v5.12.4
+      tag: v5.12.5
       # image-renderer Image sha (optional)
       sha: ""
       # image-renderer ImagePullPolicy
