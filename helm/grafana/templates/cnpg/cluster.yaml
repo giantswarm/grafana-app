@@ -9,6 +9,10 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   instances: {{ .Values.postgresqlCluster.instances }}
+  {{- if gt (int .Values.postgresqlCluster.instances) 1 }}
+  # Replaced by the pdb.yaml PodDisruptionBudget, which does not depend on role labels.
+  enablePDB: false
+  {{- end }}
   imageName: {{ .Values.postgresqlCluster.image.registry }}/{{ .Values.postgresqlCluster.image.repository }}:{{ .Values.postgresqlCluster.image.tag }}
   postgresql:
     {{- with .Values.postgresqlCluster.parameters }}
