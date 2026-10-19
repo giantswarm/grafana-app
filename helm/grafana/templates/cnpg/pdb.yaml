@@ -1,0 +1,17 @@
+{{- if and .Values.postgresqlCluster.enabled (gt (int .Values.postgresqlCluster.instances) 1) }}
+# Keeps one instance running during drains, whatever its role label.
+# The suffix avoids the name of the replica PDB, which cloudnative-pg deletes when enablePDB is false.
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  labels:
+    {{- include "grafana.labels" . | nindent 4 }}
+  name: {{ .Values.postgresqlCluster.name }}-instances
+  namespace: {{ .Release.Namespace }}
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      cnpg.io/cluster: {{ .Values.postgresqlCluster.name }}
+      cnpg.io/podRole: instance
+{{- end }}
