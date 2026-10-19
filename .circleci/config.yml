@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  architect: giantswarm/architect@10.14.2
+  architect: giantswarm/architect@10.14.7
 jobs:
   template-chart:
     docker:
