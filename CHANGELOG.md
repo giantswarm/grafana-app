@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Upgrade grafana chart: 13.5.1 => 13.7.0
+- Upgrade grafana chart: 13.5.1 => 14.1.0
+- Set sidecar `sizeLimit` defaults to `""` to match the upstream values schema.
 - Fix `appVersion`: 13.2.0 => 13.2.4
 
 ## [2.41.0] - 2026-09-30

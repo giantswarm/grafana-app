@@ -962,7 +962,7 @@
                                     "type": ["string", "null"]
                                 },
                                 "sizeLimit": {
-                                    "type": "object"
+                                    "type": ["string", "integer"]
                                 },
                                 "watchMethod": {
                                     "type": "string"
@@ -994,7 +994,7 @@
                                     "type": ["string", "null"]
                                 },
                                 "sizeLimit": {
-                                    "type": "object"
+                                    "type": ["string", "integer"]
                                 },
                                 "skipReload": {
                                     "type": "boolean"
@@ -1049,7 +1049,7 @@
                                     "type": ["string", "null"]
                                 },
                                 "sizeLimit": {
-                                    "type": "object"
+                                    "type": ["string", "integer"]
                                 }
                             }
                         },
@@ -1078,7 +1078,7 @@
                                     "type": ["string", "null"]
                                 },
                                 "sizeLimit": {
-                                    "type": "object"
+                                    "type": ["string", "integer"]
                                 },
                                 "skipReload": {
                                     "type": "boolean"
