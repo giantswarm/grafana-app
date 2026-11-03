@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add `branding.enabled` value to toggle the `grafana-branding` ConfigMap. A second release in the same namespace disables it to avoid owning the same ConfigMap.
+
+### Changed
+
+- Derive the `app.kubernetes.io/instance` label from the Helm release name. The grafana resources of a release named `grafana` render unchanged; additional releases get distinct selector labels. The pgClusterRecoveryTest objects of a release named `grafana` now carry `app.kubernetes.io/instance: grafana` instead of `pgClusterRecoveryTest` — a label-only change on mutable fields, no selectors change.
+
 ## [2.42.0] - 2026-10-26
 
 ### Changed

@@ -32,7 +32,7 @@ the object otherwise.
 Selector labels
 */}}
 {{- define "labels.selector" -}}
-app.kubernetes.io/instance: {{ .Chart.Name | quote }}
+app.kubernetes.io/instance: {{ .Release.Name | quote }}
 app.kubernetes.io/name: {{ .Chart.Name | quote }}
 {{- end -}}
 
@@ -41,7 +41,7 @@ Grafana-app selector labels
 */}}
 {{- define "grafana.selectorLabels" -}}
 app.kubernetes.io/name: {{ .Chart.Name | quote }}
-app.kubernetes.io/instance: {{ .Chart.Name | quote }}
+app.kubernetes.io/instance: {{ .Release.Name | quote }}
 {{- end -}}
 
 {{/*

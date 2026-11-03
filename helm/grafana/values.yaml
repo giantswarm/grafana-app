@@ -5,6 +5,16 @@ global:
 ciliumNetworkPolicy:
   enabled: true
 
+# The grafana-branding ConfigMap has a fixed name, so only one release per
+# namespace can own it. A second release in the same namespace must disable
+# this and also set `grafana.extraConfigmapMounts: []`, and must keep
+# ciliumNetworkPolicy and postgresqlCluster disabled: those templates also
+# create fixed-name resources (the CiliumNetworkPolicies grafana,
+# grafana-image-renderer and grafana-postgresql, the Cluster and its
+# PodMonitor, and the hardcoded release-name annotation in cnpg/bucket.yaml).
+branding:
+  enabled: true
+
 pgClusterRecoveryTest:
   enabled: false
   cronjob:
