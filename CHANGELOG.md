@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `branding.enabled` value to disable the Giant Swarm branding ConfigMap.
+
+### Changed
+
+- Derive the `app.kubernetes.io/instance` label from the Helm release name.
+
 ## [2.42.0] - 2026-10-26
 
 ### Changed
