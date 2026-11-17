@@ -1,0 +1,28 @@
+suite: CNPG without the Prometheus Operator
+templates:
+  - templates/cnpg/*.yaml
+release:
+  name: grafana
+  namespace: monitoring
+tests:
+
+  - it: renders no monitoring.coreos.com resource with the PodMonitor off
+    set:
+      postgresqlCluster.enabled: true
+      postgresqlCluster.podMonitor.enabled: false
+    asserts:
+      - notEqual:
+          path: apiVersion
+          value: monitoring.coreos.com/v1
+
+  - it: still renders the Cluster with the PodMonitor off
+    set:
+      postgresqlCluster.enabled: true
+      postgresqlCluster.podMonitor.enabled: false
+    template: templates/cnpg/cluster.yaml
+    asserts:
+      - isKind:
+          of: Cluster
+      - equal:
+          path: metadata.name
+          value: grafana-postgresql

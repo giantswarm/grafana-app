@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `branding.enabled` value to disable the Giant Swarm branding ConfigMap.
+- `postgresqlCluster.podMonitor.enabled` value to install the PostgreSQL cluster without the Prometheus Operator CRDs.
 
 ### Changed
 
