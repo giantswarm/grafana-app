@@ -68,6 +68,8 @@ Note that only assets can be changed this way, and the app keeps calling itself 
 
 Our grafana app can be stateful by using a postgresql cluster managed by the cloudnative-pg operator. For more information on how this works, see the following [page](https://intranet.giantswarm.io/docs/support-and-ops/processes/manage-postgresql-databases/).
 
+The cluster comes with a `PodMonitor`, which needs the Prometheus Operator CRDs. On a cluster without them, set `postgresqlCluster.podMonitor.enabled: false`.
+
 ## Credit
 
 - <https://github.com/grafana/helm-charts>

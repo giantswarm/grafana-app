@@ -44,6 +44,10 @@ postgresqlCluster:
     wal_keep_size: '128MB'
     # Specify the maximum size of WAL files that replication slot
     max_slot_wal_keep_size: '128MB'
+  #-- PodMonitor scraping the PostgreSQL instances. It needs the Prometheus Operator
+  # CRDs: turn it off on clusters without them.
+  podMonitor:
+    enabled: true
   storage:
     size: 2Gi
   #-- Used for the cilium network policy

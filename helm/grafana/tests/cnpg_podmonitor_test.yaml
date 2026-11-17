@@ -1,0 +1,48 @@
+suite: CNPG PodMonitor
+templates:
+  - templates/cnpg/podmonitor.yaml
+release:
+  name: grafana
+  namespace: monitoring
+tests:
+
+  - it: renders nothing while the database is off
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders the PodMonitor by default when the database is on
+    set:
+      postgresqlCluster.enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: PodMonitor
+      - equal:
+          path: metadata.name
+          value: grafana-postgresql-extra
+      - equal:
+          path: metadata.namespace
+          value: monitoring
+
+  - it: renders nothing when the PodMonitor is turned off
+    set:
+      postgresqlCluster.enabled: true
+      postgresqlCluster.podMonitor.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders the PodMonitor with management-cluster values (database and backups on)
+    set:
+      postgresqlCluster.enabled: true
+      postgresqlCluster.backup.enabled: true
+      postgresqlCluster.backup.destinationPath: s3://grafana-postgresql/
+      postgresqlCluster.objectStorage.s3.accessKeyId: key
+      postgresqlCluster.objectStorage.s3.secretAccessKey: secret
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: PodMonitor
