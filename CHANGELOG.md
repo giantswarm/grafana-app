@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.43.0] - 2026-11-17
+
 ### Added
 
 - `branding.enabled` value to disable the Giant Swarm branding ConfigMap.
@@ -668,7 +670,8 @@ Added:
 - images retagged for Giant Swarm registries
 - simple functionality test to get login web page
 
-[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.42.0...HEAD
+[Unreleased]: https://github.com/giantswarm/grafana-app/compare/v2.43.0...HEAD
+[2.43.0]: https://github.com/giantswarm/grafana-app/compare/v2.42.0...v2.43.0
 [2.42.0]: https://github.com/giantswarm/grafana-app/compare/v2.41.0...v2.42.0
 [2.41.0]: https://github.com/giantswarm/grafana-app/compare/v2.40.0...v2.41.0
 [2.40.0]: https://github.com/giantswarm/grafana-app/compare/v2.39.0...v2.40.0
