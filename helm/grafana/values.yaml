@@ -239,8 +239,9 @@ grafana:
   image:
     registry: gsoci.azurecr.io
     repository: giantswarm/grafana
-    # Overrides the Grafana image tag whose default is the chart appVersion
-    tag: ""
+    # Pinned so that bumping the upstream grafana subchart doesn't change the
+    # Grafana version. Keep it in sync with appVersion in Chart.yaml.
+    tag: "13.2.4"
     sha: ""
     pullPolicy: IfNotPresent
     pullSecrets: []

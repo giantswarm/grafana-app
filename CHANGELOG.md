@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Pin the Grafana image to 13.2.4: since 2.43.0 it ran Grafana 13.3.0, which crashes at startup.
+
 ## [2.43.0] - 2026-11-17
 
 ### Added
