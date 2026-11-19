@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- PostgreSQL backups to S3 can take their keys from an existing Secret (`postgresqlCluster.objectStorage.s3.existingSecret`), trust a private CA (`s3.endpointCA`) and use server-side encryption (`backup.encryption`).
+- On the Standalone Observability Platform, PostgreSQL backups fall back to the platform's `global.objectStorage`: its S3 endpoint, region, bucket and credentials Secret.
+
 ## [2.43.0] - 2026-11-17
 
 ### Added

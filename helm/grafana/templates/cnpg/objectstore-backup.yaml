@@ -10,9 +10,16 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   configuration:
-    destinationPath: {{ .Values.postgresqlCluster.backup.destinationPath | quote }}
-    {{- include "grafana.cnpg.objectStoreCredentials" . | nindent 4 }}
+    destinationPath: {{ include "grafana.cnpg.backup.destinationPath" . | quote }}
+    {{- include "grafana.cnpg.objectStoreCredentials" . | trim | nindent 4 }}
+    {{- with .Values.postgresqlCluster.backup.encryption.data }}
+    data:
+      encryption: {{ . | quote }}
+    {{- end }}
     wal:
       compression: gzip
+      {{- with .Values.postgresqlCluster.backup.encryption.wal }}
+      encryption: {{ . | quote }}
+      {{- end }}
   retentionPolicy: {{ .Values.postgresqlCluster.backup.retentionPolicy | quote }}
 {{- end }}

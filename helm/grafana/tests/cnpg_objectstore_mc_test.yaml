@@ -1,0 +1,67 @@
+# Management-cluster backup configurations, as shared-configs sets them. The snapshots
+# were taken before the chart learned the platform's `global.objectStorage`: they pin
+# that these renders stay unchanged.
+suite: CNPG ObjectStore on management clusters
+templates:
+  - templates/cnpg/objectstore-backup.yaml
+  - templates/cnpg/objectstore-recovery.yaml
+  - templates/cnpg/access-keys-secret.yaml
+  - templates/cnpg/cluster.yaml
+  - templates/cnpg/scheduled-backup.yaml
+release:
+  name: grafana
+  namespace: monitoring
+set:
+  postgresqlCluster.enabled: true
+  postgresqlCluster.backup.enabled: true
+  postgresqlCluster.backup.destinationPath: s3://giantswarm-test-grafana-postgresql/
+tests:
+
+  - it: renders the CAPA configuration (IAM role) unchanged
+    set:
+      postgresqlCluster.backup.useIRSA: true
+      postgresqlCluster.serviceAccount.annotations:
+        eks.amazonaws.com/role-arn: arn:aws:iam::123456789012:role/giantswarm-test-grafana-postgresql
+    asserts:
+      - matchSnapshot: {}
+
+  - it: renders the inline-keys configuration unchanged
+    set:
+      postgresqlCluster.objectStorage.s3.endpointURL: https://s3.example.internal
+      postgresqlCluster.objectStorage.s3.accessKeyId: key
+      postgresqlCluster.objectStorage.s3.secretAccessKey: secret
+    asserts:
+      - matchSnapshot: {}
+
+  - it: renders the manual Azure configuration unchanged
+    set:
+      postgresqlCluster.objectStorage.type: azure
+      postgresqlCluster.backup.destinationPath: https://account.blob.core.windows.net/grafana-postgresql/
+      postgresqlCluster.objectStorage.azure.credentials:
+        storageAccount:
+          name: azure-creds
+          key: account
+        storageKey:
+          name: azure-creds
+          key: key
+    asserts:
+      - matchSnapshot: {}
+
+  - it: renders the Crossplane Azure configuration unchanged
+    set:
+      postgresqlCluster.objectStorage.type: azure
+      postgresqlCluster.backup.destinationPath: https://account.blob.core.windows.net/grafana-postgresql/
+      postgresqlCluster.crossplane.enabled: true
+      postgresqlCluster.crossplane.provider: azure
+      postgresqlCluster.crossplane.azure.enabled: true
+      postgresqlCluster.crossplane.azure.container.name: grafana-backups
+    asserts:
+      - matchSnapshot: {}
+
+  - it: renders a recovery configuration unchanged
+    set:
+      postgresqlCluster.recovery.enabled: true
+      postgresqlCluster.recovery.destinationPath: s3://giantswarm-test-grafana-postgresql-old/
+      postgresqlCluster.recovery.recoveryBackupTime: "2026-01-01T12:00:00Z"
+    asserts:
+      - matchSnapshot: {}
