@@ -1221,6 +1221,27 @@
                         "enabled": {
                             "type": "boolean"
                         },
+                        "encryption": {
+                            "type": "object",
+                            "properties": {
+                                "data": {
+                                    "type": "string",
+                                    "enum": [
+                                        "",
+                                        "AES256",
+                                        "aws:kms"
+                                    ]
+                                },
+                                "wal": {
+                                    "type": "string",
+                                    "enum": [
+                                        "",
+                                        "AES256",
+                                        "aws:kms"
+                                    ]
+                                }
+                            }
+                        },
                         "retentionPolicy": {
                             "type": "string"
                         },
@@ -1382,8 +1403,33 @@
                                 "accessKeyId": {
                                     "type": "string"
                                 },
+                                "endpointCA": {
+                                    "type": "object",
+                                    "properties": {
+                                        "key": {
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
                                 "endpointURL": {
                                     "type": "string"
+                                },
+                                "existingSecret": {
+                                    "type": "object",
+                                    "properties": {
+                                        "accessKeyIdKey": {
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "secretAccessKeyKey": {
+                                            "type": "string"
+                                        }
+                                    }
                                 },
                                 "region": {
                                     "type": ["string", "null"]

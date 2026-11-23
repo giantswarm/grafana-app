@@ -70,6 +70,27 @@ Our grafana app can be stateful by using a postgresql cluster managed by the clo
 
 The cluster comes with a `PodMonitor`, which needs the Prometheus Operator CRDs. On a cluster without them, set `postgresqlCluster.podMonitor.enabled: false`.
 
+### Backups
+
+With `postgresqlCluster.backup.enabled: true`, the cluster is backed up through the barman-cloud plugin. The S3 credentials come from the first of these that is set:
+
+1. Inline keys: `postgresqlCluster.objectStorage.s3.accessKeyId` and `secretAccessKey`. The chart renders them into a Secret.
+2. An existing Secret: `postgresqlCluster.objectStorage.s3.existingSecret` (`name`, `accessKeyIdKey`, `secretAccessKeyKey`). Use it to give backups their own, bucket-scoped keys.
+3. The parent chart's `global.objectStorage.existingSecret`, on the Standalone Observability Platform (see below).
+4. The pod's IAM role (`inheritFromIAMRole`).
+
+On the Standalone Observability Platform, which sets `global.objectStorage` with backend `s3`, the chart falls back to the platform's store while it sets no `endpointURL` and no keys of its own:
+
+- **Endpoint:** `https://` or, with `insecure`, `http://`, followed by `global.objectStorage.s3.endpoint`.
+- **Region:** `global.objectStorage.s3.region`. barman reads it from a Secret, so the chart renders `<cluster>-s3-region`.
+- **Destination:** `s3://<global.objectStorage.buckets.grafanaPostgresql>/`, unless `backup.destinationPath` is set.
+- **Credentials:** the platform's credentials Secret, keys `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`. The render fails if neither it nor `s3.existingSecret` names a Secret, rather than falling back to the IAM role.
+
+Two more settings apply on every S3 path:
+
+- `postgresqlCluster.objectStorage.s3.endpointCA` (`name`, `key`): a Secret in the release namespace holding the CA bundle of a store behind a private CA.
+- `postgresqlCluster.backup.encryption.data` and `.wal`: server-side encryption, `AES256` or `aws:kms`. Empty uses the bucket's policy. The render fails if they're set with `objectStorage.type: azure`.
+
 ## Credit
 
 - <https://github.com/grafana/helm-charts>

@@ -11,7 +11,7 @@ metadata:
 spec:
   configuration:
     destinationPath: {{ .Values.postgresqlCluster.recovery.destinationPath | quote }}
-    {{- include "grafana.cnpg.objectStoreCredentials" . | nindent 4 }}
+    {{- include "grafana.cnpg.objectStoreCredentials" . | trim | nindent 4 }}
     wal:
       compression: gzip
 {{- end }}

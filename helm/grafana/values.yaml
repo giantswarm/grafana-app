@@ -72,6 +72,20 @@ postgresqlCluster:
       region: null
       accessKeyId: ""
       secretAccessKey: ""
+      #-- An existing Secret in the release namespace holding the S3 keys, instead of
+      # inline keys. Set it to give backups their own, bucket-scoped keys. Without it and
+      # without inline keys, the chart falls back to the parent chart's
+      # `global.objectStorage.existingSecret` (Standalone Observability Platform), then to
+      # the IAM role.
+      existingSecret:
+        name: ""
+        accessKeyIdKey: AWS_ACCESS_KEY_ID
+        secretAccessKeyKey: AWS_SECRET_ACCESS_KEY
+      #-- CA bundle for a store behind a private CA: a Secret in the release namespace,
+      # and the key holding the PEM bundle.
+      endpointCA:
+        name: ""
+        key: ""
     azure:
       #-- Azure object storage credentials. Two paths are supported:
       #
@@ -98,9 +112,17 @@ postgresqlCluster:
     enabled: false
     #-- Path to the object storage where the backups will be stored
     # ⚠️ Needs to be different from the recovery.destinationPath
+    # Empty, with the parent chart's `global.objectStorage` (backend s3), it is
+    # s3://<global.objectStorage.buckets.grafanaPostgresql>/.
     destinationPath: ""
     schedule: "0 0 * * * *" # every hour
     retentionPolicy: 30d
+    #-- Server-side encryption of base backups (`data`) and WAL files (`wal`):
+    # "" (the bucket's policy), `AES256` or `aws:kms`. S3 only: the render fails with
+    # `objectStorage.type: azure`.
+    encryption:
+      data: ""
+      wal: ""
   recovery:
     enabled: false
     #-- Path to the object storage from which to recover the backup

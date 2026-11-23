@@ -1,0 +1,255 @@
+# Backups on the Standalone Observability Platform: the chart falls back to the parent
+# chart's `global.objectStorage` (backend s3), and takes its keys from a Secret.
+suite: CNPG ObjectStore with the platform's object storage
+templates:
+  - templates/cnpg/objectstore-backup.yaml
+  - templates/cnpg/s3-region-secret.yaml
+release:
+  name: grafana
+  namespace: monitoring
+set:
+  postgresqlCluster.enabled: true
+  postgresqlCluster.backup.enabled: true
+  global.objectStorage:
+    backend: s3
+    existingSecret: observability-platform-object-storage
+    s3:
+      endpoint: s3.example.internal:9000
+      region: garage
+      insecure: false
+    buckets:
+      grafanaPostgresql: grafana-postgresql
+tests:
+
+  - it: falls back to the platform's store, bucket and credentials Secret
+    template: templates/cnpg/objectstore-backup.yaml
+    asserts:
+      - equal:
+          path: spec.configuration.destinationPath
+          value: s3://grafana-postgresql/
+      - equal:
+          path: spec.configuration.endpointURL
+          value: https://s3.example.internal:9000
+      - equal:
+          path: spec.configuration.s3Credentials
+          value:
+            accessKeyId:
+              name: observability-platform-object-storage
+              key: AWS_ACCESS_KEY_ID
+            secretAccessKey:
+              name: observability-platform-object-storage
+              key: AWS_SECRET_ACCESS_KEY
+            region:
+              name: grafana-postgresql-s3-region
+              key: REGION
+
+  - it: renders the region Secret barman reads the region from
+    template: templates/cnpg/s3-region-secret.yaml
+    asserts:
+      - isKind:
+          of: Secret
+      - equal:
+          path: metadata.name
+          value: grafana-postgresql-s3-region
+      - equal:
+          path: stringData.REGION
+          value: garage
+
+  - it: uses plain HTTP when the platform's store is insecure
+    template: templates/cnpg/objectstore-backup.yaml
+    set:
+      global.objectStorage.s3.insecure: true
+    asserts:
+      - equal:
+          path: spec.configuration.endpointURL
+          value: http://s3.example.internal:9000
+
+  - it: uses the platform's bucket name
+    template: templates/cnpg/objectstore-backup.yaml
+    set:
+      global.objectStorage.buckets.grafanaPostgresql: acme-grafana-backups
+    asserts:
+      - equal:
+          path: spec.configuration.destinationPath
+          value: s3://acme-grafana-backups/
+
+  - it: references no region and renders no region Secret without a region
+    set:
+      global.objectStorage.s3.region: ""
+    asserts:
+      - notExists:
+          path: spec.configuration.s3Credentials.region
+        template: templates/cnpg/objectstore-backup.yaml
+      - hasDocuments:
+          count: 0
+        template: templates/cnpg/s3-region-secret.yaml
+
+  - it: prefers dedicated backup keys over the platform's Secret
+    template: templates/cnpg/objectstore-backup.yaml
+    set:
+      postgresqlCluster.objectStorage.s3.existingSecret:
+        name: grafana-backup-keys
+        accessKeyIdKey: id
+        secretAccessKeyKey: secret
+    asserts:
+      - equal:
+          path: spec.configuration.s3Credentials.accessKeyId
+          value:
+            name: grafana-backup-keys
+            key: id
+      - equal:
+          path: spec.configuration.s3Credentials.secretAccessKey
+          value:
+            name: grafana-backup-keys
+            key: secret
+      - equal:
+          path: spec.configuration.endpointURL
+          value: https://s3.example.internal:9000
+
+  - it: references a private CA
+    template: templates/cnpg/objectstore-backup.yaml
+    set:
+      postgresqlCluster.objectStorage.s3.endpointCA:
+        name: store-ca
+        key: ca.crt
+    asserts:
+      - equal:
+          path: spec.configuration.endpointCA
+          value:
+            name: store-ca
+            key: ca.crt
+
+  - it: passes server-side encryption through
+    template: templates/cnpg/objectstore-backup.yaml
+    set:
+      postgresqlCluster.backup.encryption:
+        data: AES256
+        wal: aws:kms
+    asserts:
+      - equal:
+          path: spec.configuration.data.encryption
+          value: AES256
+      - equal:
+          path: spec.configuration.wal
+          value:
+            compression: gzip
+            encryption: aws:kms
+
+  - it: renders no encryption settings by default
+    template: templates/cnpg/objectstore-backup.yaml
+    asserts:
+      - notExists:
+          path: spec.configuration.data
+      - notExists:
+          path: spec.configuration.wal.encryption
+
+  - it: fails when the platform's store has no endpoint
+    template: templates/cnpg/objectstore-backup.yaml
+    set:
+      global.objectStorage.s3.endpoint: ""
+    asserts:
+      - failedTemplate:
+          errorPattern: 'global\.objectStorage\.s3\.endpoint is empty'
+
+  - it: does not fall back with the platform's azure backend
+    template: templates/cnpg/objectstore-backup.yaml
+    set:
+      global.objectStorage.backend: azure
+      postgresqlCluster.backup.destinationPath: s3://own-bucket/
+    asserts:
+      - equal:
+          path: spec.configuration.destinationPath
+          value: s3://own-bucket/
+      - notExists:
+          path: spec.configuration.endpointURL
+      - equal:
+          path: spec.configuration.s3Credentials
+          value:
+            inheritFromIAMRole: true
+
+  - it: keeps its own endpoint and destination over the platform's
+    template: templates/cnpg/objectstore-backup.yaml
+    set:
+      postgresqlCluster.objectStorage.s3.endpointURL: https://own.example.internal
+      postgresqlCluster.backup.destinationPath: s3://own-bucket/
+    asserts:
+      - equal:
+          path: spec.configuration.endpointURL
+          value: https://own.example.internal
+      - equal:
+          path: spec.configuration.destinationPath
+          value: s3://own-bucket/
+      - equal:
+          path: spec.configuration.s3Credentials
+          value:
+            inheritFromIAMRole: true
+
+  # Review fixes (giantswarm/grafana-app#597).
+
+  - it: fails when the fallback has no credentials Secret at all
+    # Helm reports the first template that fails; both ObjectStore templates and the
+    # region Secret share the guarded helper.
+    template: templates/cnpg/s3-region-secret.yaml
+    set:
+      global.objectStorage.existingSecret: ""
+    asserts:
+      - failedTemplate:
+          errorPattern: 'neither global\.objectStorage\.existingSecret nor postgresqlCluster\.objectStorage\.s3\.existingSecret names a credentials Secret'
+
+  - it: renders without a credentials Secret while backups are off
+    set:
+      global.objectStorage.existingSecret: ""
+      postgresqlCluster.backup.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders without a credentials Secret while the database is off
+    set:
+      global.objectStorage.existingSecret: ""
+      postgresqlCluster.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: accepts dedicated keys when the platform names no Secret
+    template: templates/cnpg/objectstore-backup.yaml
+    set:
+      global.objectStorage.existingSecret: ""
+      postgresqlCluster.objectStorage.s3.existingSecret.name: grafana-backup-keys
+    asserts:
+      - equal:
+          path: spec.configuration.s3Credentials.accessKeyId.name
+          value: grafana-backup-keys
+
+  - it: still falls back when only accessKeyId is set, like the inline-keys path
+    template: templates/cnpg/objectstore-backup.yaml
+    set:
+      postgresqlCluster.objectStorage.s3.accessKeyId: key
+    asserts:
+      - equal:
+          path: spec.configuration.destinationPath
+          value: s3://grafana-postgresql/
+      - equal:
+          path: spec.configuration.s3Credentials.accessKeyId.name
+          value: observability-platform-object-storage
+
+  - it: uses the default bucket when the platform's bucket key is empty
+    template: templates/cnpg/objectstore-backup.yaml
+    set:
+      global.objectStorage.buckets.grafanaPostgresql: ""
+    asserts:
+      - equal:
+          path: spec.configuration.destinationPath
+          value: s3://grafana-postgresql/
+
+  - it: fails on server-side encryption with the azure type
+    template: templates/cnpg/objectstore-backup.yaml
+    set:
+      global.objectStorage: null
+      postgresqlCluster.objectStorage.type: azure
+      postgresqlCluster.backup.destinationPath: https://account.blob.core.windows.net/grafana-postgresql/
+      postgresqlCluster.backup.encryption.data: AES256
+    asserts:
+      - failedTemplate:
+          errorPattern: 'postgresqlCluster\.backup\.encryption is S3-only, but postgresqlCluster\.objectStorage\.type is "azure"'
