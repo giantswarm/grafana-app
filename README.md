@@ -84,12 +84,12 @@ On the Standalone Observability Platform, which sets `global.objectStorage` with
 - **Endpoint:** `https://` or, with `insecure`, `http://`, followed by `global.objectStorage.s3.endpoint`.
 - **Region:** `global.objectStorage.s3.region`. barman reads it from a Secret, so the chart renders `<cluster>-s3-region`.
 - **Destination:** `s3://<global.objectStorage.buckets.grafanaPostgresql>/`, unless `backup.destinationPath` is set.
-- **Credentials:** the platform's credentials Secret, keys `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
+- **Credentials:** the platform's credentials Secret, keys `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`. The render fails if neither it nor `s3.existingSecret` names a Secret, rather than falling back to the IAM role.
 
 Two more settings apply on every S3 path:
 
 - `postgresqlCluster.objectStorage.s3.endpointCA` (`name`, `key`): a Secret in the release namespace holding the CA bundle of a store behind a private CA.
-- `postgresqlCluster.backup.encryption.data` and `.wal`: server-side encryption, `AES256` or `aws:kms`. Empty uses the bucket's policy.
+- `postgresqlCluster.backup.encryption.data` and `.wal`: server-side encryption, `AES256` or `aws:kms`. Empty uses the bucket's policy. The render fails if they're set with `objectStorage.type: azure`.
 
 ## Credit
 

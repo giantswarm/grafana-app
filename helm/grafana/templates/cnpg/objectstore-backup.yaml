@@ -8,6 +8,11 @@ metadata:
     observability.giantswarm.io/tenant: giantswarm
   name: {{ .Values.postgresqlCluster.name }}-objectstore-backup
   namespace: {{ .Release.Namespace }}
+{{- with .Values.postgresqlCluster.backup.encryption }}
+{{- if and (or .data .wal) (ne $.Values.postgresqlCluster.objectStorage.type "s3") }}
+{{- fail (printf "postgresqlCluster.backup.encryption is S3-only, but postgresqlCluster.objectStorage.type is %q. Unset backup.encryption.data and backup.encryption.wal." $.Values.postgresqlCluster.objectStorage.type) }}
+{{- end }}
+{{- end }}
 spec:
   configuration:
     destinationPath: {{ include "grafana.cnpg.backup.destinationPath" . | quote }}

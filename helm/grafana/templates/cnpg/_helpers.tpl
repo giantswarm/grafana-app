@@ -99,12 +99,12 @@ azureCredentials:
 {{/*
 Whether S3 backups fall back to the parent chart's `global.objectStorage`: the Standalone
 Observability Platform sets it, management clusters don't. True ("true") when the parent's
-backend is s3 and this chart sets no endpoint and no keys of its own.
+backend is s3 and this chart sets no endpoint and no inline key pair of its own.
 */}}
 {{- define "grafana.cnpg.s3.useGlobal" -}}
 {{- $s3 := .Values.postgresqlCluster.objectStorage.s3 -}}
 {{- $global := dig "objectStorage" dict (.Values.global | default dict) -}}
-{{- if and (eq .Values.postgresqlCluster.objectStorage.type "s3") (eq (dig "backend" "" $global) "s3") (not $s3.endpointURL) (not $s3.accessKeyId) -}}
+{{- if and (eq .Values.postgresqlCluster.objectStorage.type "s3") (eq (dig "backend" "" $global) "s3") (not $s3.endpointURL) (not (and $s3.accessKeyId $s3.secretAccessKey)) -}}
 true
 {{- end -}}
 {{- end -}}
@@ -142,14 +142,18 @@ The S3 region: s3.region, or global.objectStorage.s3.region when falling back to
 {{/*
 The Secret holding the S3 keys, as JSON {name, accessKeyIdKey, secretAccessKeyKey}: the
 dedicated s3.existingSecret, else the parent's global.objectStorage.existingSecret when
-falling back to it. name is empty when there is none (explicit keys or the IAM role).
+falling back to it; the render fails when the fallback has neither. name is empty when there
+is none (explicit keys or the IAM role).
 */}}
 {{- define "grafana.cnpg.s3.credentialsSecret" -}}
 {{- $s3 := .Values.postgresqlCluster.objectStorage.s3 -}}
 {{- $existing := $s3.existingSecret | default dict -}}
 {{- if $existing.name -}}
 {{- dict "name" $existing.name "accessKeyIdKey" ($existing.accessKeyIdKey | default "AWS_ACCESS_KEY_ID") "secretAccessKeyKey" ($existing.secretAccessKeyKey | default "AWS_SECRET_ACCESS_KEY") | toJson -}}
-{{- else if and (include "grafana.cnpg.s3.useGlobal" .) .Values.global.objectStorage.existingSecret -}}
+{{- else if include "grafana.cnpg.s3.useGlobal" . -}}
+{{- if not .Values.global.objectStorage.existingSecret -}}
+{{- fail "postgresqlCluster.backup falls back to global.objectStorage, but neither global.objectStorage.existingSecret nor postgresqlCluster.objectStorage.s3.existingSecret names a credentials Secret. Without one, barman would use the IAM role against the platform's store and backups would fail at runtime." -}}
+{{- end -}}
 {{- dict "name" .Values.global.objectStorage.existingSecret "accessKeyIdKey" "AWS_ACCESS_KEY_ID" "secretAccessKeyKey" "AWS_SECRET_ACCESS_KEY" | toJson -}}
 {{- else -}}
 {{- dict "name" "" | toJson -}}
@@ -165,6 +169,6 @@ back to it.
 {{- if .Values.postgresqlCluster.backup.destinationPath -}}
 {{- .Values.postgresqlCluster.backup.destinationPath -}}
 {{- else if include "grafana.cnpg.s3.useGlobal" . -}}
-s3://{{ dig "objectStorage" "buckets" "grafanaPostgresql" "grafana-postgresql" .Values.global }}/
+s3://{{ dig "objectStorage" "buckets" "grafanaPostgresql" "" .Values.global | default "grafana-postgresql" }}/
 {{- end -}}
 {{- end -}}

@@ -118,7 +118,8 @@ postgresqlCluster:
     schedule: "0 0 * * * *" # every hour
     retentionPolicy: 30d
     #-- Server-side encryption of base backups (`data`) and WAL files (`wal`):
-    # "" (the bucket's policy), `AES256` or `aws:kms`. S3 only.
+    # "" (the bucket's policy), `AES256` or `aws:kms`. S3 only: the render fails with
+    # `objectStorage.type: azure`.
     encryption:
       data: ""
       wal: ""

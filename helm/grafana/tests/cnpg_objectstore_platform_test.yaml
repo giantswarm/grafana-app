@@ -183,3 +183,73 @@ tests:
           path: spec.configuration.s3Credentials
           value:
             inheritFromIAMRole: true
+
+  # Review fixes (giantswarm/grafana-app#597).
+
+  - it: fails when the fallback has no credentials Secret at all
+    # Helm reports the first template that fails; both ObjectStore templates and the
+    # region Secret share the guarded helper.
+    template: templates/cnpg/s3-region-secret.yaml
+    set:
+      global.objectStorage.existingSecret: ""
+    asserts:
+      - failedTemplate:
+          errorPattern: 'neither global\.objectStorage\.existingSecret nor postgresqlCluster\.objectStorage\.s3\.existingSecret names a credentials Secret'
+
+  - it: renders without a credentials Secret while backups are off
+    set:
+      global.objectStorage.existingSecret: ""
+      postgresqlCluster.backup.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders without a credentials Secret while the database is off
+    set:
+      global.objectStorage.existingSecret: ""
+      postgresqlCluster.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: accepts dedicated keys when the platform names no Secret
+    template: templates/cnpg/objectstore-backup.yaml
+    set:
+      global.objectStorage.existingSecret: ""
+      postgresqlCluster.objectStorage.s3.existingSecret.name: grafana-backup-keys
+    asserts:
+      - equal:
+          path: spec.configuration.s3Credentials.accessKeyId.name
+          value: grafana-backup-keys
+
+  - it: still falls back when only accessKeyId is set, like the inline-keys path
+    template: templates/cnpg/objectstore-backup.yaml
+    set:
+      postgresqlCluster.objectStorage.s3.accessKeyId: key
+    asserts:
+      - equal:
+          path: spec.configuration.destinationPath
+          value: s3://grafana-postgresql/
+      - equal:
+          path: spec.configuration.s3Credentials.accessKeyId.name
+          value: observability-platform-object-storage
+
+  - it: uses the default bucket when the platform's bucket key is empty
+    template: templates/cnpg/objectstore-backup.yaml
+    set:
+      global.objectStorage.buckets.grafanaPostgresql: ""
+    asserts:
+      - equal:
+          path: spec.configuration.destinationPath
+          value: s3://grafana-postgresql/
+
+  - it: fails on server-side encryption with the azure type
+    template: templates/cnpg/objectstore-backup.yaml
+    set:
+      global.objectStorage: null
+      postgresqlCluster.objectStorage.type: azure
+      postgresqlCluster.backup.destinationPath: https://account.blob.core.windows.net/grafana-postgresql/
+      postgresqlCluster.backup.encryption.data: AES256
+    asserts:
+      - failedTemplate:
+          errorPattern: 'postgresqlCluster\.backup\.encryption is S3-only, but postgresqlCluster\.objectStorage\.type is "azure"'
