@@ -11,6 +11,9 @@ templates:
 release:
   name: grafana
   namespace: monitoring
+# Pinned, so the helm.sh/chart label in the snapshots doesn't change with every release.
+chart:
+  version: 0.0.0-snapshot
 set:
   postgresqlCluster.enabled: true
   postgresqlCluster.backup.enabled: true
