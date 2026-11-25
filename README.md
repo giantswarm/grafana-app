@@ -91,6 +91,12 @@ Two more settings apply on every S3 path:
 - `postgresqlCluster.objectStorage.s3.endpointCA` (`name`, `key`): a Secret in the release namespace holding the CA bundle of a store behind a private CA.
 - `postgresqlCluster.backup.encryption.data` and `.wal`: server-side encryption, `AES256` or `aws:kms`. Empty uses the bucket's policy. The render fails if they're set with `objectStorage.type: azure`.
 
+## grafana-mcp
+
+`grafanaMcp.enabled: true` adds `grafana-mcp`, a second Grafana instance for the mcp-observability-platform MCP server.
+It verifies each caller's Dex token and shares the main Grafana's database.
+See [docs/grafana-mcp.md](docs/grafana-mcp.md).
+
 ## Credit
 
 - <https://github.com/grafana/helm-charts>
