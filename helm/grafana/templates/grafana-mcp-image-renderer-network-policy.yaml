@@ -1,0 +1,28 @@
+{{- /*
+The Grafana chart's grafana-image-renderer-ingress NetworkPolicy admits only the
+main Grafana pods. This one adds the grafana-mcp pods; NetworkPolicies add up.
+*/}}
+{{- if and .Values.grafanaMcp.enabled .Values.grafana.imageRenderer.enabled .Values.grafana.imageRenderer.networkPolicy.limitIngress }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  labels:
+    {{- include "grafanaMcp.selectorLabels" . | nindent 4 }}
+  name: grafana-mcp-image-renderer-ingress
+  namespace: {{ .Release.Namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Release.Name | quote }}
+      app.kubernetes.io/name: grafana-image-renderer
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              {{- include "grafanaMcp.selectorLabels" . | nindent 14 }}
+      ports:
+        - port: {{ .Values.grafana.imageRenderer.service.targetPort }}
+          protocol: TCP
+{{- end }}

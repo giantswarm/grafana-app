@@ -36,6 +36,10 @@ spec:
     - toEndpoints:
         - matchLabels:
             {{- include "labels.selector" . | nindent 12 }}
+        {{- if .Values.grafanaMcp.enabled }}
+        - matchLabels:
+            {{- include "grafanaMcp.selectorLabels" . | nindent 12 }}
+        {{- end }}
       toPorts:
         - ports:
             - port: "3000"
@@ -73,6 +77,10 @@ spec:
     - fromEndpoints:
         - matchLabels:
             {{- include "labels.selector" . | nindent 12 }}
+        {{- if .Values.grafanaMcp.enabled }}
+        - matchLabels:
+            {{- include "grafanaMcp.selectorLabels" . | nindent 12 }}
+        {{- end }}
       toPorts:
         - ports:
             - port: "8081"
