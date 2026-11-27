@@ -98,6 +98,16 @@ tests:
           path: data["grafana.ini"]
           pattern: 'ha_peers'
 
+  - it: verifies Dex tokens with a connector-scoped login and no email claim
+    template: charts/grafanaMcp/templates/configmap.yaml
+    asserts:
+      - matchRegex:
+          path: data["grafana.ini"]
+          pattern: '\[auth\.jwt\]\n\s*auto_sign_up = true\n\s*cache_ttl = 5m\n\s*enabled = true\n\s*header_name = X-JWT-Assertion\n\s*org_attribute_path = groups\n\s*role_attribute_path = to_string\(''None''\)\n\s*role_attribute_strict = true\n\s*username_attribute_path = join\('':'', \[federated_claims\.connector_id, replace\(email, ''@'', ''_at_''\)\]\)\n'
+      - notMatchRegex:
+          path: data["grafana.ini"]
+          pattern: 'email_claim|email_attribute_path|username_claim'
+
   - it: uses the same secret_key source as the main Grafana, Grafana's default
     templates:
       - charts/grafanaMcp/templates/configmap.yaml
@@ -113,6 +123,19 @@ tests:
             name: GF_SECURITY_SECRET_KEY
           any: true
         template: charts/grafanaMcp/templates/deployment.yaml
+
+  - it: reads the JWT org mapping from an optional Secret
+    template: charts/grafanaMcp/templates/deployment.yaml
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: GF_AUTH_JWT_ORG_MAPPING
+            valueFrom:
+              secretKeyRef:
+                name: grafana-mcp-org-mapping
+                key: orgMapping
+                optional: true
 
   - it: renders a ServiceMonitor that selects only grafana-mcp
     template: charts/grafanaMcp/templates/servicemonitor.yaml

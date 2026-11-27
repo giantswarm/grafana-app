@@ -1255,6 +1255,30 @@
                 "enabled": {
                     "type": "boolean"
                 },
+                "envValueFrom": {
+                    "type": "object",
+                    "properties": {
+                        "GF_AUTH_JWT_ORG_MAPPING": {
+                            "type": "object",
+                            "properties": {
+                                "secretKeyRef": {
+                                    "type": "object",
+                                    "properties": {
+                                        "key": {
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "optional": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
                 "fullnameOverride": {
                     "type": "string"
                 },
@@ -1274,6 +1298,35 @@
                             "properties": {
                                 "enabled": {
                                     "type": "boolean"
+                                }
+                            }
+                        },
+                        "auth.jwt": {
+                            "type": "object",
+                            "properties": {
+                                "auto_sign_up": {
+                                    "type": "boolean"
+                                },
+                                "cache_ttl": {
+                                    "type": "string"
+                                },
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "header_name": {
+                                    "type": "string"
+                                },
+                                "org_attribute_path": {
+                                    "type": "string"
+                                },
+                                "role_attribute_path": {
+                                    "type": "string"
+                                },
+                                "role_attribute_strict": {
+                                    "type": "boolean"
+                                },
+                                "username_attribute_path": {
+                                    "type": "string"
                                 }
                             }
                         },
