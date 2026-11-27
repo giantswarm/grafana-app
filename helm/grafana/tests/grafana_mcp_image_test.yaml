@@ -1,0 +1,81 @@
+suite: grafana-mcp image and selector labels
+templates:
+  - charts/grafana/templates/deployment.yaml
+  - charts/grafanaMcp/templates/deployment.yaml
+  - templates/grafana-mcp-validate.yaml
+release:
+  name: grafana
+  namespace: monitoring
+set:
+  grafanaMcp.enabled: true
+tests:
+
+  - it: renders both Deployments with the same image
+    set:
+      global.imageRegistry: registry.example.com
+      grafana.image.tag: 13.3.0
+      grafanaMcp.image.tag: 13.3.0
+    templates:
+      - charts/grafana/templates/deployment.yaml
+      - charts/grafanaMcp/templates/deployment.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: registry.example.com/giantswarm/grafana:13.3.0
+
+  - it: renders the main Grafana with its own selector labels
+    template: charts/grafana/templates/deployment.yaml
+    asserts:
+      - equal:
+          path: spec.selector.matchLabels
+          value:
+            app.kubernetes.io/instance: grafana
+            app.kubernetes.io/name: grafana
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: gsoci.azurecr.io/giantswarm/grafana:13.3.0
+
+  - it: renders grafana-mcp with distinct selector labels
+    template: charts/grafanaMcp/templates/deployment.yaml
+    asserts:
+      - equal:
+          path: spec.selector.matchLabels
+          value:
+            app.kubernetes.io/instance: grafana
+            app.kubernetes.io/name: grafanaMcp
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: gsoci.azurecr.io/giantswarm/grafana:13.3.0
+
+  - it: fails when the grafana-mcp image tag differs
+    template: templates/grafana-mcp-validate.yaml
+    set:
+      grafanaMcp.image.tag: 13.2.4
+    asserts:
+      - failedTemplate:
+          errorPattern: 'grafanaMcp.image.tag \("13.2.4"\) must equal grafana.image.tag \(""\)'
+
+  - it: fails when the main Grafana image repository differs
+    template: templates/grafana-mcp-validate.yaml
+    set:
+      grafana.image.repository: giantswarm/grafana-custom
+    asserts:
+      - failedTemplate:
+          errorPattern: 'grafanaMcp.image.repository .* must equal grafana.image.repository'
+
+  - it: fails when the image digests differ
+    template: templates/grafana-mcp-validate.yaml
+    set:
+      grafana.image.sha: 0123456789abcdef
+    asserts:
+      - failedTemplate:
+          errorPattern: 'grafanaMcp.image.sha .* must equal grafana.image.sha'
+
+  - it: allows different images while grafana-mcp is off
+    template: templates/grafana-mcp-validate.yaml
+    set:
+      grafanaMcp.enabled: false
+      grafanaMcp.image.tag: 13.2.4
+    asserts:
+      - hasDocuments:
+          count: 0

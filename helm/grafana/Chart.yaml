@@ -12,6 +12,11 @@ dependencies:
   - name: grafana
     version: 14.4.0
     repository: https://grafana-community.github.io/helm-charts
+  - name: grafana
+    version: 14.4.0
+    repository: https://grafana-community.github.io/helm-charts
+    alias: grafanaMcp
+    condition: grafanaMcp.enabled
   - name: pg-cluster-recovery-test
     version: 0.5.0
     repository: https://giantswarm.github.io/giantswarm-catalog
