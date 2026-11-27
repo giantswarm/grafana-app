@@ -1,0 +1,196 @@
+suite: grafana-mcp network policies
+templates:
+  - templates/grafana-mcp-cilium-network-policy.yaml
+  - templates/grafana-mcp-image-renderer-network-policy.yaml
+  - templates/cilium-network-policy.yaml
+release:
+  name: grafana
+  namespace: monitoring
+tests:
+
+  - it: renders no grafana-mcp policy while grafana-mcp is off
+    set:
+      grafana.imageRenderer.enabled: true
+    templates:
+      - templates/grafana-mcp-cilium-network-policy.yaml
+      - templates/grafana-mcp-image-renderer-network-policy.yaml
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: keeps the image renderer policy to the main Grafana while grafana-mcp is off
+    set:
+      grafana.imageRenderer.enabled: true
+    template: templates/cilium-network-policy.yaml
+    documentSelector:
+      path: metadata.name
+      value: grafana-image-renderer
+    asserts:
+      - lengthEqual:
+          path: spec.ingress[0].fromEndpoints
+          count: 1
+      - lengthEqual:
+          path: spec.egress[0].toEndpoints
+          count: 1
+
+  - it: selects only the grafana-mcp pods
+    set:
+      grafanaMcp.enabled: true
+    template: templates/grafana-mcp-cilium-network-policy.yaml
+    asserts:
+      - isKind:
+          of: CiliumNetworkPolicy
+      - equal:
+          path: metadata.name
+          value: grafana-mcp
+      - equal:
+          path: spec.endpointSelector.matchLabels
+          value:
+            app.kubernetes.io/instance: grafana
+            app.kubernetes.io/name: grafanaMcp
+
+  - it: admits only the MCP server, the image renderer and the metrics scrapers
+    set:
+      grafanaMcp.enabled: true
+    template: templates/grafana-mcp-cilium-network-policy.yaml
+    asserts:
+      - lengthEqual:
+          path: spec.ingress
+          count: 3
+      - equal:
+          path: spec.ingress[0].fromEndpoints
+          value:
+            - matchLabels:
+                k8s:io.kubernetes.pod.namespace: mcp-observability-platform
+                app.kubernetes.io/name: mcp-observability-platform
+      - equal:
+          path: spec.ingress[1].fromEndpoints
+          value:
+            - matchLabels:
+                app.kubernetes.io/name: grafana-image-renderer
+      - equal:
+          path: spec.ingress[2].fromEndpoints
+          value:
+            - matchLabels:
+                io.kubernetes.pod.namespace: kube-system
+                app.kubernetes.io/instance: alloy-metrics
+            - matchLabels:
+                io.kubernetes.pod.namespace: kube-system
+                app.kubernetes.io/instance: prometheus-agent
+      - equal:
+          path: spec.ingress[0].toPorts[0].ports
+          value:
+            - port: "3000"
+              protocol: TCP
+      - notExists:
+          path: spec.ingress[0].fromEntities
+
+  - it: admits the MCP server from a configured namespace
+    set:
+      grafanaMcp.enabled: true
+      grafanaMcp.ciliumNetworkPolicy.mcpClients.namespace: mcp
+      grafanaMcp.ciliumNetworkPolicy.mcpClients.podLabels:
+        app.kubernetes.io/name: mcp
+    template: templates/grafana-mcp-cilium-network-policy.yaml
+    asserts:
+      - equal:
+          path: spec.ingress[0].fromEndpoints[0].matchLabels
+          value:
+            k8s:io.kubernetes.pod.namespace: mcp
+            app.kubernetes.io/name: mcp
+
+  - it: allows egress to the database, the image renderer, DNS, Dex and the datasources
+    set:
+      grafanaMcp.enabled: true
+    template: templates/grafana-mcp-cilium-network-policy.yaml
+    asserts:
+      - contains:
+          path: spec.egress
+          content:
+            toEndpoints:
+              - matchLabels:
+                  cnpg.io/cluster: grafana-postgresql
+            toPorts:
+              - ports:
+                  - port: "5432"
+                    protocol: TCP
+      - contains:
+          path: spec.egress
+          content:
+            toEndpoints:
+              - matchLabels:
+                  app.kubernetes.io/name: grafana-image-renderer
+            toPorts:
+              - ports:
+                  - port: "8081"
+                    protocol: TCP
+      - contains:
+          path: spec.egress
+          content:
+            toEntities:
+              - cluster
+              - world
+
+  - it: renders no grafana-mcp policy while Cilium policies are off
+    set:
+      grafanaMcp.enabled: true
+      ciliumNetworkPolicy.enabled: false
+    template: templates/grafana-mcp-cilium-network-policy.yaml
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: opens the image renderer policy to grafana-mcp in both directions
+    set:
+      grafanaMcp.enabled: true
+      grafana.imageRenderer.enabled: true
+    template: templates/cilium-network-policy.yaml
+    documentSelector:
+      path: metadata.name
+      value: grafana-image-renderer
+    asserts:
+      - contains:
+          path: spec.ingress[0].fromEndpoints
+          content:
+            matchLabels:
+              app.kubernetes.io/instance: grafana
+              app.kubernetes.io/name: grafanaMcp
+      - contains:
+          path: spec.egress[0].toEndpoints
+          content:
+            matchLabels:
+              app.kubernetes.io/instance: grafana
+              app.kubernetes.io/name: grafanaMcp
+
+  - it: admits grafana-mcp to the image renderer NetworkPolicy
+    set:
+      grafanaMcp.enabled: true
+      grafana.imageRenderer.enabled: true
+    template: templates/grafana-mcp-image-renderer-network-policy.yaml
+    asserts:
+      - isKind:
+          of: NetworkPolicy
+      - equal:
+          path: spec.podSelector.matchLabels
+          value:
+            app.kubernetes.io/instance: grafana
+            app.kubernetes.io/name: grafana-image-renderer
+      - equal:
+          path: spec.ingress
+          value:
+            - from:
+                - podSelector:
+                    matchLabels:
+                      app.kubernetes.io/instance: grafana
+                      app.kubernetes.io/name: grafanaMcp
+              ports:
+                - port: 8081
+                  protocol: TCP
+
+  - it: renders no image renderer NetworkPolicy without the image renderer
+    set:
+      grafanaMcp.enabled: true
+    template: templates/grafana-mcp-image-renderer-network-policy.yaml
+    asserts:
+      - hasDocuments:
+          count: 0
