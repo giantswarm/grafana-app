@@ -72,3 +72,12 @@ Return the appropriate apiVersion for podDisruptionBudget.
     {{- print "policy/v1beta1" -}}
   {{- end -}}
 {{- end -}}
+
+{{/*
+Selector labels of the grafana-mcp pods, rendered by the grafanaMcp subchart
+alias. The alias name becomes their app.kubernetes.io/name label.
+*/}}
+{{- define "grafanaMcp.selectorLabels" -}}
+app.kubernetes.io/instance: {{ .Release.Name | quote }}
+app.kubernetes.io/name: grafanaMcp
+{{- end -}}

@@ -1378,3 +1378,16 @@ grafanaMcp:
       allow_sign_up: false
       allow_org_create: false
 
+  # Allowed callers of grafana-mcp, used by its CiliumNetworkPolicy.
+  ciliumNetworkPolicy:
+    # The MCP server pods.
+    mcpClients:
+      namespace: mcp-observability-platform
+      podLabels:
+        app.kubernetes.io/name: mcp-observability-platform
+    # The metrics scrapers.
+    metricsScrapers:
+      - io.kubernetes.pod.namespace: kube-system
+        app.kubernetes.io/instance: alloy-metrics
+      - io.kubernetes.pod.namespace: kube-system
+        app.kubernetes.io/instance: prometheus-agent

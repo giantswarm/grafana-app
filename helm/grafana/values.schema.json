@@ -1166,6 +1166,34 @@
                 "automountServiceAccountToken": {
                     "type": "boolean"
                 },
+                "ciliumNetworkPolicy": {
+                    "type": "object",
+                    "properties": {
+                        "mcpClients": {
+                            "type": "object",
+                            "properties": {
+                                "namespace": {
+                                    "type": "string"
+                                },
+                                "podLabels": {
+                                    "type": "object",
+                                    "additionalProperties": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        },
+                        "metricsScrapers": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "additionalProperties": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                },
                 "containerSecurityContext": {
                     "type": "object",
                     "properties": {
