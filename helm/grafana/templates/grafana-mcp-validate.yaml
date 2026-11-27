@@ -1,0 +1,14 @@
+{{/*
+grafana-mcp and the main Grafana share one database, so they must run the same
+Grafana version. The grafanaMcp alias does not inherit grafana.image: fail the
+render when the two images differ.
+*/}}
+{{- if .Values.grafanaMcp.enabled }}
+{{- range $key := list "registry" "repository" "tag" "sha" }}
+{{- $main := index $.Values.grafana.image $key | default "" | toString }}
+{{- $mcp := index $.Values.grafanaMcp.image $key | default "" | toString }}
+{{- if ne $main $mcp }}
+{{- fail (printf "grafanaMcp.image.%s (%q) must equal grafana.image.%s (%q): grafana-mcp shares the main Grafana's database and must run the same image" $key $mcp $key $main) }}
+{{- end }}
+{{- end }}
+{{- end }}

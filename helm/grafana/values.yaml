@@ -1271,3 +1271,110 @@ grafana:
     #     data:
     #       - key: grafana-admin-password
     #         name: adminPassword
+
+# grafana-mcp: a second Grafana instance for the mcp-observability-platform MCP
+# server. It shares the main Grafana's database, so users, orgs, dashboards and
+# datasources are the same on both.
+#
+# This is the upstream Grafana chart a second time, under the alias grafanaMcp.
+# It receives `global.*` but none of the `grafana.*` values above, so every
+# default it needs is repeated here. The installation supplies the database,
+# the image renderer and the plugins.
+#
+# Its pods carry `app.kubernetes.io/name: grafanaMcp`, so the Service,
+# ServiceMonitor and policies of the main Grafana do not select them.
+grafanaMcp:
+  enabled: false
+
+  fullnameOverride: grafana-mcp
+
+  # Must equal grafana.image: both instances migrate the same database. The
+  # render fails when they differ.
+  image:
+    registry: gsoci.azurecr.io
+    repository: giantswarm/grafana
+    tag: ""
+    sha: ""
+    pullPolicy: IfNotPresent
+
+  # One pod. The rolling update starts the new pod before it stops the old one.
+  replicas: 1
+  deploymentStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  podDisruptionBudget: {}
+
+  # grafana-mcp runs no sidecar and calls no Kubernetes API.
+  rbac:
+    create: false
+    pspEnabled: false
+    pspUseAppArmor: false
+    namespaced: false
+  serviceAccount:
+    create: true
+    automountServiceAccountToken: false
+  automountServiceAccountToken: false
+
+  testFramework:
+    enabled: false
+
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 472
+    runAsGroup: 472
+    fsGroup: 472
+
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    privileged: false
+    capabilities:
+      drop:
+        - ALL
+    seccompProfile:
+      type: RuntimeDefault
+    readOnlyRootFilesystem: true
+
+  # In-cluster only: the MCP and the image renderer call the service on the
+  # Grafana port.
+  service:
+    enabled: true
+    type: ClusterIP
+    port: 3000
+    targetPort: 3000
+    portName: service
+
+  serviceMonitor:
+    enabled: true
+    path: /metrics
+    labels: {}
+    interval: 1m
+    scheme: http
+    tlsConfig: {}
+    scrapeTimeout: 30s
+    relabelings: []
+
+  ingress:
+    enabled: false
+
+  # grafana-mcp uses the main Grafana's image renderer.
+  imageRenderer:
+    enabled: false
+
+  grafana.ini:
+    auth:
+      disable_login_form: true
+    # The admin password of the shared database must not work here.
+    auth.basic:
+      enabled: false
+    server:
+      root_url: "http://{{ include \"grafana.fullname\" . }}.{{ .Release.Namespace }}:{{ .Values.service.port }}/"
+    # The main Grafana evaluates the alerts. The alerting API stays available.
+    # No ha_peers: grafana-mcp does not join the main Grafana's alert cluster.
+    unified_alerting:
+      execute_alerts: false
+    users:
+      allow_sign_up: false
+      allow_org_create: false
+

@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add `grafanaMcp.enabled` to run grafana-mcp, a second Grafana instance for mcp-observability-platform that shares the main Grafana's database.
+- Fail the install when `grafanaMcp.image` differs from `grafana.image`.
+
 ## [2.44.0] - 2026-11-24
 
 ### Added
